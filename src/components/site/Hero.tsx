@@ -36,15 +36,16 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative flex items-end justify-center">
-          <div className="absolute inset-x-6 bottom-0 top-10 rounded-[2rem] bg-gradient-to-br from-primary-glow/30 via-fuchsia-400/20 to-transparent blur-3xl" />
+        <div className="relative flex items-center justify-center">
+          <div className="absolute -inset-10 rounded-[3rem] bg-gradient-to-br from-primary-glow/40 via-fuchsia-400/20 to-transparent blur-3xl" />
           <div className="relative animate-float">
             <img
               src={advisor}
-              alt="Aarthvaahini financial advisor"
+              alt="Aarthvaahini financial advisor showing loans, insurance and mutual funds"
               width={560}
               height={560}
-              className="h-[480px] w-auto object-contain drop-shadow-[0_30px_60px_rgba(20,10,80,0.55)]"
+              className="h-[480px] w-[480px] rounded-[2rem] object-cover mix-blend-luminosity opacity-0"
+              style={{ mixBlendMode: "normal", opacity: 1, maskImage: "radial-gradient(ellipse at center, #000 60%, transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse at center, #000 60%, transparent 100%)" }}
             />
           </div>
           <div className="absolute -bottom-6 left-4 hidden rounded-2xl border border-white/15 bg-white/10 px-5 py-3 backdrop-blur md:block">
