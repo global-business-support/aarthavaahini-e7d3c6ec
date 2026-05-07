@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
-import advisor from "@/assets/hero-advisor.jpg";
+import advisor from "@/assets/hero-advisor.png";
 import bg from "@/assets/hero-bg.jpg";
 
 export function Hero() {
@@ -36,15 +36,15 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative flex items-center justify-center">
-          <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-primary-glow/40 to-transparent blur-2xl" />
-          <div className="relative animate-float overflow-hidden rounded-[2rem] border border-white/15 shadow-elegant">
+        <div className="relative flex items-end justify-center">
+          <div className="absolute inset-x-6 bottom-0 top-10 rounded-[2rem] bg-gradient-to-br from-primary-glow/30 via-fuchsia-400/20 to-transparent blur-3xl" />
+          <div className="relative animate-float">
             <img
               src={advisor}
               alt="Aarthvaahini financial advisor"
               width={560}
               height={560}
-              className="h-[460px] w-[460px] object-cover"
+              className="h-[480px] w-auto object-contain drop-shadow-[0_30px_60px_rgba(20,10,80,0.55)]"
             />
           </div>
           <div className="absolute -bottom-6 left-4 hidden rounded-2xl border border-white/15 bg-white/10 px-5 py-3 backdrop-blur md:block">
