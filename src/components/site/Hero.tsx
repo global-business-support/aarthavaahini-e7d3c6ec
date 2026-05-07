@@ -38,13 +38,13 @@ export function Hero() {
 
         <div className="relative flex items-center justify-center">
           <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-primary-glow/40 to-transparent blur-2xl" />
-          <div className="relative animate-float overflow-hidden rounded-[2rem] border border-white/15 bg-white/5 shadow-elegant backdrop-blur">
+          <div className="relative animate-float overflow-hidden rounded-[2rem] border border-white/15 shadow-elegant">
             <img
               src={advisor}
               alt="Aarthvaahini financial advisor"
               width={560}
               height={560}
-              className="h-[460px] w-[460px] object-cover object-[70%_center]"
+              className="h-[460px] w-[460px] object-cover"
             />
           </div>
           <div className="absolute -bottom-6 left-4 hidden rounded-2xl border border-white/15 bg-white/10 px-5 py-3 backdrop-blur md:block">
