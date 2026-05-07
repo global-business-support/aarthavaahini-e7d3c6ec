@@ -6,6 +6,7 @@ import { EmiCalculator } from "@/components/site/EmiCalculator";
 import { CibilChecker } from "@/components/site/CibilChecker";
 import { AdminPanel } from "@/components/site/AdminPanel";
 import { Footer } from "@/components/site/Footer";
+import { ScrollScene } from "@/components/site/ScrollScene";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -16,11 +17,13 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <Hero />
-        <Products />
-        <EmiCalculator />
-        <CibilChecker />
-        <AdminPanel />
+        <ScrollScene>
+          <Hero />
+          <Products />
+          <EmiCalculator />
+          <CibilChecker />
+          <AdminPanel />
+        </ScrollScene>
       </main>
       <Footer />
     </div>
