@@ -44,7 +44,7 @@ export function Hero() {
               alt="Aarthvaahini financial advisor"
               width={560}
               height={560}
-              className="h-[460px] w-[460px] object-cover"
+              className="h-[460px] w-[460px] object-cover object-[70%_center]"
             />
           </div>
           <div className="absolute -bottom-6 left-4 hidden rounded-2xl border border-white/15 bg-white/10 px-5 py-3 backdrop-blur md:block">
