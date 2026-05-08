@@ -8,7 +8,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="container mx-auto flex h-24 items-center justify-between gap-6 px-6">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-soft ring-1 ring-border">
+          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-card p-1 shadow-soft ring-1 ring-border">
             <img src={logo} alt="Aarthvaahini" className="h-full w-full object-contain" />
           </div>
           <div className="hidden flex-col leading-none sm:flex">
