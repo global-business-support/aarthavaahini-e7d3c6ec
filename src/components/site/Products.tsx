@@ -1,6 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Banknote, ShieldPlus, LineChart, ArrowRight } from "lucide-react";
+import { Banknote, ShieldPlus, LineChart, ArrowRight, Landmark, FileCheck2, Headphones, Percent } from "lucide-react";
+
+const bankingFeatures = [
+  { icon: Landmark, title: "40+ bank partners", desc: "Home, business and personal loan options in one place." },
+  { icon: Percent, title: "Low interest offers", desc: "Compare rates and eligibility before you apply." },
+  { icon: ShieldPlus, title: "Insurance protection", desc: "Health, life, term and motor plans for every family." },
+  { icon: FileCheck2, title: "Fast processing", desc: "Guided documentation with advisor support." },
+];
 
 const products = [
   {
@@ -26,13 +33,23 @@ const products = [
 export function Products() {
   return (
     <section id="products" className="container mx-auto scroll-mt-24 px-6 py-24">
+      <div className="grid gap-4 rounded-[2rem] border border-border/70 bg-card/75 p-4 shadow-soft backdrop-blur md:grid-cols-4 md:p-5">
+        {bankingFeatures.map(({ icon: Icon, title, desc }) => (
+          <div key={title} className="rounded-2xl bg-secondary/55 p-5">
+            <Icon className="h-6 w-6 text-primary" />
+            <h3 className="mt-4 font-display text-lg font-bold text-foreground">{title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="mx-auto max-w-2xl text-center">
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-glow">Our Products</span>
         <h2 className="mt-3 font-display text-4xl font-bold text-foreground sm:text-5xl">
-          Everything financial, <span className="text-gradient">in one place</span>
+          Banking, loans and protection, <span className="text-gradient">in one place</span>
         </h2>
         <p className="mt-4 text-muted-foreground">
-          A complete suite of products engineered for India's growing households and entrepreneurs.
+          A complete suite of loan, insurance and investment products built for India's growing households and entrepreneurs.
         </p>
       </div>
 
@@ -55,7 +72,7 @@ export function Products() {
                 ))}
               </ul>
               <Button variant="ghost" className="mt-6 px-0 text-primary hover:bg-transparent hover:text-primary-glow">
-                Learn more <ArrowRight className="ml-2 h-4 w-4" />
+                View features <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </Card>
