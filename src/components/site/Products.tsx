@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Banknote, ShieldPlus, LineChart, ArrowRight, Landmark, FileCheck2, Headphones, Percent } from "lucide-react";
+import { Banknote, ShieldPlus, LineChart, ArrowRight, Landmark, FileCheck2, Percent } from "lucide-react";
 
 const bankingFeatures = [
   { icon: Landmark, title: "40+ bank partners", desc: "Home, business and personal loan options in one place." },
@@ -43,7 +43,7 @@ export function Products() {
         ))}
       </div>
 
-      <div className="mx-auto max-w-2xl text-center">
+      <div className="mx-auto mt-20 max-w-2xl text-center">
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-glow">Our Products</span>
         <h2 className="mt-3 font-display text-4xl font-bold text-foreground sm:text-5xl">
           Banking, loans and protection, <span className="text-gradient">in one place</span>
