@@ -78,27 +78,27 @@ export function AdminPanel() {
             </div>
           </Card>
 
-          <Card className="relative overflow-hidden border-border/60 bg-gradient-hero p-8 text-primary-foreground shadow-elegant">
-            <div className="absolute inset-0 bg-gradient-glow opacity-70" />
+          <Card className="relative overflow-hidden border-border/60 bg-gradient-card p-8 text-foreground shadow-elegant">
+            <div className="absolute inset-0 bg-gradient-glow opacity-60" />
             <div className="relative">
               <Smartphone className="h-8 w-8 text-primary-glow" />
               <h3 className="mt-4 font-display text-2xl font-bold">React Native Mobile App</h3>
-              <p className="mt-2 text-primary-foreground/80">
+              <p className="mt-2 text-muted-foreground">
                 Manage leads on the go. Push notifications for every status change, in-app CIBIL checks, document uploads and e-sign — all natively for iOS & Android.
               </p>
 
               <ul className="mt-6 space-y-3 text-sm">
                 {["Real-time lead pipeline", "Push notifications", "In-app document upload", "Biometric secure login"].map((f) => (
                   <li key={f} className="flex items-center gap-3">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-glow/20 text-primary-glow">✓</span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary">✓</span>
                     {f}
                   </li>
                 ))}
               </ul>
 
               <div className="mt-8 flex gap-3">
-                <div className="rounded-xl border border-primary-foreground/15 bg-card/10 px-4 py-2 text-xs font-medium backdrop-blur">App Store</div>
-                <div className="rounded-xl border border-primary-foreground/15 bg-card/10 px-4 py-2 text-xs font-medium backdrop-blur">Google Play</div>
+                <div className="rounded-xl border border-border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">App Store</div>
+                <div className="rounded-xl border border-border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">Google Play</div>
               </div>
             </div>
           </Card>
