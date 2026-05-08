@@ -13,10 +13,10 @@ export function Hero() {
           aria-hidden
           width={1024}
           height={1024}
-          className="pointer-events-none absolute -right-24 bottom-4 z-0 h-[420px] w-[420px] object-cover opacity-35 sm:hidden"
+          className="pointer-events-none absolute -right-24 bottom-0 z-0 h-[420px] w-[420px] object-cover opacity-20 sm:hidden"
           style={{ maskImage: "radial-gradient(ellipse at center, #000 54%, transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse at center, #000 54%, transparent 100%)" }}
         />
-        <div className="flex flex-col justify-center">
+        <div className="relative z-10 flex flex-col justify-center">
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-1.5 text-xs font-semibold text-primary shadow-soft backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" /> India's Trusted Financial Partner
           </span>
