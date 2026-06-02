@@ -58,7 +58,6 @@ type Lead = {
   pan: string | null;
   city: string | null;
   state: string | null;
-  product_type: string | null;
   product_type: string;
   lead_source: string | null;
   status: string;
