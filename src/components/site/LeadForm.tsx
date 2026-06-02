@@ -687,7 +687,7 @@ export function LeadForm({
     const { error } = await supabase
       .from("leads")
       .insert({
-        name: form.name,
+        full_name: form.name,
         email: form.email,
         phone: form.phone,
         loan_type: form.loan_type,

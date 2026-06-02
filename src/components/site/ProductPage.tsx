@@ -43,9 +43,7 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
               </DialogTrigger>
               <DialogContent className="max-w-lg">
                 <DialogHeader><DialogTitle>{p.name} — Enquiry</DialogTitle></DialogHeader>
-                <LeadForm productType={productType} productName={p.name}
-                  showAmount={productType === "loan" || productType === "insurance" || productType === "mutual_fund"}
-                  showMessage />
+                <LeadForm productType={productType} productName={p.name} />
               </DialogContent>
             </Dialog>
           </Card>
