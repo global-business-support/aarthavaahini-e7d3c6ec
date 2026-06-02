@@ -76,7 +76,7 @@ function LeadsPage() {
     const { data, error } = await supabase
       .from("leads")
       .select(
-        "id, lead_name, full_name, phone, email, pan, city, state, product_type, product_type, lead_source, status, created_at",
+        "id, lead_name, full_name, phone, email, pan, city, state, product_type, lead_source, status, created_at",
       )
       .order("created_at", { ascending: false })
       .limit(500);
