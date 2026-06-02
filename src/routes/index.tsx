@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
-import { HeroBanner } from "@/components/site/HeroBanner";
 import { Products } from "@/components/site/Products";
 import { EmiCalculator } from "@/components/site/EmiCalculator";
 import { CibilChecker } from "@/components/site/CibilChecker";
 import { AdminPanel } from "@/components/site/AdminPanel";
 import { Footer } from "@/components/site/Footer";
-
+import { SipPlanner } from "@/components/site/SipPlanner";
 export const Route = createFileRoute("/")({ component: Index });
 
 function Index() {
@@ -15,10 +14,10 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <HeroBanner />
         <Hero />
         <Products />
         <EmiCalculator />
+        <SipPlanner />
         <CibilChecker />
         <AdminPanel />
       </main>

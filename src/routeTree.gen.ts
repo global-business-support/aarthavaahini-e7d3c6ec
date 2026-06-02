@@ -13,12 +13,17 @@ import { Route as MutualFundsRouteImport } from './routes/mutual-funds'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoansRouteImport } from './routes/loans'
 import { Route as InsuranceRouteImport } from './routes/insurance'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CibilRouteImport } from './routes/cibil'
+import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as BankingRouteImport } from './routes/banking'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogsSipGuideRouteImport } from './routes/blogs/sip-guide'
+import { Route as BlogsHomeLoanGuideRouteImport } from './routes/blogs/home-loan-guide'
+import { Route as BlogsCibilScoreRouteImport } from './routes/blogs/cibil-score'
 
 const MutualFundsRoute = MutualFundsRouteImport.update({
   id: '/mutual-funds',
@@ -40,6 +45,11 @@ const InsuranceRoute = InsuranceRouteImport.update({
   path: '/insurance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -48,6 +58,11 @@ const ContactRoute = ContactRouteImport.update({
 const CibilRoute = CibilRouteImport.update({
   id: '/cibil',
   path: '/cibil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BankingRoute = BankingRouteImport.update({
@@ -70,30 +85,55 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsSipGuideRoute = BlogsSipGuideRouteImport.update({
+  id: '/sip-guide',
+  path: '/sip-guide',
+  getParentRoute: () => BlogsRoute,
+} as any)
+const BlogsHomeLoanGuideRoute = BlogsHomeLoanGuideRouteImport.update({
+  id: '/home-loan-guide',
+  path: '/home-loan-guide',
+  getParentRoute: () => BlogsRoute,
+} as any)
+const BlogsCibilScoreRoute = BlogsCibilScoreRouteImport.update({
+  id: '/cibil-score',
+  path: '/cibil-score',
+  getParentRoute: () => BlogsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/banking': typeof BankingRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/insurance': typeof InsuranceRoute
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/blogs/cibil-score': typeof BlogsCibilScoreRoute
+  '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
+  '/blogs/sip-guide': typeof BlogsSipGuideRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/banking': typeof BankingRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/insurance': typeof InsuranceRoute
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/blogs/cibil-score': typeof BlogsCibilScoreRoute
+  '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
+  '/blogs/sip-guide': typeof BlogsSipGuideRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,12 +141,17 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/banking': typeof BankingRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/insurance': typeof InsuranceRoute
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/blogs/cibil-score': typeof BlogsCibilScoreRoute
+  '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
+  '/blogs/sip-guide': typeof BlogsSipGuideRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -115,36 +160,51 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/banking'
+    | '/blogs'
     | '/cibil'
     | '/contact'
+    | '/dashboard'
     | '/insurance'
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/blogs/cibil-score'
+    | '/blogs/home-loan-guide'
+    | '/blogs/sip-guide'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/admin'
     | '/banking'
+    | '/blogs'
     | '/cibil'
     | '/contact'
+    | '/dashboard'
     | '/insurance'
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/blogs/cibil-score'
+    | '/blogs/home-loan-guide'
+    | '/blogs/sip-guide'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/admin'
     | '/banking'
+    | '/blogs'
     | '/cibil'
     | '/contact'
+    | '/dashboard'
     | '/insurance'
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/blogs/cibil-score'
+    | '/blogs/home-loan-guide'
+    | '/blogs/sip-guide'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,8 +212,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   BankingRoute: typeof BankingRoute
+  BlogsRoute: typeof BlogsRouteWithChildren
   CibilRoute: typeof CibilRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRoute
   InsuranceRoute: typeof InsuranceRoute
   LoansRoute: typeof LoansRoute
   LoginRoute: typeof LoginRoute
@@ -190,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -202,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/cibil'
       fullPath: '/cibil'
       preLoaderRoute: typeof CibilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/banking': {
@@ -232,16 +308,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs/sip-guide': {
+      id: '/blogs/sip-guide'
+      path: '/sip-guide'
+      fullPath: '/blogs/sip-guide'
+      preLoaderRoute: typeof BlogsSipGuideRouteImport
+      parentRoute: typeof BlogsRoute
+    }
+    '/blogs/home-loan-guide': {
+      id: '/blogs/home-loan-guide'
+      path: '/home-loan-guide'
+      fullPath: '/blogs/home-loan-guide'
+      preLoaderRoute: typeof BlogsHomeLoanGuideRouteImport
+      parentRoute: typeof BlogsRoute
+    }
+    '/blogs/cibil-score': {
+      id: '/blogs/cibil-score'
+      path: '/cibil-score'
+      fullPath: '/blogs/cibil-score'
+      preLoaderRoute: typeof BlogsCibilScoreRouteImport
+      parentRoute: typeof BlogsRoute
+    }
   }
 }
+
+interface BlogsRouteChildren {
+  BlogsCibilScoreRoute: typeof BlogsCibilScoreRoute
+  BlogsHomeLoanGuideRoute: typeof BlogsHomeLoanGuideRoute
+  BlogsSipGuideRoute: typeof BlogsSipGuideRoute
+}
+
+const BlogsRouteChildren: BlogsRouteChildren = {
+  BlogsCibilScoreRoute: BlogsCibilScoreRoute,
+  BlogsHomeLoanGuideRoute: BlogsHomeLoanGuideRoute,
+  BlogsSipGuideRoute: BlogsSipGuideRoute,
+}
+
+const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   BankingRoute: BankingRoute,
+  BlogsRoute: BlogsRouteWithChildren,
   CibilRoute: CibilRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRoute,
   InsuranceRoute: InsuranceRoute,
   LoansRoute: LoansRoute,
   LoginRoute: LoginRoute,
@@ -250,3 +363,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

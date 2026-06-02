@@ -47,7 +47,7 @@ export function HeroBanner() {
 
   return (
     <section className="container mx-auto px-4 pt-6 sm:px-6">
-      <div className={`relative overflow-hidden rounded-[2rem] border border-border/70 bg-gradient-to-br ${s.bg} shadow-elegant transition-all duration-700`}>
+      <div className={`relative overflow-hidden rounded-4xl border border-border/70 bg-linear-to-br ${s.bg} shadow-elegant transition-all duration-700`}>
         <div className="grid items-center gap-6 p-6 sm:p-10 md:grid-cols-[1.4fr_1fr]">
           <div>
             <span className={`inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-soft backdrop-blur ${s.accent}`}>
@@ -61,6 +61,9 @@ export function HeroBanner() {
               </Button>
               <Button asChild size="lg" variant="outline" className="border-primary/30 bg-white/60">
                 <Link to="/contact">Talk to Advisor</Link>
+              </Button>
+                <Button asChild size="lg" variant="outline" className="border-primary/30 bg-white/60">
+                <Link to="/contact">contact</Link>
               </Button>
             </div>
           </div>

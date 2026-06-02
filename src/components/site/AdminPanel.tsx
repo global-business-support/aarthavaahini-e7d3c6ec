@@ -31,7 +31,7 @@ export function AdminPanel() {
         </div>
 
         <div className="mt-14 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-          <Card className="overflow-hidden border-border/60 bg-card p-0 shadow-elegant">
+          <Card className="overflow-hidden border/60 bg-card p-0 shadow-elegant">
             <div className="flex items-center justify-between border-b border-border/60 bg-gradient-primary px-6 py-4 text-primary-foreground">
               <div>
                 <p className="text-xs uppercase tracking-wider text-primary-foreground/70">Aarthvaahini CRM</p>
@@ -53,7 +53,7 @@ export function AdminPanel() {
 
             <div className="px-6 pb-6">
               <p className="mb-3 text-sm font-semibold text-foreground">Recent Leads</p>
-              <div className="overflow-hidden rounded-xl border border-border/60">
+              <div className="overflow-hidden rounded-xl  border/60">
                 <table className="w-full text-sm">
                   <thead className="bg-secondary/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
@@ -65,7 +65,7 @@ export function AdminPanel() {
                   </thead>
                   <tbody>
                     {leads.map((l) => (
-                      <tr key={l.name} className="border-t border-border/60">
+                      <tr key={l.name} className="border-t border/60">
                         <td className="px-4 py-3 font-medium text-foreground">{l.name}</td>
                         <td className="px-4 py-3 text-muted-foreground">{l.product}</td>
                         <td className="px-4 py-3 font-semibold">{l.amount}</td>
@@ -78,7 +78,7 @@ export function AdminPanel() {
             </div>
           </Card>
 
-          <Card className="relative overflow-hidden border-border/60 bg-gradient-card p-8 text-foreground shadow-elegant">
+          <Card className="relative overflow-hidden border/60 bg-gradient-card p-8 text-foreground shadow-elegant">
             <div className="absolute inset-0 bg-gradient-glow opacity-60" />
             <div className="relative">
               <Smartphone className="h-8 w-8 text-primary-glow" />
@@ -97,8 +97,8 @@ export function AdminPanel() {
               </ul>
 
               <div className="mt-8 flex gap-3">
-                <div className="rounded-xl border border-border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">App Store</div>
-                <div className="rounded-xl border border-border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">Google Play</div>
+                <div className="rounded-xl border border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">App Store</div>
+                <div className="rounded-xl border border/70 bg-card/70 px-4 py-2 text-xs font-medium shadow-soft backdrop-blur">Google Play</div>
               </div>
             </div>
           </Card>

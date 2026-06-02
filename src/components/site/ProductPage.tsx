@@ -18,7 +18,7 @@ type Props = {
 
 export function ProductPage({ title, subtitle, items, productType, accentClass }: Props) {
   return (
-    <div className="container mx-auto px-6 py-16">
+    <div className="container mx-auto px-6 py-25">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className={`font-display text-4xl font-bold sm:text-5xl ${accentClass}`}>{title}</h1>
         <p className="mt-4 text-muted-foreground">{subtitle}</p>

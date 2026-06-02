@@ -6,9 +6,12 @@ import { CheckCircle2, Gauge } from "lucide-react";
 
 export function CibilChecker() {
   return (
-    <section id="cibil" className="container mx-auto scroll-mt-24 px-6 py-24">
+    <section
+  id="cibil"
+  className="container mx-auto scroll-mt-24 px-6 py-24"
+>
       <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
-        <Card className="relative overflow-hidden border-border/60 bg-gradient-card p-10 shadow-elegant">
+        <Card className="relative overflow-hidden border/60 bg-gradient-card p-10 shadow-elegant">
           <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -34,7 +37,7 @@ export function CibilChecker() {
                 <Label htmlFor="mobile">Mobile</Label>
                 <Input id="mobile" placeholder="+91 98xxxxxxxx" className="mt-1.5 h-11" />
               </div>
-              <Button type="button" size="lg" className="sm:col-span-2 bg-gradient-primary text-primary-foreground shadow-glow">
+              <Button type="button" size="lg" className="sm:col-span-2 bg-linear-to-r from-[#17357e] to-blue-600 shadow-glow">
                 Get my Score — Free
               </Button>
             </form>
@@ -62,7 +65,7 @@ function CibilDial({ score }: { score: number }) {
   const angle = -120 + pct * 240;
   return (
     <div className="relative flex h-80 w-80 items-center justify-center rounded-full bg-gradient-card shadow-elegant">
-      <svg viewBox="0 0 200 200" className="h-full w-full -rotate-[30deg]">
+      <svg viewBox="0 0 200 200" className="h-full w-full rotate-[-30deg]">
         <defs>
           <linearGradient id="g" x1="0" x2="1">
             <stop offset="0" stopColor="oklch(0.32 0.16 260)" />
@@ -77,7 +80,12 @@ function CibilDial({ score }: { score: number }) {
         <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Your Score</span>
         <span className="font-display text-6xl font-bold text-gradient">{score}</span>
         <span className="mt-1 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">Excellent</span>
-        <span className="mt-2 text-[10px] text-muted-foreground" style={{ transform: `rotate(${angle}deg)` }} />
+        <svg className="mt-2 text-muted-foreground" width="40" height="12" viewBox="0 0 40 12" aria-hidden>
+          <g transform={`translate(20 6) rotate(${angle})`}>
+            <rect x="-0.5" y="-5" width="1" height="5" className="fill-current text-muted-foreground" />
+            <circle cx="0" cy="0" r="1.6" className="fill-current text-muted-foreground" />
+          </g>
+        </svg>
       </div>
     </div>
   );

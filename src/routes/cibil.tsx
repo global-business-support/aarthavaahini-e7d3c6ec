@@ -50,7 +50,7 @@ function CibilPage() {
               <Gauge className="h-3.5 w-3.5" /> 100% Free • No score impact
             </span>
             <h1 className="mt-4 font-display text-4xl font-bold">Check your <span className="text-gradient">CIBIL Score</span></h1>
-            <p className="mt-3 text-muted-foreground">30 second me apna credit score jaane.</p>
+            <p className="mt-3 text-muted-foreground"></p>Check your credit score in just 30 seconds.
             <form onSubmit={check} className="mt-6 space-y-4">
               <div><Label>Full Name (as per PAN)</Label><Input className="mt-1.5 h-11" required value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} /></div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -60,7 +60,7 @@ function CibilPage() {
               <Button type="submit" disabled={loading} size="lg" className="w-full bg-gradient-primary text-primary-foreground shadow-glow">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Get My Score — Free
               </Button>
-              <p className="text-xs text-muted-foreground">* Demo mode — real CIBIL API connect karne ke liye admin se sampark kare.</p>
+              <p className="text-xs text-muted-foreground">* Demo mode — Contact the administrator to enable real-time CIBIL API integration.</p>
             </form>
             <ul className="mt-6 grid gap-2 text-sm sm:grid-cols-2">
               {["Soft pull — no impact", "Bank-level encryption", "Personalised loan offers", "Score improvement tips"].map((t) => (
@@ -73,7 +73,7 @@ function CibilPage() {
             {score == null ? (
               <div className="text-center text-muted-foreground">
                 <Gauge className="mx-auto h-20 w-20 opacity-40" />
-                <p className="mt-4 text-sm">Form bhare aur apna score paaye</p>
+                <p className="mt-4 text-sm">Fill out the form and get your score.</p>
               </div>
             ) : (
               <div className="text-center">

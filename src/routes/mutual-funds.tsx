@@ -12,8 +12,8 @@ export const Route = createFileRoute("/mutual-funds")({
   component: () => (
     <div className="min-h-screen bg-background">
       <Header />
-      <main><ProductPage title="Mutual Funds" subtitle="₹500 se shuru karein — long-term wealth banane ka sabse smart tareeka."
-        items={mutualFunds} productType="mutual_fund" accentClass="text-[#2E7D32]" /></main>
+      <main><ProductPage title="Mutual Funds" subtitle="₹500 se Start investing through SIP — the smartest path to long-term wealth creation."
+        items={mutualFunds} productType="mutual_fund" accentClass="text-[#183c93]" /></main>
       <Footer />
     </div>
   ),

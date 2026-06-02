@@ -16,11 +16,11 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto px-6 py-16">
+      <main className="container mx-auto px-6 py-25">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="font-display text-4xl font-bold sm:text-5xl">About <span className="text-gradient">Aarthvaahini</span></h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Srijan se Samriddhi tak — Aarthvaahini India ke har pariwar aur business ko ek hi chhat ke neeche banking, loans, insurance aur investments solutions deta hai.
+            Srijan se Samriddhi tak — Aarthvaahini brings banking, loans, insurance, and investment services together on a single platform for individuals, families, and businesses across India.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ function AboutPage() {
             <Target className="h-8 w-8 text-primary" />
             <h2 className="mt-4 font-display text-2xl font-bold">Our Mission</h2>
             <p className="mt-3 text-muted-foreground">
-              Har Indian ko sahi financial product — bina jargon ke, bina middleman ke. RBI compliant partners ke saath transparent rates aur advisor-led guidance.
+              Empowering every Indian with the right financial products — simple, transparent, and hassle-free. Benefit from competitive rates, RBI-compliant partners, and expert advisor-led guidance every step of the way.
             </p>
           </Card>
           <Card className="p-7 shadow-soft">
@@ -37,8 +37,8 @@ function AboutPage() {
             <h2 className="mt-4 font-display text-2xl font-bold">Why Aarthvaahini?</h2>
             <ul className="mt-3 space-y-2 text-muted-foreground">
               <li>• 40+ bank partners + 20+ insurers</li>
-              <li>• SEBI registered mutual fund distributor</li>
-              <li>• Free CIBIL check + EMI tools</li>
+              {/* <li>• SEBI registered mutual fund distributor</li>
+              <li>• Free CIBIL check + EMI tools</li> */}
               <li>• Dedicated relationship manager</li>
             </ul>
           </Card>
@@ -53,7 +53,7 @@ function AboutPage() {
             <div><p className="font-semibold">Registered Office</p><p className="text-muted-foreground">Mumbai, Maharashtra, India</p></div>
             <div><p className="font-semibold">Email</p><p className="text-muted-foreground">support@aarthvaahini.com</p></div>
             <div><p className="font-semibold">Phone</p><p className="text-muted-foreground">+91 90000 00000</p></div>
-            <div><p className="font-semibold">Compliance</p><p className="text-muted-foreground">RBI guidelines • IRDAI partner • SEBI registered MFD</p></div>
+            {/* <div><p className="font-semibold">Compliance</p><p className="text-muted-foreground">RBI guidelines • IRDAI partner • SEBI registered MFD</p></div> */}
           </div>
         </Card>
 
