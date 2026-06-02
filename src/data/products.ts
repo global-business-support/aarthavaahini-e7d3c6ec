@@ -98,4 +98,26 @@ export const mutualFunds: ProductItem[] = [
     features: ["SEBI registered", "Direct stock ownership", "Customized strategy", "Quarterly reporting"] },
 ];
 
+export const bankingProducts: ProductItem[] = [
+  { slug: "savings-account", name: "Savings Account", tag: "Zero Balance",
+    desc: "Open a zero-balance savings account with India's top banks in minutes.",
+    features: ["Zero balance options", "Instant debit card", "UPI & net banking", "Higher interest rates"] },
+  { slug: "current-account", name: "Current Account",
+    desc: "Business current accounts with unlimited transactions and overdraft facility.",
+    features: ["Unlimited transactions", "Overdraft facility", "Multi-location access", "Business debit card"] },
+  { slug: "fixed-deposit", name: "Fixed Deposit", rate: "Up to 7.75% p.a.*",
+    desc: "Lock-in guaranteed returns with FDs from 20+ leading banks.",
+    features: ["Flexible tenure", "Auto-renewal", "Loan against FD", "Senior citizen bonus"] },
+  { slug: "recurring-deposit", name: "Recurring Deposit", rate: "Up to 7.25% p.a.*",
+    desc: "Build savings habit with monthly RD — guaranteed maturity amount.",
+    features: ["Start ₹500/month", "6 months – 10 years", "Auto-debit", "Premature withdrawal"] },
+  { slug: "demat-account", name: "Demat Account", tag: "Free AMC",
+    desc: "Open a free demat & trading account to invest in stocks, IPOs, and bonds.",
+    features: ["Zero AMC offers", "Instant activation", "Stocks + F&O + IPO", "Mobile trading app"] },
+  { slug: "bank-locker", name: "Bank Locker",
+    desc: "Safe deposit lockers across branches for jewellery and valuables.",
+    features: ["Multiple sizes", "Insurance covered", "24/7 secure vault", "Annual rent"] },
+];
+
+
 
