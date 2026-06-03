@@ -1,158 +1,3 @@
-// import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-// import type { Session, User } from "@supabase/supabase-js";
-// import { supabase } from "@/integrations/supabase/client";
-
-// type AuthCtx = {
-//   session: Session | null;
-//   user: User | null;
-//   isAdmin: boolean;
-//   loading: boolean;
-//   signOut: () => Promise<void>;
-// };
-
-// const Ctx = createContext<AuthCtx>({
-//   session: null, user: null, isAdmin: false, loading: true, signOut: async () => {},
-// });
-
-// export function AuthProvider({ children }: { children: ReactNode }) {
-//   const [session, setSession] = useState<Session | null>(null);
-//   const [isAdmin, setIsAdmin] = useState(false);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-//       setSession(s);
-//       if (s?.user) {
-//         setTimeout(async () => {
-//           const { data } = await supabase.from("user_roles").select("role").eq("user_id", s.user.id);
-//           setIsAdmin(!!data?.some((r) => r.role === "admin"));
-//         }, 0);
-//       } else {
-//         setIsAdmin(false);
-//       }
-//     });
-
-//     supabase.auth.getSession().then(async ({ data: { session: s } }) => {
-//       setSession(s);
-//       if (s?.user) {
-//         const { data } = await supabase.from("user_roles").select("role").eq("user_id", s.user.id);
-//         setIsAdmin(!!data?.some((r) => r.role === "admin"));
-//       }
-//       setLoading(false);
-//     });
-
-//     return () => subscription.unsubscribe();
-//   }, []);
-
-//   return (
-//     <Ctx.Provider value={{
-//       session, user: session?.user ?? null, isAdmin, loading,
-//       signOut: async () => { await supabase.auth.signOut(); },
-//     }}>{children}</Ctx.Provider>
-//   );
-// }
-
-// export const useAuth = () => useContext(Ctx);
-// import {
-//   createContext,
-//   useContext,
-//   useEffect,
-//   useState,
-//   type ReactNode,
-// } from "react";
-
-// type User = {
-//   email: string;
-// };
-//  type AuthCtx = {
-//   user: User | null;
-//   role: string | null;
-//   isAdmin: boolean;
-//   loading: boolean;
-//   signOut: () => void;
-// };
-
-// const Ctx = createContext<AuthCtx>({
-//   user: null,
-//   role: null,
-//   isAdmin: false,
-//   loading: true,
-//   signOut: () => {},
-// });
-
-// export function AuthProvider({
-//   children,
-// }: {
-//   children: ReactNode;
-// }) {
-//   const [role, setRole] = useState<string | null>(null);
-//   const [user, setUser] =
-//     useState<User | null>(null);
-
-//   const [isAdmin, setIsAdmin] =
-//     useState(false);
-
-//   const [loading, setLoading] =
-//     useState(true);
-
-//  useEffect(() => {
-//   const role = localStorage.getItem("role");
-
-// if (token && email) {
-//   setUser({ email });
-//   setRole(role);
-//   setIsAdmin(role === "admin");
-// } else {
-//   setUser(null);
-//   setRole(null);
-//   setIsAdmin(false);
-// }
-
-//     setLoading(false);
-//   };
-
-//   checkAuth();
-
-//   window.addEventListener("storage", checkAuth);
-//   window.addEventListener("focus", checkAuth);
-
-//   return () => {
-//     window.removeEventListener("storage", checkAuth);
-//     window.removeEventListener("focus", checkAuth);
-//   };
-// }, []);
-
-//   const signOut = () => {
-//   localStorage.removeItem("token");
-//   localStorage.removeItem("email");
-//   localStorage.removeItem("role");
-
-//   setUser(null);
-//   setRole(null);
-//   setIsAdmin(false);
-
-//   window.location.href = "/";
-// };
-
-//   return (
-//     <Ctx.Provider
-//   value={{
-//     user,
-//     role,
-//     isAdmin,
-//     loading,
-//     signOut,
-//   }}
-// >
-//       }}
-//     >
-//       {children}
-//     </Ctx.Provider>
-//   );
-// }
-
-// export const useAuth = () =>
-//   useContext(Ctx);
 import {
   createContext,
   useContext,
@@ -160,17 +5,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
-type User = {
-  email: string;
-};
+type User = { email: string; id: string };
 
 type AuthCtx = {
   user: User | null;
   role: string | null;
   isAdmin: boolean;
   loading: boolean;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 };
 
 const Ctx = createContext<AuthCtx>({
@@ -178,70 +22,59 @@ const Ctx = createContext<AuthCtx>({
   role: null,
   isAdmin: false,
   loading: true,
-  signOut: () => {},
+  signOut: async () => {},
 });
 
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("token");
-      const email = localStorage.getItem("email");
-      const savedRole = localStorage.getItem("role");
+    const loadRole = async (uid: string) => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", uid);
+      const roles = (data ?? []).map((r) => r.role as string);
+      setRole(roles.includes("admin") ? "admin" : roles[0] ?? "user");
+    };
 
-      if (token) {
-        setUser({ email: email ?? "" });
-        setRole(savedRole);
-        setIsAdmin(savedRole === "admin");
-      } else {
-        setUser(null);
-        setRole(null);
-        setIsAdmin(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_e, session) => {
+        const u = session?.user;
+        if (u) {
+          setUser({ email: u.email ?? "", id: u.id });
+          setTimeout(() => loadRole(u.id), 0);
+        } else {
+          setUser(null);
+          setRole(null);
+        }
+      },
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const u = session?.user;
+      if (u) {
+        setUser({ email: u.email ?? "", id: u.id });
+        loadRole(u.id);
       }
-
       setLoading(false);
-    };
+    });
 
-    checkAuth();
-
-    window.addEventListener("storage", checkAuth);
-    window.addEventListener("focus", checkAuth);
-
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-      window.removeEventListener("focus", checkAuth);
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
-  const signOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    localStorage.removeItem("role");
-
+  const signOut = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setRole(null);
-    setIsAdmin(false);
-
     window.location.href = "/";
   };
 
   return (
     <Ctx.Provider
-      value={{
-        user,
-        role,
-        isAdmin,
-        loading,
-        signOut,
-      }}
+      value={{ user, role, isAdmin: role === "admin", loading, signOut }}
     >
       {children}
     </Ctx.Provider>

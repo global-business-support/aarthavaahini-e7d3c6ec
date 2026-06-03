@@ -2,41 +2,48 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ProductPage } from "@/components/site/ProductPage";
+import { ProductHeroSlider } from "@/components/site/ProductHeroSlider";
 import { insurance } from "@/data/products";
-import insuranceBg from "@/assets/insurance-bg.jpeg";
 
 export const Route = createFileRoute("/insurance")({
-  head: () => ({ meta: [
-    { title: "Insurance — Term, Health, Motor, Travel | Aarthvaahini" },
-    { name: "description", content: "Protect your family with term life, health, motor, travel, home and child insurance from top insurers." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Insurance — Term, Health, Motor, Travel | Aarthvaahini" },
+      { name: "description", content: "Protect your family with term life, health, motor, travel, home and child insurance from top insurers." },
+    ],
+  }),
   component: () => (
-   <div
-  className="min-h-screen relative"
-  style={{
-    backgroundImage: `url(${insuranceBg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    
-  }}
->
-  <div className="absolute inset-0 bg-white/30 backdrop-blur-sm" />
-
-  <div className="relative z-10">
-    <Header />
-
-    <main>
-      <ProductPage
-        title="Insurance"
-        subtitle="Your family's protection comes first — choose from the best plans offered by top insurers."
-        items={insurance}
-        productType="insurance"
-        accentClass="text-[#183c93]"
-      />
-    </main>
-
-    <Footer />
-  </div>
-</div> 
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
+        <ProductHeroSlider
+          slides={[
+            {
+              title: "Term Life Insurance — Secure Your Family",
+              subtitle: "₹1 Crore cover from just ₹490/month — top insurers, lowest premiums.",
+              image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=80",
+            },
+            {
+              title: "Health Insurance for the Whole Family",
+              subtitle: "Cashless treatment at 10,000+ hospitals across India.",
+              image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?auto=format&fit=crop&w=1600&q=80",
+            },
+            {
+              title: "Motor & Travel Insurance",
+              subtitle: "Comprehensive cover with quick claims and 24×7 roadside assistance.",
+              image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1600&q=80",
+            },
+          ]}
+        />
+        <ProductPage
+          title="Insurance"
+          subtitle="Your family's protection comes first — choose from the best plans offered by top insurers."
+          items={insurance}
+          productType="insurance"
+          accentClass="text-[#183c93]"
+        />
+      </main>
+      <Footer />
+    </div>
   ),
 });
