@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Plus, Search } from "lucide-react";
+import { Loader2, Plus, Search, ArrowRightLeft } from "lucide-react";
 
 export const Route = createFileRoute("/crm/leads")({
   component: LeadsPage,
@@ -43,6 +43,7 @@ const LEAD_STAGES = [
   "Login Ready",
   "Sanction Pending",
   "Disbursed",
+  "Converted",
   "Closed",
 ] as const;
 
@@ -70,6 +71,7 @@ function LeadsPage() {
   const [filter, setFilter] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [open, setOpen] = useState(false);
+  const [convertLead, setConvertLead] = useState<Lead | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -179,6 +181,7 @@ function LeadsPage() {
                 <TableHead>Source</TableHead>
                 <TableHead>Stage</TableHead>
                 <TableHead>Created</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -213,12 +216,38 @@ function LeadsPage() {
                   <TableCell className="text-xs text-slate-500">
                     {new Date(l.created_at).toLocaleDateString()}
                   </TableCell>
+                  <TableCell className="text-right">
+                    {l.status === "Converted" ? (
+                      <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">Converted</Badge>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={() => setConvertLead(l)}>
+                        <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" /> Convert
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         )}
       </Card>
+
+      <Dialog open={!!convertLead} onOpenChange={(v) => !v && setConvertLead(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Convert Lead → Customer</DialogTitle>
+          </DialogHeader>
+          {convertLead && (
+            <ConvertLeadForm
+              lead={convertLead}
+              onDone={() => {
+                setConvertLead(null);
+                load();
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -299,5 +328,189 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <Label className="text-xs">{label}</Label>
       <div className="mt-1">{children}</div>
     </div>
+  );
+}
+
+function ConvertLeadForm({ lead, onDone }: { lead: Lead; onDone: () => void }) {
+  const isLoan = lead.product_type === "loan";
+  const isIns = lead.product_type === "insurance";
+  const isMf = lead.product_type === "mutual_fund";
+
+  const [c, setC] = useState({
+    customer_name: lead.lead_name ?? lead.full_name ?? "",
+    mobile: lead.phone,
+    email: lead.email ?? "",
+    pan: lead.pan ?? "",
+    occupation: "",
+    income: "",
+    address: [lead.city, lead.state].filter(Boolean).join(", "),
+  });
+
+  // Product-specific fields
+  const [loanFields, setLoanFields] = useState({ loan_type: "Personal Loan", loan_amount: "", lender_name: "" });
+  const [insFields, setInsFields] = useState({ policy_type: "Term Life", premium: "", insurer: "" });
+  const [mfFields, setMfFields] = useState({ fund_name: "", sip_amount: "", investment_type: "SIP" });
+
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+
+    // 1. Create customer
+    const { data: cust, error: cErr } = await supabase
+      .from("customers")
+      .insert({
+        customer_name: c.customer_name,
+        mobile: c.mobile,
+        email: c.email || null,
+        pan: c.pan || null,
+        occupation: c.occupation || null,
+        income: c.income ? Number(c.income) : null,
+        address: c.address || null,
+        lead_id: lead.id,
+      })
+      .select("id")
+      .single();
+
+    if (cErr || !cust) {
+      setSaving(false);
+      return toast.error(cErr?.message ?? "Customer creation failed");
+    }
+
+    // 2. Create product case
+    let caseErr: { message: string } | null = null;
+    if (isLoan) {
+      const { error } = await supabase.from("loan_cases").insert({
+        customer_id: cust.id,
+        loan_type: loanFields.loan_type,
+        loan_amount: loanFields.loan_amount ? Number(loanFields.loan_amount) : null,
+        lender_name: loanFields.lender_name || null,
+        stage: "Lead",
+      });
+      caseErr = error;
+    } else if (isIns) {
+      const { error } = await supabase.from("insurance_cases").insert({
+        customer_id: cust.id,
+        policy_type: insFields.policy_type,
+        premium: insFields.premium ? Number(insFields.premium) : null,
+        insurer: insFields.insurer || null,
+        policy_status: "Lead",
+      });
+      caseErr = error;
+    } else if (isMf) {
+      const { error } = await supabase.from("mutual_funds").insert({
+        customer_id: cust.id,
+        fund_name: mfFields.fund_name || "Unnamed Fund",
+        sip_amount: mfFields.sip_amount ? Number(mfFields.sip_amount) : null,
+        investment_type: mfFields.investment_type,
+        status: "Lead",
+      });
+      caseErr = error;
+    }
+
+    if (caseErr) {
+      setSaving(false);
+      return toast.error("Customer created, but case failed: " + caseErr.message);
+    }
+
+    // 3. Mark lead as converted
+    await supabase.from("leads").update({ status: "Converted" }).eq("id", lead.id);
+
+    // 4. Activity log
+    await supabase.from("activities").insert({
+      lead_id: lead.id,
+      customer_id: cust.id,
+      activity_type: "lead_converted",
+      notes: `Converted lead to customer (${lead.product_type})`,
+    });
+
+    setSaving(false);
+    toast.success("Lead converted to customer ✓");
+    onDone();
+  };
+
+  return (
+    <form onSubmit={submit} className="space-y-4">
+      <div>
+        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Customer Details
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Full Name *"><Input required value={c.customer_name} onChange={(e) => setC({ ...c, customer_name: e.target.value })} /></Field>
+          <Field label="Mobile *"><Input required value={c.mobile} onChange={(e) => setC({ ...c, mobile: e.target.value })} /></Field>
+          <Field label="Email"><Input type="email" value={c.email} onChange={(e) => setC({ ...c, email: e.target.value })} /></Field>
+          <Field label="PAN"><Input value={c.pan} onChange={(e) => setC({ ...c, pan: e.target.value.toUpperCase() })} /></Field>
+          <Field label="Occupation"><Input value={c.occupation} onChange={(e) => setC({ ...c, occupation: e.target.value })} /></Field>
+          <Field label="Annual Income (₹)"><Input type="number" value={c.income} onChange={(e) => setC({ ...c, income: e.target.value })} /></Field>
+          <div className="col-span-2"><Field label="Address"><Input value={c.address} onChange={(e) => setC({ ...c, address: e.target.value })} /></Field></div>
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          {isLoan ? "Loan Case" : isIns ? "Insurance Case" : isMf ? "Mutual Fund Case" : "Product"}
+        </div>
+        {isLoan && (
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Loan Type">
+              <Select value={loanFields.loan_type} onValueChange={(v) => setLoanFields({ ...loanFields, loan_type: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Home Loan", "Personal Loan", "Business Loan", "LAP", "Car Loan", "Education Loan", "Gold Loan"].map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Loan Amount (₹)"><Input type="number" value={loanFields.loan_amount} onChange={(e) => setLoanFields({ ...loanFields, loan_amount: e.target.value })} /></Field>
+            <div className="col-span-2"><Field label="Lender (optional)"><Input value={loanFields.lender_name} onChange={(e) => setLoanFields({ ...loanFields, lender_name: e.target.value })} /></Field></div>
+          </div>
+        )}
+        {isIns && (
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Policy Type">
+              <Select value={insFields.policy_type} onValueChange={(v) => setInsFields({ ...insFields, policy_type: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Term Life", "Health", "Motor", "Travel", "Home", "Child"].map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Annual Premium (₹)"><Input type="number" value={insFields.premium} onChange={(e) => setInsFields({ ...insFields, premium: e.target.value })} /></Field>
+            <div className="col-span-2"><Field label="Insurer (optional)"><Input value={insFields.insurer} onChange={(e) => setInsFields({ ...insFields, insurer: e.target.value })} /></Field></div>
+          </div>
+        )}
+        {isMf && (
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Fund Name"><Input value={mfFields.fund_name} onChange={(e) => setMfFields({ ...mfFields, fund_name: e.target.value })} /></Field>
+            <Field label="Investment Type">
+              <Select value={mfFields.investment_type} onValueChange={(v) => setMfFields({ ...mfFields, investment_type: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["SIP", "Lumpsum", "ELSS", "NPS"].map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <div className="col-span-2"><Field label="SIP / Lumpsum Amount (₹)"><Input type="number" value={mfFields.sip_amount} onChange={(e) => setMfFields({ ...mfFields, sip_amount: e.target.value })} /></Field></div>
+          </div>
+        )}
+        {!isLoan && !isIns && !isMf && (
+          <p className="text-xs text-slate-500">
+            This lead's product type is "{lead.product_type}" — no case will be created. Customer will be added.
+          </p>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-2 pt-2">
+        <Button type="submit" disabled={saving}>
+          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Convert to Customer
+        </Button>
+      </div>
+    </form>
   );
 }
