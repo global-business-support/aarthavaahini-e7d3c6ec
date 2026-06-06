@@ -181,6 +181,7 @@ function LeadsPage() {
                 <TableHead>Source</TableHead>
                 <TableHead>Stage</TableHead>
                 <TableHead>Created</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -214,6 +215,15 @@ function LeadsPage() {
                   </TableCell>
                   <TableCell className="text-xs text-slate-500">
                     {new Date(l.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {l.status === "Converted" ? (
+                      <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">Converted</Badge>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={() => setConvertLead(l)}>
+                        <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" /> Convert
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
