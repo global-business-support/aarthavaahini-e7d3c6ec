@@ -15,24 +15,13 @@ export const Route = createFileRoute("/insurance")({
   component: () => (
     <div className="min-h-screen bg-background">
       <Header />
-      <main>
+      <main className="relative isolate overflow-hidden">
         <ProductHeroSlider
+          variant="watermark"
           slides={[
-            {
-              title: "Term Life Insurance — Secure Your Family",
-              subtitle: "₹1 Crore cover from just ₹490/month — top insurers, lowest premiums.",
-              image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "Health Insurance for the Whole Family",
-              subtitle: "Cashless treatment at 10,000+ hospitals across India.",
-              image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "Motor & Travel Insurance",
-              subtitle: "Comprehensive cover with quick claims and 24×7 roadside assistance.",
-              image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1600&q=80",
-            },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1600&q=80" },
           ]}
         />
         <ProductPage

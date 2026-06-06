@@ -16,24 +16,13 @@ export const Route = createFileRoute("/mutual-funds")({
   component: () => (
     <div className="min-h-screen bg-background">
       <Header />
-      <main>
+      <main className="relative isolate overflow-hidden">
         <ProductHeroSlider
+          variant="watermark"
           slides={[
-            {
-              title: "Start SIP from just ₹500",
-              subtitle: "Build long-term wealth with India's top performing mutual funds.",
-              image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "ELSS — Save Tax up to ₹46,800",
-              subtitle: "Tax-saving funds under Section 80C with the best 3-yr returns.",
-              image: "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "Goal-based Investing",
-              subtitle: "Plan retirement, child's education, dream home — all on one dashboard.",
-              image: "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1600&q=80",
-            },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1600&q=80" },
           ]}
         />
         <ProductPage

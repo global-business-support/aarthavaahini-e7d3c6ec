@@ -14,26 +14,15 @@ export const Route = createFileRoute("/loans")({
     ],
   }),
   component: () => (
-    <div className="min-h-screen bg-background" style={{ backgroundColor: "#d5def3" }}>
+    <div className="min-h-screen bg-background">
       <Header />
-      <main>
+      <main className="relative isolate overflow-hidden">
         <ProductHeroSlider
+          variant="watermark"
           slides={[
-            {
-              title: "Home Loans at Lowest Rates",
-              subtitle: "Starting 8.40% p.a. with approval in 24 hours from 40+ banks.",
-              image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "Instant Personal Loans",
-              subtitle: "Up to ₹40 Lakhs disbursed within hours — minimal paperwork.",
-              image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600&q=80",
-            },
-            {
-              title: "Business & MSME Funding",
-              subtitle: "Grow your business with collateral-free loans up to ₹2 Crore.",
-              image: "https://images.unsplash.com/photo-1664575602554-2087b04935a5?auto=format&fit=crop&w=1600&q=80",
-            },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600&q=80" },
+            { title: "", subtitle: "", image: "https://images.unsplash.com/photo-1664575602554-2087b04935a5?auto=format&fit=crop&w=1600&q=80" },
           ]}
         />
         <ProductPage
