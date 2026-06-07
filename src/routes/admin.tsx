@@ -1,781 +1,323 @@
-// import { createFileRoute, Link } from "@tanstack/react-router";
-// import { useEffect, useState } from "react";
-// import { Header } from "@/components/site/Header";
-// import { Footer } from "@/components/site/Footer";
-// import { Card } from "@/components/ui/card";
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
-// import { useAuth } from "@/hooks/useAuth";
-
-// import { Loader2, RefreshCw } from "lucide-react";
-
-// export const Route = createFileRoute("/admin")({
-//   head: () => ({ meta: [{ title: "Admin Panel — Aarthvaahini" }]}),
-//   component: AdminPage,
-// });
-
-// type Lead = {
-//   id: string; full_name: string; email: string | null; phone: string;
-//   product_type: string; product_name: string | null; amount: number | null;
-//   message: string | null; status: string; created_at: string;
-// };
-
-// function AdminPage() {
-//   const { user, isAdmin, loading } = useAuth();
-//   const [leads, setLeads] = useState<Lead[]>([]);
-//   const [busy, setBusy] = useState(false);
-
-//   const load = async () => {
-//     setBusy(true);
-//     const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
-//     if (!error && data) setLeads(data as Lead[]);
-//     setBusy(false);
-//   };
-
-//   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
-
-//   if (loading) return (
-//     <div className="min-h-screen bg-background"><Header /><div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div></div>
-//   );
-
-//   if (!user) return (
-//     <div className="min-h-screen bg-background"><Header /><div className="container mx-auto px-6 py-80 text-center">
-//       <h1 className="font-display text-3xl font-bold">Login required</h1>
-//       <p className="mt-2 text-muted-foreground">Login to Access the Admin Panel.</p>
-//       <Button asChild className="mt-6"><Link to="/login">Go to Login</Link></Button>
-//     </div><Footer /></div>
-//   );
-
-//   if (!isAdmin) return (
-//     <div className="min-h-screen bg-background"><Header /><div className="container mx-auto px-6 py-20 text-center">
-//       <h1 className="font-display text-3xl font-bold">Access Denied</h1>
-//       <p className="mt-2 text-muted-foreground">This page is accessible to admins only..</p>
-//     </div><Footer /></div>
-//   );
-
-//   const counts = leads.reduce<Record<string, number>>((acc, l) => {
-//     acc[l.product_type] = (acc[l.product_type] || 0) + 1; return acc;
-//   }, {});
-
-//   return (
-//     <div className="min-h-screen bg-background">
-//       <Header />
-//       <main className="container mx-auto px-6 py-12">
-//         <div className="flex items-center justify-between">
-//           <div>
-//             <h1 className="font-display text-3xl font-bold">Admin Panel</h1>
-//             <p className="text-sm text-muted-foreground">Manage All Customer Leads in One Place.</p>
-//           </div>
-//           <Button onClick={load} disabled={busy} variant="outline">
-//             {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}Refresh
-//           </Button>
-//         </div>
-
-//         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-6">
-//           {[["Total", leads.length], ["Loan", counts.loan || 0], ["Insurance", counts.insurance || 0],
-//             ["Mutual Fund", counts.mutual_fund || 0], ["Banking", counts.banking || 0], ["Contact", (counts.contact || 0) + (counts.cibil || 0)],
-//           ].map(([k, v]) => (
-//             <Card key={k} className="p-4 text-center">
-//               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{k}</p>
-//               <p className="font-display text-2xl font-bold">{v}</p>
-//             </Card>
-//           ))}
-//         </div>
-
-//         <Card className="mt-6 overflow-x-auto p-0 shadow-soft">
-//           <table className="w-full text-sm">
-//             <thead className="bg-secondary/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-//               <tr>
-//                 <th className="px-4 py-3">Date</th><th className="px-4 py-3">Name</th><th className="px-4 py-3">Phone</th>
-//                 <th className="px-4 py-3">Email</th><th className="px-4 py-3">Type</th><th className="px-4 py-3">Product</th>
-//                 <th className="px-4 py-3">Amount</th><th className="px-4 py-3">Message</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {leads.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">Abhi koi lead nahi hai.</td></tr>}
-//               {leads.map((l) => (
-//                 <tr key={l.id} className="border-t border-border/60 align-top">
-//                   <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">{new Date(l.created_at).toLocaleString("en-IN")}</td>
-//                   <td className="px-4 py-3 font-medium">{l.full_name}</td>
-//                   <td className="px-4 py-3">{l.phone}</td>
-//                   <td className="px-4 py-3 text-muted-foreground">{l.email || "—"}</td>
-//                   <td className="px-4 py-3"><Badge variant="secondary">{l.product_type}</Badge></td>
-//                   <td className="px-4 py-3">{l.product_name || "—"}</td>
-//                   <td className="px-4 py-3">{l.amount ? `₹ ${l.amount.toLocaleString("en-IN")}` : "—"}</td>
-//                   <td className="px-4 py-3 max-w-xs text-muted-foreground">{l.message || "—"}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </Card>
-//       </main>
-//       <Footer />
-//     </div>
-//   );
-// }
-// import { createFileRoute, Link } from "@tanstack/react-router";
-// import { useEffect, useState } from "react";
-// import { Header } from "@/components/site/Header";
-// import { Footer } from "@/components/site/Footer";
-// import { Card } from "@/components/ui/card";
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
-// import { useAuth } from "@/hooks/useAuth";
-// import { Loader2, RefreshCw } from "lucide-react";
-
-// export const Route = createFileRoute("/admin")({
-//   head: () => ({
-//     meta: [{ title: "Admin Panel — Aarthvaahini" }],
-//   }),
-//   component: AdminPage,
-// });
-
-// type Lead = {
-//   id: string;
-//   name: string;
-//   email: string | null;
-//   phone: string;
-//   loan_type?: string;
-//   insurance_type?: string;
-//   investment_type?: string;
-//   amount?: number | null;
-//   monthly_investment?: number | null;
-//   message?: string | null;
-//   status?: string;
-//   created_at?: string;
-// };
-
-// function AdminPage() {
-//   const { user, isAdmin, loading } = useAuth();
-
-//   const [leads, setLeads] = useState<Lead[]>([]);
-//   const [busy, setBusy] = useState(false);
-
-//   const load = async () => {
-//     setBusy(true);
-
-//     try {
-//       const response = await fetch(
-//         "http://192.168.29.1:8000/api/admin/leads"
-//       );
-
-//       const result = await response.json();
-
-//       setLeads(result.data);
-
-//     } catch (error) {
-//       console.error("Failed to fetch leads", error);
-//     }
-
-//     setBusy(false);
-//   };
-
-//   useEffect(() => {
-//     if (isAdmin) {
-//       load();
-//     }
-//   }, [isAdmin]);
-
-//   if (loading)
-//     return (
-//       <div className="min-h-screen bg-background">
-//         <Header />
-//         <div className="flex justify-center py-20">
-//           <Loader2 className="h-6 w-6 animate-spin" />
-//         </div>
-//       </div>
-//     );
-
-//   if (!user)
-//     return (
-//       <div className="min-h-screen bg-background">
-//         <Header />
-
-//         <div className="container mx-auto px-6 py-80 text-center">
-//           <h1 className="font-display text-3xl font-bold">
-//             Login required
-//           </h1>
-
-//           <p className="mt-2 text-muted-foreground">
-//             Login to Access the Admin Panel.
-//           </p>
-
-//           <Button asChild className="mt-6">
-//             <Link to="/login">Go to Login</Link>
-//           </Button>
-//         </div>
-
-//         <Footer />
-//       </div>
-//     );
-
-//   if (!isAdmin)
-//     return (
-//       <div className="min-h-screen bg-background">
-//         <Header />
-
-//         <div className="container mx-auto px-6 py-20 text-center">
-//           <h1 className="font-display text-3xl font-bold">
-//             Access Denied
-//           </h1>
-
-//           <p className="mt-2 text-muted-foreground">
-//             This page is accessible to admins only.
-//           </p>
-//         </div>
-
-//         <Footer />
-//       </div>
-//     );
-
-//   return (
-//     <div className="min-h-screen bg-background">
-//       <Header />
-
-//       <main className="container mx-auto px-6 py-12">
-
-//         <div className="flex items-center justify-between">
-
-//           <div>
-//             <h1 className="font-display text-3xl font-bold">
-//               Admin Panel
-//             </h1>
-
-//             <p className="text-sm text-muted-foreground">
-//               Manage All Customer Leads in One Place.
-//             </p>
-//           </div>
-
-//           <Button
-//             onClick={load}
-//             disabled={busy}
-//             variant="outline"
-//           >
-//             {busy ? (
-//               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-//             ) : (
-//               <RefreshCw className="mr-2 h-4 w-4" />
-//             )}
-
-//             Refresh
-//           </Button>
-//         </div>
-
-//         <Card className="mt-6 overflow-x-auto p-0 shadow-soft">
-
-//           <table className="w-full text-sm">
-
-//             <thead className="bg-secondary/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-//               <tr>
-//                 <th className="px-4 py-3">Date</th>
-//                 <th className="px-4 py-3">Name</th>
-//                 <th className="px-4 py-3">Phone</th>
-//                 <th className="px-4 py-3">Email</th>
-//                 <th className="px-4 py-3">Type</th>
-//                 <th className="px-4 py-3">Amount</th>
-//                 <th className="px-4 py-3">Message</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-
-//               {leads.length === 0 && (
-//                 <tr>
-//                   <td
-//                     colSpan={7}
-//                     className="p-8 text-center text-muted-foreground"
-//                   >
-//                     Abhi koi lead nahi hai.
-//                   </td>
-//                 </tr>
-//               )}
-
-//               {leads.map((l) => (
-
-//                 <tr
-//                   key={l.id}
-//                   className="border-t border-border/60 align-top"
-//                 >
-
-//                   <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">
-//                     {l.created_at
-//                       ? new Date(l.created_at).toLocaleString("en-IN")
-//                       : "—"}
-//                   </td>
-
-//                   <td className="px-4 py-3 font-medium">
-//                     {l.name}
-//                   </td>
-
-//                   <td className="px-4 py-3">
-//                     {l.phone}
-//                   </td>
-
-//                   <td className="px-4 py-3 text-muted-foreground">
-//                     {l.email || "—"}
-//                   </td>
-
-//                   <td className="px-4 py-3">
-//                     <Badge variant="secondary">
-//                       {l.loan_type ||
-//                         l.insurance_type ||
-//                         l.investment_type ||
-//                         "Lead"}
-//                     </Badge>
-//                   </td>
-
-//                   <td className="px-4 py-3">
-//                     {l.amount
-//                       ? `₹ ${l.amount.toLocaleString("en-IN")}`
-//                       : l.monthly_investment
-//                       ? `₹ ${l.monthly_investment.toLocaleString("en-IN")}`
-//                       : "—"}
-//                   </td>
-
-//                   <td className="px-4 py-3 max-w-xs text-muted-foreground">
-//                     {l.message || "—"}
-//                   </td>
-
-//                 </tr>
-//               ))}
-
-//             </tbody>
-
-//           </table>
-
-//         </Card>
-
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// }
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-
+import { supabase } from "@/integrations/supabase/client";
 import {
   Loader2,
   RefreshCw,
+  Users,
+  Banknote,
+  ShieldCheck,
+  TrendingUp,
+  Building2,
+  Phone,
+  ArrowUpRight,
+  Search,
+  UserCircle2,
+  CheckSquare,
+  IndianRupee,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({
-    meta: [
-      {
-        title: "Admin Panel — Aarthvaahini",
-      },
-    ],
-  }),
-
+  head: () => ({ meta: [{ title: "Admin Panel — Aarthvaahini" }] }),
   component: AdminPage,
 });
 
 type Lead = {
   id: string;
-
-  name: string;
-
+  full_name: string;
   email: string | null;
-
   phone: string;
+  product_type: string;
+  product_name: string | null;
+  amount: number | null;
+  message: string | null;
+  status: string;
+  city: string | null;
+  lead_source: string | null;
+  created_at: string;
+};
 
-  loan_type?: string;
-
-  insurance_type?: string;
-
-  investment_type?: string;
-
-  amount?: number | null;
-
-  monthly_investment?: number | null;
-
-  message?: string | null;
-
-  status?: string;
-
-  created_at?: string;
+type Stats = {
+  totalLeads: number;
+  customers: number;
+  loans: number;
+  insurance: number;
+  mf: number;
+  pendingTasks: number;
+  revenue: number;
 };
 
 function AdminPage() {
-
   const { user, isAdmin, loading } = useAuth();
-
   const [leads, setLeads] = useState<Lead[]>([]);
-
+  const [stats, setStats] = useState<Stats | null>(null);
   const [busy, setBusy] = useState(false);
-
-  // LOAD LEADS
+  const [q, setQ] = useState("");
 
   const load = async () => {
-
     setBusy(true);
+    const [leadsRes, customers, loans, insurance, mf, tasks, disb] = await Promise.all([
+      supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(100),
+      supabase.from("customers").select("id", { count: "exact", head: true }),
+      supabase.from("loan_cases").select("id", { count: "exact", head: true }),
+      supabase.from("insurance_cases").select("id", { count: "exact", head: true }),
+      supabase.from("mutual_funds").select("id", { count: "exact", head: true }),
+      supabase.from("tasks").select("id", { count: "exact", head: true }).neq("status", "done"),
+      supabase.from("loan_cases").select("disbursement_amount"),
+    ]);
 
-    try {
-
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/admin/leads",
-        {
-          method: "GET",
-
-          headers: {
-            "Content-Type": "application/json",
-
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const result = await response.json();
-
-      console.log("LEADS RESPONSE:", result);
-
-      if (!response.ok) {
-
-        console.error(result);
-
-        setBusy(false);
-
-        return;
-      }
-
-      setLeads(result.data || []);
-
-    } catch (error) {
-
-      console.error(
-        "Failed to fetch leads",
-        error
-      );
-    }
-
+    setLeads((leadsRes.data ?? []) as Lead[]);
+    setStats({
+      totalLeads: leadsRes.data?.length ?? 0,
+      customers: customers.count ?? 0,
+      loans: loans.count ?? 0,
+      insurance: insurance.count ?? 0,
+      mf: mf.count ?? 0,
+      pendingTasks: tasks.count ?? 0,
+      revenue: (disb.data ?? []).reduce((a, r) => a + (Number(r.disbursement_amount) || 0), 0),
+    });
     setBusy(false);
   };
 
   useEffect(() => {
-
-    if (isAdmin) {
-
-      load();
-    }
-
+    if (isAdmin) load();
   }, [isAdmin]);
 
-  // LOADING
-
-  if (loading)
-
+  if (loading) {
     return (
-
       <div className="min-h-screen bg-background">
-
         <Header />
-
         <div className="flex justify-center py-40">
-
           <Loader2 className="h-8 w-8 animate-spin text-[#17357e]" />
-
         </div>
-
       </div>
     );
+  }
 
-  // NOT LOGIN
-
-  if (!user)
-
+  if (!user) {
     return (
-
       <div className="min-h-screen bg-background">
-
         <Header />
-
-        <div className="container mx-auto px-6 py-80 text-center">
-
-          <h1 className="font-display text-4xl font-bold text-[#17357e]">
-
-            Login Required
-
-          </h1>
-
-          <p className="mt-3 text-muted-foreground">
-
-            Login to access the Aarthvaahini Admin Dashboard.
-
-          </p>
-
-          <Button
-            asChild
-            className="mt-8 bg-gradient-to-r from-[#17357e] to-blue-600 text-white"
-          >
-
-            <Link to="/login">
-
-              Go to Login
-
-            </Link>
-
-          </Button>
-
+        <div className="container mx-auto px-6 py-32 text-center">
+          <h1 className="font-display text-3xl font-bold">Login required</h1>
+          <p className="mt-2 text-muted-foreground">Sign in to access the admin panel.</p>
+          <Button asChild className="mt-6"><Link to="/login">Go to Login</Link></Button>
         </div>
-
         <Footer />
-
       </div>
     );
+  }
 
-  // NOT ADMIN
-
-  if (!isAdmin)
-
+  if (!isAdmin) {
     return (
-
       <div className="min-h-screen bg-background">
-
         <Header />
-
-        <div className="container mx-auto px-6 py-80 text-center">
-
-          <h1 className="font-display text-4xl font-bold text-red-600">
-
-            Unauthorized Access
-
-          </h1>
-
-          <p className="mt-3 text-muted-foreground">
-
-            You do not have permission to access this dashboard.
-
-          </p>
-
+        <div className="container mx-auto px-6 py-32 text-center">
+          <h1 className="font-display text-3xl font-bold">Access Denied</h1>
+          <p className="mt-2 text-muted-foreground">This page is accessible to admins only.</p>
         </div>
-
         <Footer />
-
       </div>
     );
+  }
 
-  // MAIN PAGE
+  const filtered = leads.filter((l) => {
+    if (!q) return true;
+    const s = q.toLowerCase();
+    return (
+      l.full_name?.toLowerCase().includes(s) ||
+      l.phone?.toLowerCase().includes(s) ||
+      l.email?.toLowerCase().includes(s) ||
+      l.product_type?.toLowerCase().includes(s)
+    );
+  });
+
+  const statCards = [
+    { label: "Total Leads", value: stats?.totalLeads ?? 0, icon: Users, tone: "blue" },
+    { label: "Customers", value: stats?.customers ?? 0, icon: UserCircle2, tone: "emerald" },
+    { label: "Loan Cases", value: stats?.loans ?? 0, icon: Banknote, tone: "amber" },
+    { label: "Insurance", value: stats?.insurance ?? 0, icon: ShieldCheck, tone: "violet" },
+    { label: "Mutual Funds", value: stats?.mf ?? 0, icon: TrendingUp, tone: "cyan" },
+    { label: "Pending Tasks", value: stats?.pendingTasks ?? 0, icon: CheckSquare, tone: "rose" },
+    { label: "Revenue", value: stats ? formatINR(stats.revenue) : "—", icon: IndianRupee, tone: "emerald" },
+    { label: "Branches", value: "—", icon: Building2, tone: "slate" },
+  ];
 
   return (
-
-    <div className="min-h-screen bg-background">
-
+    <div className="min-h-screen bg-slate-50">
       <Header />
-
-      <main className="container mx-auto px-6 py-32">
-
-        {/* TOP */}
-
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-
-          <div>
-
-            <h1 className="bg-gradient-to-r from-[#17357e] to-blue-600 bg-clip-text font-display text-4xl font-bold text-transparent">
-
-              Aarthvaahini Admin Dashboard
-
-            </h1>
-
-            <p className="mt-2 text-muted-foreground">
-
-              Monitor and manage all customer enquiries from a single dashboard.
-
-            </p>
-
+      <main className="container mx-auto px-4 py-8 md:px-6">
+        {/* Hero */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0b1437] via-[#15224f] to-[#1e3a8a] p-6 text-white shadow-xl md:p-8">
+          <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl" />
+          <div className="absolute -bottom-16 right-20 h-44 w-44 rounded-full bg-indigo-400/20 blur-3xl" />
+          <div className="relative flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Badge className="border-white/20 bg-white/10 text-white">Admin Workspace</Badge>
+              <h1 className="mt-2 font-display text-2xl font-bold md:text-3xl">Welcome back, Admin</h1>
+              <p className="mt-1 max-w-xl text-sm text-blue-100/80">
+                Live snapshot of leads, pipeline, and team activity. Jump into the full CRM for deep workflows.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={load} disabled={busy} variant="secondary" className="bg-white/10 text-white hover:bg-white/20">
+                {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Refresh
+              </Button>
+              <Button asChild className="bg-white text-[#15224f] hover:bg-blue-50">
+                <Link to="/crm">Open CRM <ArrowUpRight className="ml-1 h-4 w-4" /></Link>
+              </Button>
+            </div>
           </div>
-
-          {/* REFRESH BUTTON */}
-
-          <Button
-            onClick={load}
-            disabled={busy}
-            variant="outline"
-            className="border-[#17357e] text-[#17357e]"
-          >
-
-            {busy ? (
-
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-
-            ) : (
-
-              <RefreshCw className="mr-2 h-4 w-4" />
-
-            )}
-
-            Refresh
-
-          </Button>
-
         </div>
 
-        {/* TABLE */}
+        {/* Stats */}
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {statCards.map((c) => {
+            const Icon = c.icon;
+            return (
+              <Card key={c.label} className="relative overflow-hidden border-slate-200/70 p-4 transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className={`absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-40 blur-2xl ${toneBlur(c.tone)}`} />
+                <div className="relative flex items-start justify-between">
+                  <div className={`rounded-xl p-2.5 ${toneBg(c.tone)}`}>
+                    <Icon className={`h-5 w-5 ${toneFg(c.tone)}`} />
+                  </div>
+                </div>
+                <div className="relative mt-3">
+                  <div className="text-[11px] font-medium uppercase tracking-wide text-slate-500">{c.label}</div>
+                  <div className="mt-0.5 text-2xl font-bold text-slate-900">{c.value}</div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
 
-        <Card className="mt-8 overflow-x-auto rounded-3xl border border-border/60 p-0 shadow-soft">
+        {/* Quick links */}
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { to: "/crm/leads", label: "Manage Leads", icon: Users },
+            { to: "/crm/customers", label: "Customers 360°", icon: UserCircle2 },
+            { to: "/crm/loans", label: "Loan Pipeline", icon: Banknote },
+            { to: "/crm/reports", label: "Reports", icon: TrendingUp },
+          ].map((l) => {
+            const Icon = l.icon;
+            return (
+              <Link
+                key={l.to}
+                to={l.to as never}
+                className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 transition hover:border-blue-300 hover:shadow-md"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-blue-50 p-2 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <span className="text-sm font-semibold text-slate-800">{l.label}</span>
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600" />
+              </Link>
+            );
+          })}
+        </div>
 
-          <table className="w-full text-sm">
-
-            {/* HEAD */}
-
-            <thead className="bg-secondary/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-
-              <tr>
-
-                <th className="px-5 py-4">
-                  Date
-                </th>
-
-                <th className="px-5 py-4">
-                  Name
-                </th>
-
-                <th className="px-5 py-4">
-                  Phone
-                </th>
-
-                <th className="px-5 py-4">
-                  Email
-                </th>
-
-                <th className="px-5 py-4">
-                  Type
-                </th>
-
-                <th className="px-5 py-4">
-                  Amount
-                </th>
-
-                <th className="px-5 py-4">
-                  Message
-                </th>
-
-              </tr>
-
-            </thead>
-
-            {/* BODY */}
-
-            <tbody>
-
-              {leads.length === 0 && (
-
+        {/* Leads */}
+        <Card className="mt-6 overflow-hidden border-slate-200/70 p-0 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Latest Leads</h2>
+              <p className="text-xs text-slate-500">Recent submissions across the website and team entry.</p>
+            </div>
+            <div className="relative w-full sm:w-72">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search name, phone, product…"
+                className="h-9 border-slate-200 bg-slate-50 pl-9 text-sm"
+              />
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-[11px] uppercase tracking-wider text-slate-500">
                 <tr>
-
-                  <td
-                    colSpan={7}
-                    className="p-10 text-center text-muted-foreground"
-                  >
-
-                    No customer leads available yet.
-
-                  </td>
-
+                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Phone</th>
+                  <th className="px-4 py-3">Email</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Product</th>
+                  <th className="px-4 py-3">Amount</th>
+                  <th className="px-4 py-3">Status</th>
                 </tr>
-              )}
-
-              {leads.map((l) => (
-
-                <tr
-                  key={l.id}
-                  className="border-t border-border/60 align-top hover:bg-secondary/20"
-                >
-
-                  {/* DATE */}
-
-                  <td className="px-5 py-4 whitespace-nowrap text-muted-foreground">
-
-                    {l.created_at
-                      ? new Date(
-                          l.created_at
-                        ).toLocaleString("en-IN")
-                      : "—"}
-
-                  </td>
-
-                  {/* NAME */}
-
-                  <td className="px-5 py-4 font-semibold text-[#17357e]">
-
-                    {l.name}
-
-                  </td>
-
-                  {/* PHONE */}
-
-                  <td className="px-5 py-4">
-
-                    {l.phone}
-
-                  </td>
-
-                  {/* EMAIL */}
-
-                  <td className="px-5 py-4 text-muted-foreground">
-
-                    {l.email || "—"}
-
-                  </td>
-
-                  {/* TYPE */}
-
-                  <td className="px-5 py-4">
-
-                    <Badge variant="secondary">
-
-                      {l.loan_type ||
-                        l.insurance_type ||
-                        l.investment_type ||
-                        "Lead"}
-
-                    </Badge>
-
-                  </td>
-
-                  {/* AMOUNT */}
-
-                  <td className="px-5 py-4">
-
-                    {l.amount
-                      ? `₹ ${l.amount.toLocaleString("en-IN")}`
-                      : l.monthly_investment
-                      ? `₹ ${l.monthly_investment.toLocaleString("en-IN")}`
-                      : "—"}
-
-                  </td>
-
-                  {/* MESSAGE */}
-
-                  <td className="max-w-xs px-5 py-4 text-muted-foreground">
-
-                    {l.message || "—"}
-
-                  </td>
-
-                </tr>
-              ))}
-
-            </tbody>
-
-          </table>
-
+              </thead>
+              <tbody>
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="p-10 text-center text-sm text-slate-400">
+                      {busy ? "Loading…" : "No leads found."}
+                    </td>
+                  </tr>
+                )}
+                {filtered.map((l) => (
+                  <tr key={l.id} className="border-t border-slate-100 align-top hover:bg-slate-50/60">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-slate-500">
+                      {new Date(l.created_at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-slate-900">{l.full_name}</div>
+                      {l.city && <div className="text-xs text-slate-500">{l.city}</div>}
+                    </td>
+                    <td className="px-4 py-3">
+                      <a href={`tel:${l.phone}`} className="inline-flex items-center gap-1 text-slate-700 hover:text-blue-600">
+                        <Phone className="h-3 w-3" /> {l.phone}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{l.email || "—"}</td>
+                    <td className="px-4 py-3"><Badge variant="secondary" className="capitalize">{l.product_type?.replace(/_/g, " ")}</Badge></td>
+                    <td className="px-4 py-3 text-slate-700">{l.product_name || "—"}</td>
+                    <td className="px-4 py-3 font-medium text-slate-800">{l.amount ? `₹${Number(l.amount).toLocaleString("en-IN")}` : "—"}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className="capitalize">{l.status}</Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Card>
-
       </main>
-
       <Footer />
-
     </div>
   );
+}
+
+function formatINR(v: number) {
+  if (v >= 1e7) return `₹${(v / 1e7).toFixed(2)} Cr`;
+  if (v >= 1e5) return `₹${(v / 1e5).toFixed(2)} L`;
+  return `₹${Math.round(v).toLocaleString("en-IN")}`;
+}
+function toneBg(t: string) {
+  return ({
+    blue: "bg-blue-100", amber: "bg-amber-100", emerald: "bg-emerald-100",
+    violet: "bg-violet-100", cyan: "bg-cyan-100", slate: "bg-slate-200", rose: "bg-rose-100",
+  } as Record<string, string>)[t];
+}
+function toneFg(t: string) {
+  return ({
+    blue: "text-blue-600", amber: "text-amber-600", emerald: "text-emerald-600",
+    violet: "text-violet-600", cyan: "text-cyan-600", slate: "text-slate-600", rose: "text-rose-600",
+  } as Record<string, string>)[t];
+}
+function toneBlur(t: string) {
+  return ({
+    blue: "bg-blue-300/40", amber: "bg-amber-300/40", emerald: "bg-emerald-300/40",
+    violet: "bg-violet-300/40", cyan: "bg-cyan-300/40", slate: "bg-slate-300/40", rose: "bg-rose-300/40",
+  } as Record<string, string>)[t];
 }
