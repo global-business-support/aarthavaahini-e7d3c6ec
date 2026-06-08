@@ -1,4 +1,5 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import logoUrl from "@/assets/logo.png";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
