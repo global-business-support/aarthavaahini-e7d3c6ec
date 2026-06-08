@@ -58,13 +58,20 @@ export function CrmLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isLoginRoute = pathname === "/crm/login";
+
   useEffect(() => {
-    if (loading) return;
+    if (loading || isLoginRoute) return;
     if (!user) nav({ to: "/crm/login" });
     else if (!isStaff) nav({ to: "/crm/login", search: { unauthorized: "1" } as never });
-  }, [loading, user, isStaff, nav]);
+  }, [loading, user, isStaff, nav, isLoginRoute]);
 
   useEffect(() => setMobileOpen(false), [pathname]);
+
+  // Login page renders standalone, without the staff shell
+  if (isLoginRoute) {
+    return <Outlet />;
+  }
 
   if (loading || !user || !isStaff) {
     return (
