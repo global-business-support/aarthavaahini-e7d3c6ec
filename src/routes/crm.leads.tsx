@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Plus, Search, ArrowRightLeft } from "lucide-react";
+import { Loader2, Plus, Search, ArrowRightLeft, MessageCircle, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/crm/leads")({
   component: LeadsPage,
@@ -112,29 +112,38 @@ function LeadsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Leads</h1>
-          <p className="text-sm text-slate-500">{leads.length} total · {filtered.length} shown</p>
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-rose-500 p-5 text-white shadow-lg shadow-fuchsia-500/20 md:p-6">
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/20 blur-3xl" />
+        <div className="absolute -bottom-12 right-24 h-36 w-36 rounded-full bg-pink-300/30 blur-3xl" />
+        <div className="relative flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+              <Sparkles className="h-3 w-3" /> Lead Pipeline
+            </div>
+            <h1 className="mt-2 font-display text-2xl font-bold md:text-3xl">Leads</h1>
+            <p className="text-sm text-white/80">{leads.length} total · {filtered.length} shown · WhatsApp ready</p>
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-white text-fuchsia-700 shadow-md hover:bg-pink-50">
+                <Plus className="mr-2 h-4 w-4" /> New Lead
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl bg-gradient-to-br from-white via-rose-50/60 to-violet-50/60">
+              <DialogHeader>
+                <DialogTitle className="bg-gradient-to-r from-violet-600 to-rose-600 bg-clip-text text-transparent">
+                  Add New Lead
+                </DialogTitle>
+              </DialogHeader>
+              <NewLeadForm
+                onSaved={() => {
+                  setOpen(false);
+                  load();
+                }}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> New Lead
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add Lead</DialogTitle>
-            </DialogHeader>
-            <NewLeadForm
-              onSaved={() => {
-                setOpen(false);
-                load();
-              }}
-            />
-          </DialogContent>
-        </Dialog>
       </div>
 
       <Card className="p-4">
@@ -217,13 +226,25 @@ function LeadsPage() {
                     {new Date(l.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    {l.status === "Converted" ? (
-                      <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">Converted</Badge>
-                    ) : (
-                      <Button size="sm" variant="outline" onClick={() => setConvertLead(l)}>
-                        <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" /> Convert
-                      </Button>
-                    )}
+                    <div className="flex items-center justify-end gap-1">
+                      <a
+                        href={`https://wa.me/${(l.phone || "").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi ${l.lead_name ?? l.full_name ?? "there"}, this is from Aarthvaahini. Following up on your ${(l.product_type ?? "").replace(/_/g, " ")} enquiry.`)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Send WhatsApp"
+                      >
+                        <Button size="sm" variant="outline" className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800">
+                          <MessageCircle className="h-3.5 w-3.5" />
+                        </Button>
+                      </a>
+                      {l.status === "Converted" ? (
+                        <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">Converted</Badge>
+                      ) : (
+                        <Button size="sm" className="bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white hover:opacity-90" onClick={() => setConvertLead(l)}>
+                          <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" /> Convert
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -289,17 +310,17 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
   };
 
   return (
-    <form onSubmit={submit} className="grid grid-cols-2 gap-3">
-      <Field label="Lead Name *"><Input required value={f.lead_name} onChange={(e) => setF({ ...f, lead_name: e.target.value })} /></Field>
-      <Field label="Mobile *"><Input required value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></Field>
-      <Field label="Email"><Input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
-      <Field label="PAN"><Input value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
-      <Field label="Aadhaar"><Input value={f.aadhaar} onChange={(e) => setF({ ...f, aadhaar: e.target.value })} /></Field>
-      <Field label="City"><Input value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></Field>
-      <Field label="State"><Input value={f.state} onChange={(e) => setF({ ...f, state: e.target.value })} /></Field>
+    <form onSubmit={submit} className="grid grid-cols-2 gap-3 rounded-xl bg-white/70 p-4 ring-1 ring-violet-100">
+      <Field label="Lead Name *"><Input required className="border-violet-200 focus-visible:ring-violet-400" value={f.lead_name} onChange={(e) => setF({ ...f, lead_name: e.target.value })} /></Field>
+      <Field label="Mobile *"><Input required className="border-rose-200 focus-visible:ring-rose-400" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></Field>
+      <Field label="Email"><Input type="email" className="border-fuchsia-200 focus-visible:ring-fuchsia-400" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
+      <Field label="PAN"><Input className="border-amber-200 focus-visible:ring-amber-400" value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
+      <Field label="Aadhaar"><Input className="border-emerald-200 focus-visible:ring-emerald-400" value={f.aadhaar} onChange={(e) => setF({ ...f, aadhaar: e.target.value })} /></Field>
+      <Field label="City"><Input className="border-sky-200 focus-visible:ring-sky-400" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></Field>
+      <Field label="State"><Input className="border-cyan-200 focus-visible:ring-cyan-400" value={f.state} onChange={(e) => setF({ ...f, state: e.target.value })} /></Field>
       <Field label="Product Interest">
         <Select value={f.product_type} onValueChange={(v) => setF({ ...f, product_type: v })}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger className="border-indigo-200 focus:ring-indigo-400"><SelectValue /></SelectTrigger>
           <SelectContent>
             {PRODUCT_TYPES.map((p) => <SelectItem key={p} value={p} className="capitalize">{p.replace(/_/g, " ")}</SelectItem>)}
           </SelectContent>
@@ -307,14 +328,14 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
       </Field>
       <Field label="Lead Source">
         <Select value={f.lead_source} onValueChange={(v) => setF({ ...f, lead_source: v })}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger className="border-pink-200 focus:ring-pink-400"><SelectValue /></SelectTrigger>
           <SelectContent>
             {LEAD_SOURCES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
           </SelectContent>
         </Select>
       </Field>
       <div className="col-span-2 mt-2 flex justify-end">
-        <Button type="submit" disabled={saving}>
+        <Button type="submit" disabled={saving} className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-rose-600 text-white shadow-md hover:opacity-90">
           {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Create Lead
         </Button>
       </div>
