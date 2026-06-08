@@ -169,7 +169,7 @@ export function CrmLayout() {
       {/* Backdrop for mobile */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-purple-900/30 backdrop-blur-sm md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
