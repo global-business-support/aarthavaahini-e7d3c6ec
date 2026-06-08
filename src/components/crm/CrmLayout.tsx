@@ -15,7 +15,7 @@ import {
   Bell,
   Settings,
   ChevronDown,
-  Sparkles,
+  Sparkles as _Sparkles,
   Menu,
   X,
 } from "lucide-react";
