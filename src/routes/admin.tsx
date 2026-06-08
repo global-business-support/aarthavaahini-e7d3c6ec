@@ -203,9 +203,9 @@ function AdminPage() {
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { to: "/admin/employees", label: "Manage Employees", icon: UserCircle2 },
+            { to: "/crm/schedule", label: "Employee Schedule", icon: CheckSquare },
             { to: "/admin/whatsapp", label: "WhatsApp Sender", icon: Phone },
             { to: "/crm/leads", label: "Manage Leads", icon: Users },
-            { to: "/crm/reports", label: "Reports", icon: TrendingUp },
           ].map((l) => {
             const Icon = l.icon;
             return (
