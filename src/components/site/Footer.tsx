@@ -18,7 +18,9 @@ import {
   Phone,
   Mail,
   MapPin,
+  LogIn,
 } from "lucide-react";
+
 
 export function Footer() {
 
