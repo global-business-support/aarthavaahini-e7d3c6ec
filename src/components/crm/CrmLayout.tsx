@@ -10,13 +10,13 @@ import {
   TrendingUp,
   CheckSquare,
   FileText,
+  CalendarClock,
   LogOut,
   Loader2,
   Search,
   Bell,
   Settings,
   ChevronDown,
-  
   Menu,
   X,
 } from "lucide-react";
@@ -50,6 +50,7 @@ const NAV: NavItem[] = [
   { to: "/crm/insurance", label: "Insurance", icon: ShieldCheck },
   { to: "/crm/mutual-funds", label: "Mutual Funds", icon: TrendingUp },
   { to: "/crm/tasks", label: "Tasks", icon: CheckSquare },
+  { to: "/crm/schedule", label: "Schedule", icon: CalendarClock },
   { to: "/crm/reports", label: "Reports", icon: FileText },
 ];
 
