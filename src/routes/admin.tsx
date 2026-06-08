@@ -202,9 +202,9 @@ function AdminPage() {
         {/* Quick links */}
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
+            { to: "/admin/employees", label: "Manage Employees", icon: UserCircle2 },
+            { to: "/admin/whatsapp", label: "WhatsApp Sender", icon: Phone },
             { to: "/crm/leads", label: "Manage Leads", icon: Users },
-            { to: "/crm/customers", label: "Customers 360°", icon: UserCircle2 },
-            { to: "/crm/loans", label: "Loan Pipeline", icon: Banknote },
             { to: "/crm/reports", label: "Reports", icon: TrendingUp },
           ].map((l) => {
             const Icon = l.icon;

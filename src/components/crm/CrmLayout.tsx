@@ -15,10 +15,11 @@ import {
   Bell,
   Settings,
   ChevronDown,
-  Sparkles,
+  
   Menu,
   X,
 } from "lucide-react";
+import logoUrl from "@/assets/logo.png";
 import { useCrmAuth } from "@/hooks/useCrmAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -105,15 +106,15 @@ export function CrmLayout() {
       >
         {/* Brand */}
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/30">
-              <Sparkles className="h-5 w-5 text-white" />
+          <Link to="/crm" className="flex items-center gap-2.5">
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-lg shadow-blue-500/30">
+              <img src={logoUrl} alt="Aarthvaahini" className="h-9 w-9 object-contain" />
             </div>
             <div>
               <div className="text-sm font-semibold tracking-tight text-white">Aarthvaahini</div>
               <div className="text-[10px] uppercase tracking-wider text-blue-300/80">Enterprise CRM</div>
             </div>
-          </div>
+          </Link>
           <button
             className="rounded-md p-1 text-slate-300 hover:bg-white/10 md:hidden"
             onClick={() => setMobileOpen(false)}

@@ -34,6 +34,8 @@ import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
 import { Route as BlogsSipGuideRouteImport } from './routes/blogs/sip-guide'
 import { Route as BlogsHomeLoanGuideRouteImport } from './routes/blogs/home-loan-guide'
 import { Route as BlogsCibilScoreRouteImport } from './routes/blogs/cibil-score'
+import { Route as AdminWhatsappRouteImport } from './routes/admin.whatsapp'
+import { Route as AdminEmployeesRouteImport } from './routes/admin.employees'
 
 const MutualFundsRoute = MutualFundsRouteImport.update({
   id: '/mutual-funds',
@@ -160,11 +162,21 @@ const BlogsCibilScoreRoute = BlogsCibilScoreRouteImport.update({
   path: '/cibil-score',
   getParentRoute: () => BlogsRoute,
 } as any)
+const AdminWhatsappRoute = AdminWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEmployeesRoute = AdminEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
@@ -175,6 +187,8 @@ export interface FileRoutesByFullPath {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/admin/employees': typeof AdminEmployeesRoute
+  '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
@@ -191,7 +205,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
@@ -201,6 +215,8 @@ export interface FileRoutesByTo {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/admin/employees': typeof AdminEmployeesRoute
+  '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
@@ -218,7 +234,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
@@ -229,6 +245,8 @@ export interface FileRoutesById {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
+  '/admin/employees': typeof AdminEmployeesRoute
+  '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
@@ -258,6 +276,8 @@ export interface FileRouteTypes {
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/admin/employees'
+    | '/admin/whatsapp'
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
@@ -284,6 +304,8 @@ export interface FileRouteTypes {
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/admin/employees'
+    | '/admin/whatsapp'
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
@@ -311,6 +333,8 @@ export interface FileRouteTypes {
     | '/loans'
     | '/login'
     | '/mutual-funds'
+    | '/admin/employees'
+    | '/admin/whatsapp'
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
@@ -328,7 +352,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BankingRoute: typeof BankingRoute
   BlogsRoute: typeof BlogsRouteWithChildren
   CibilRoute: typeof CibilRoute
@@ -518,8 +542,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsCibilScoreRouteImport
       parentRoute: typeof BlogsRoute
     }
+    '/admin/whatsapp': {
+      id: '/admin/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/admin/whatsapp'
+      preLoaderRoute: typeof AdminWhatsappRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/employees': {
+      id: '/admin/employees'
+      path: '/employees'
+      fullPath: '/admin/employees'
+      preLoaderRoute: typeof AdminEmployeesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminEmployeesRoute: typeof AdminEmployeesRoute
+  AdminWhatsappRoute: typeof AdminWhatsappRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminEmployeesRoute: AdminEmployeesRoute,
+  AdminWhatsappRoute: AdminWhatsappRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BlogsRouteChildren {
   BlogsCibilScoreRoute: typeof BlogsCibilScoreRoute
@@ -564,7 +614,7 @@ const CrmRouteWithChildren = CrmRoute._addFileChildren(CrmRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   BankingRoute: BankingRoute,
   BlogsRoute: BlogsRouteWithChildren,
   CibilRoute: CibilRoute,
@@ -579,13 +629,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
