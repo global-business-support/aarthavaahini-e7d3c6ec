@@ -140,14 +140,14 @@ export function CrmLayout() {
                 className={cn(
                   "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                   active
-                    ? "bg-gradient-to-r from-blue-600/40 to-indigo-600/20 text-white shadow-inner"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white",
+                    ? "bg-gradient-to-r from-white/20 to-white/5 text-white shadow-inner"
+                    : "text-white/70 hover:bg-white/10 hover:text-white",
                 )}
               >
                 {active && (
-                  <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-blue-400 to-indigo-400" />
+                  <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-pink-300 to-rose-400" />
                 )}
-                <Icon className={cn("h-4 w-4", active ? "text-blue-300" : "text-slate-400 group-hover:text-blue-300")} />
+                <Icon className={cn("h-4 w-4", active ? "text-pink-200" : "text-white/50 group-hover:text-pink-200")} />
                 {item.label}
               </Link>
             );
