@@ -1,4 +1,5 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import logoUrl from "@/assets/logo.png";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
@@ -19,7 +20,6 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import logoUrl from "@/assets/logo.png";
 import { useCrmAuth } from "@/hooks/useCrmAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -96,11 +96,11 @@ export function CrmLayout() {
     .toUpperCase();
 
   return (
-    <div className="flex min-h-screen w-full bg-slate-100">
+    <div className="flex min-h-screen w-full bg-gradient-to-br from-violet-50 via-rose-50 to-sky-50">
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 shrink-0 flex-col bg-gradient-to-b from-[#0b1437] via-[#101a4a] to-[#0b1437] text-slate-100 shadow-2xl transition-transform md:relative md:flex md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 w-64 shrink-0 flex-col bg-gradient-to-b from-[#4f46e5] via-[#7c3aed] to-[#db2777] text-white shadow-2xl shadow-purple-500/20 transition-transform md:relative md:flex md:translate-x-0",
           mobileOpen ? "flex translate-x-0" : "hidden -translate-x-full md:flex",
         )}
       >
@@ -116,7 +116,7 @@ export function CrmLayout() {
             </div>
           </Link>
           <button
-            className="rounded-md p-1 text-slate-300 hover:bg-white/10 md:hidden"
+            className="rounded-md p-1 text-white/70 hover:bg-white/10 md:hidden"
             onClick={() => setMobileOpen(false)}
           >
             <X className="h-4 w-4" />
@@ -125,7 +125,7 @@ export function CrmLayout() {
 
         {/* Nav */}
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
-          <div className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-wider text-blue-300/60">
+          <div className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-wider text-pink-200/70">
             Main Menu
           </div>
           {NAV.map((item) => {
@@ -140,27 +140,27 @@ export function CrmLayout() {
                 className={cn(
                   "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                   active
-                    ? "bg-gradient-to-r from-blue-600/40 to-indigo-600/20 text-white shadow-inner"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white",
+                    ? "bg-gradient-to-r from-white/20 to-white/5 text-white shadow-inner"
+                    : "text-white/70 hover:bg-white/10 hover:text-white",
                 )}
               >
                 {active && (
-                  <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-blue-400 to-indigo-400" />
+                  <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-pink-300 to-rose-400" />
                 )}
-                <Icon className={cn("h-4 w-4", active ? "text-blue-300" : "text-slate-400 group-hover:text-blue-300")} />
+                <Icon className={cn("h-4 w-4", active ? "text-pink-200" : "text-white/50 group-hover:text-pink-200")} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        {/* Upgrade card */}
-        <div className="mx-3 mb-3 rounded-xl border border-white/10 bg-gradient-to-br from-blue-600/30 to-indigo-600/10 p-3">
+        {/* Help card */}
+        <div className="mx-3 mb-3 rounded-xl border border-white/10 bg-gradient-to-br from-pink-500/30 to-violet-500/20 p-3">
           <div className="text-xs font-semibold text-white">Need help?</div>
-          <p className="mt-1 text-[11px] leading-relaxed text-blue-100/70">
+          <p className="mt-1 text-[11px] leading-relaxed text-white/70">
             Check our docs or contact support for personalised guidance.
           </p>
-          <Button size="sm" className="mt-2 h-7 w-full bg-white/10 text-xs text-white hover:bg-white/20">
+          <Button size="sm" className="mt-2 h-7 w-full bg-white/15 text-xs text-white hover:bg-white/25">
             Open Docs
           </Button>
         </div>
@@ -169,7 +169,7 @@ export function CrmLayout() {
       {/* Backdrop for mobile */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-purple-900/30 backdrop-blur-sm md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -210,7 +210,7 @@ export function CrmLayout() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-left transition hover:bg-slate-50">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-[11px] font-semibold text-white">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-[11px] font-semibold text-white shadow-sm">
                   {initials}
                 </div>
                 <div className="hidden text-xs leading-tight sm:block">
