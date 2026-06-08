@@ -125,7 +125,7 @@ export function CrmLayout() {
 
         {/* Nav */}
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
-          <div className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-wider text-blue-300/60">
+          <div className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-wider text-pink-200/70">
             Main Menu
           </div>
           {NAV.map((item) => {
