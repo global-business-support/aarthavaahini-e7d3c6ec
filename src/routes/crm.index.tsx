@@ -106,23 +106,24 @@ function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Hero header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0b1437] via-[#15224f] to-[#1e3a8a] p-6 text-white shadow-xl">
-        <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl" />
-        <div className="absolute -bottom-16 right-20 h-44 w-44 rounded-full bg-indigo-400/20 blur-3xl" />
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-rose-500 p-6 text-white shadow-xl shadow-fuchsia-500/20">
+        <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-pink-400/30 blur-3xl" />
+        <div className="absolute -bottom-16 right-20 h-44 w-44 rounded-full bg-orange-300/30 blur-3xl" />
+        <div className="absolute left-10 top-10 h-32 w-32 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-blue-200">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-pink-100">
               <Activity className="h-3.5 w-3.5" /> Live overview
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">
               Welcome back 👋
             </h1>
-            <p className="mt-1 max-w-xl text-sm text-blue-100/80">
+            <p className="mt-1 max-w-xl text-sm text-white/80">
               Real-time view of leads, pipeline value and team performance across loans, insurance and mutual funds.
             </p>
           </div>
           <div className="flex gap-2">
-            <Badge className="border-white/20 bg-white/10 text-white">
+            <Badge className="border-white/20 bg-white/15 text-white backdrop-blur-sm">
               {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })}
             </Badge>
           </div>
