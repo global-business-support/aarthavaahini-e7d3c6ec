@@ -20,6 +20,7 @@ function Index() {
         <EmiCalculator />
         <SipPlanner />
         <CibilChecker />
+        <Testimonials />
         <AdminPanel />
       </main>
       <Footer />
