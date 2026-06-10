@@ -249,6 +249,59 @@ function AdminPage() {
           })}
         </div>
 
+        {/* Charts */}
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          <Card className="lg:col-span-2 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-slate-900">Leads — Last 14 days</h2>
+                <p className="text-xs text-slate-500">Daily new leads captured.</p>
+              </div>
+              <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">Trend</Badge>
+            </div>
+            <div className="mt-4 h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trend} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="adminLeadFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                  <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#64748b" }} tickLine={false} axisLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: "#64748b" }} tickLine={false} axisLine={false} allowDecimals={false} />
+                  <RTooltip contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 12 }} />
+                  <Area type="monotone" dataKey="leads" stroke="#2563eb" strokeWidth={2} fill="url(#adminLeadFill)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <h2 className="text-sm font-semibold text-slate-900">Product Mix</h2>
+            <p className="text-xs text-slate-500">Active cases across products.</p>
+            <div className="mt-4 h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: "Loans", value: stats?.loans ?? 0 },
+                      { name: "Insurance", value: stats?.insurance ?? 0 },
+                      { name: "Mutual Funds", value: stats?.mf ?? 0 },
+                    ]}
+                    cx="50%" cy="50%" outerRadius={70} innerRadius={40} paddingAngle={3} dataKey="value"
+                  >
+                    {["#3b82f6", "#8b5cf6", "#10b981"].map((c, i) => <Cell key={i} fill={c} />)}
+                  </Pie>
+                  <RTooltip contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+
         {/* Leads */}
         <Card className="mt-6 overflow-hidden border-slate-200/70 p-0 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
