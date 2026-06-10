@@ -7,33 +7,34 @@ const PRESETS: Record<Variant, {
   blob1: string;
   blob2: string;
   blob3: string;
-  video: string;
-  poster: string;
+  image: string;
 }> = {
   loans: {
-    tint: "from-blue-200/80 via-sky-100/70 to-indigo-100/60",
-    blob1: "bg-blue-400/40",
-    blob2: "bg-sky-400/40",
-    blob3: "bg-indigo-400/35",
-    // City / finance buildings loop
-    video: "https://cdn.coverr.co/videos/coverr-a-businessman-counting-money-2633/1080p.mp4",
-    poster: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1600&q=70",
+    tint: "from-blue-100/70 via-sky-50/60 to-indigo-100/60",
+    blob1: "bg-blue-400/35",
+    blob2: "bg-sky-400/35",
+    blob3: "bg-indigo-400/30",
+    // Finance / banking / city skyline
+    image:
+      "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1920&q=80",
   },
   insurance: {
-    tint: "from-emerald-200/80 via-teal-100/70 to-cyan-100/60",
-    blob1: "bg-emerald-400/40",
-    blob2: "bg-teal-400/40",
-    blob3: "bg-cyan-400/35",
-    video: "https://cdn.coverr.co/videos/coverr-family-walking-on-the-beach-2584/1080p.mp4",
-    poster: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=70",
+    tint: "from-emerald-100/70 via-teal-50/60 to-cyan-100/60",
+    blob1: "bg-emerald-400/35",
+    blob2: "bg-teal-400/35",
+    blob3: "bg-cyan-400/30",
+    // Family protection / umbrella
+    image:
+      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80",
   },
   "mutual-funds": {
-    tint: "from-amber-200/80 via-orange-100/70 to-rose-100/60",
-    blob1: "bg-amber-400/45",
-    blob2: "bg-orange-400/40",
-    blob3: "bg-rose-400/35",
-    video: "https://cdn.coverr.co/videos/coverr-stock-market-graph-2633/1080p.mp4",
-    poster: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1600&q=70",
+    tint: "from-amber-100/70 via-orange-50/60 to-rose-100/60",
+    blob1: "bg-amber-400/40",
+    blob2: "bg-orange-400/35",
+    blob3: "bg-rose-400/30",
+    // Stock market / investing growth chart
+    image:
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1920&q=80",
   },
 };
 
@@ -42,23 +43,17 @@ export function AnimatedBackground({ variant }: { variant: Variant }) {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Video background layer */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster={preset.poster}
-        className="absolute inset-0 w-full h-full object-cover opacity-60"
-      >
-        <source src={preset.video} type="video/mp4" />
-      </video>
+      {/* Finance image background (Ken-Burns slow zoom) */}
+      <div
+        className="absolute inset-0 bg-cover bg-center animate-bg-zoom"
+        style={{ backgroundImage: `url('${preset.image}')` }}
+      />
 
-      {/* Color tint over the video to keep content readable */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${preset.tint} mix-blend-soft-light`} />
-      <div className="absolute inset-0 bg-white/40" />
+      {/* Color tint + white wash for readability */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${preset.tint}`} />
+      <div className="absolute inset-0 bg-white/55" />
 
-      {/* Animated gradient blobs (clearly visible) */}
+      {/* Animated soft color blobs */}
       <div className={`absolute -top-40 -left-32 h-[32rem] w-[32rem] rounded-full ${preset.blob1} blur-3xl animate-blob`} />
       <div
         className={`absolute top-1/3 -right-32 h-[30rem] w-[30rem] rounded-full ${preset.blob2} blur-3xl animate-blob`}
@@ -69,8 +64,8 @@ export function AnimatedBackground({ variant }: { variant: Variant }) {
         style={{ animationDelay: "6s" } as CSSProperties}
       />
 
-      {/* Subtle grid overlay */}
-      <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:48px_48px]" />
+      {/* Subtle grid overlay for finance feel */}
+      <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:48px_48px]" />
     </div>
   );
 }
