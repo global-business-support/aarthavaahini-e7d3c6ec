@@ -27,63 +27,24 @@ const CARD_PALETTES = [
   { bg: "bg-gradient-to-br from-cyan-50 via-white to-sky-100",      ring: "ring-cyan-200",   chip: "bg-cyan-100 text-cyan-700",      btn: "from-cyan-500 to-sky-600" },
 ];
 
-// Animated background per product type — soft, light, with related imagery
-function AnimatedBackdrop({ productType }: { productType: Props["productType"] }) {
-  const config: Record<Props["productType"], { blobs: string[]; image: string }> = {
-    loan: {
-      blobs: ["bg-blue-200/40", "bg-sky-200/40", "bg-indigo-200/40"],
-      // Modern home / keys — represents home & personal loans
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1800&q=80",
-    },
-    insurance: {
-      blobs: ["bg-rose-200/40", "bg-pink-200/40", "bg-amber-200/40"],
-      // Family protection / umbrella concept
-      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
-    },
-    mutual_fund: {
-      blobs: ["bg-emerald-200/40", "bg-teal-200/40", "bg-lime-200/40"],
-      // Stock chart / investing growth
-      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1800&q=80",
-    },
-    banking: {
-      blobs: ["bg-cyan-200/40", "bg-sky-200/40", "bg-blue-200/40"],
-      image: "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1800&q=80",
-    },
-  };
-  const { blobs, image } = config[productType];
-  return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {/* Themed background image — very faded so cards stay readable */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-[0.12]"
-        style={{ backgroundImage: `url('${image}')` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-white/70 to-white/85" />
-      {/* Animated soft color blobs */}
-      <div className={cn("absolute -top-20 -left-20 h-[28rem] w-[28rem] rounded-full blur-3xl animate-pulse", blobs[0])} style={{ animationDuration: "6s" }} />
-      <div className={cn("absolute top-1/3 -right-24 h-[26rem] w-[26rem] rounded-full blur-3xl animate-pulse", blobs[1])} style={{ animationDuration: "8s", animationDelay: "1s" }} />
-      <div className={cn("absolute bottom-0 left-1/3 h-[24rem] w-[24rem] rounded-full blur-3xl animate-pulse", blobs[2])} style={{ animationDuration: "10s", animationDelay: "2s" }} />
-    </div>
-  );
-}
+// Backdrop is now provided globally by <AnimatedBackground /> on each product route.
 
 export function ProductPage({ title, subtitle, items, productType, accentClass }: Props) {
   return (
     <div className="relative isolate">
-      <AnimatedBackdrop productType={productType} />
       <div className="container mx-auto px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className={`font-display text-4xl font-bold sm:text-5xl ${accentClass}`}>{title}</h1>
           <p className="mt-4 text-muted-foreground">{subtitle}</p>
         </div>
-        <div className="mt-12 grid gap-8 sm:grid-cols-1 md:grid-cols-2">
+        <div className="mt-14 grid gap-10 sm:grid-cols-1 md:grid-cols-2 [perspective:1400px]">
           {items.map((p, i) => {
             const palette = CARD_PALETTES[i % CARD_PALETTES.length];
             return (
               <Card
                 key={p.slug}
                 className={cn(
-                  "group relative flex flex-col overflow-hidden p-7 ring-1 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl",
+                  "card-3d group relative flex flex-col overflow-hidden rounded-2xl p-7 ring-1 border-0 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.25)] backdrop-blur-sm",
                   palette.bg,
                   palette.ring,
                 )}
