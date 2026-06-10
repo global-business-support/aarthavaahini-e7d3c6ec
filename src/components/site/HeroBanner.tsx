@@ -15,22 +15,22 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    badge: "Home Loan", title: "Apna ghar, ab aasaan", subtitle: "Starting @ 8.40% p.a.* — 40+ banks me se best rate.",
+    badge: "Home Loan", title: "Your dream home, made easy", subtitle: "Starting @ 8.40% p.a.* — best rates from 40+ banks.",
     cta: { label: "Apply Home Loan", to: "/loans" },
     bg: "from-[#EAF3FF] via-[#DDE9FF] to-[#F4E8FF]", accent: "text-[#1565C0]", icon: Banknote,
   },
   {
-    badge: "Term Insurance", title: "₹1 Cr cover @ just ₹500/m*", subtitle: "Pariwar ki suraksha — tax bachat 80C + 10(10D).",
+    badge: "Term Insurance", title: "₹1 Cr cover @ just ₹500/m*", subtitle: "Protect your family — save tax under 80C + 10(10D).",
     cta: { label: "Get Insurance", to: "/insurance" },
     bg: "from-[#FCE4EC] via-[#FFEAF1] to-[#FFF1E5]", accent: "text-[#AD1457]", icon: ShieldCheck,
   },
   {
-    badge: "SIP", title: "₹500 se shuru karein investing", subtitle: "Average 14% CAGR* — ELSS, equity, debt — sab ek jagah.",
+    badge: "SIP", title: "Start investing from just ₹500", subtitle: "Average 14% CAGR* — ELSS, equity, debt — all in one place.",
     cta: { label: "Start SIP", to: "/mutual-funds" },
     bg: "from-[#E8F5E9] via-[#DFF5E1] to-[#E3F2FD]", accent: "text-[#2E7D32]", icon: TrendingUp,
   },
   {
-    badge: "Free", title: "CIBIL Score 30 second me", subtitle: "100% free, no score impact — personalised loan offers.",
+    badge: "Free", title: "CIBIL Score in 30 seconds", subtitle: "100% free, no score impact — personalised loan offers.",
     cta: { label: "Check CIBIL", to: "/cibil" },
     bg: "from-[#FFF4E5] via-[#FFE8D6] to-[#FCE4EC]", accent: "text-[#E65100]", icon: Gauge,
   },
