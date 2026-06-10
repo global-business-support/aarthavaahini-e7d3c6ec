@@ -453,6 +453,76 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
   );
 }
 
+function LeadNotes({ lead }: { lead: Lead }) {
+  const [notes, setNotes] = useState<{ id: string; notes: string | null; created_at: string }[]>([]);
+  const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    const { data } = await supabase
+      .from("activities")
+      .select("id, notes, created_at")
+      .eq("lead_id", lead.id)
+      .eq("activity_type", "note")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setNotes(data ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [lead.id]);
+
+  const add = async () => {
+    if (!text.trim()) return;
+    setSaving(true);
+    const { error } = await supabase.from("activities").insert({
+      lead_id: lead.id,
+      activity_type: "note",
+      notes: text.trim(),
+    });
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    setText("");
+    toast.success("Note added");
+    load();
+  };
+
+  return (
+    <div className="space-y-3">
+      <Textarea
+        rows={3}
+        placeholder="Add a follow-up note (call summary, next action, document pending…)"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="border-amber-200 focus-visible:ring-amber-400"
+      />
+      <div className="flex justify-end">
+        <Button onClick={add} disabled={saving || !text.trim()} className="bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+          {saving && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />} Save Note
+        </Button>
+      </div>
+      <div className="max-h-64 space-y-2 overflow-auto pr-1">
+        {loading ? (
+          <div className="py-3 text-center"><Loader2 className="mx-auto h-4 w-4 animate-spin text-slate-400" /></div>
+        ) : notes.length === 0 ? (
+          <p className="py-2 text-center text-xs text-slate-400">No notes yet for this lead.</p>
+        ) : (
+          notes.map((n) => (
+            <div key={n.id} className="rounded-lg border border-amber-100 bg-amber-50/60 p-3 text-sm">
+              <div className="whitespace-pre-wrap text-slate-800">{n.notes}</div>
+              <div className="mt-1 text-[10px] uppercase tracking-wide text-slate-500">
+                {new Date(n.created_at).toLocaleString("en-IN")}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div><Label className="text-xs">{label}</Label><div className="mt-1">{children}</div></div>;
 }
