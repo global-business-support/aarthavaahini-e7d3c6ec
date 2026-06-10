@@ -721,219 +721,102 @@ export function LeadForm({
 
  return (
 
-  <div className="w-full rounded-[32px] bg-white p-6 sm:p-8">
+  <div className="w-full rounded-[24px] bg-gradient-to-br from-slate-950 via-slate-900 to-black p-6 sm:p-8 shadow-2xl">
 
     <div className="mb-6">
-
-      <h2 className="text-3xl font-bold text-[#17357e]">
-        Apply for Loan
+      <h2 className="text-2xl font-bold text-white">
+        {productName ? `${productName} — Enquiry` : "Apply Now"}
       </h2>
-
-      <p className="mt-2 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-slate-400">
         Fill in your details and our expert will contact you shortly.
       </p>
-
     </div>
 
-    <form
-      onSubmit={submit}
-      className="grid grid-cols-1 gap-5 sm:grid-cols-2"
-    >
-
-      {/* FULL NAME */}
+    <form onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
       <div className="sm:col-span-2">
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Full Name
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Full Name</Label>
         <Input
           value={form.name}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              name: e.target.value,
-            })
-          }
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="Enter your full name"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4 text-base shadow-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          required
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
 
-      {/* EMAIL */}
-
       <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Email
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Email</Label>
         <Input
           type="email"
           value={form.email}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              email: e.target.value,
-            })
-          }
-          placeholder="Enter email"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          placeholder="you@example.com"
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
 
-      {/* PHONE */}
-
       <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Phone
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Phone</Label>
         <Input
           value={form.phone}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              phone: e.target.value,
-            })
-          }
-          placeholder="Enter mobile number"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          placeholder="+91 9xxxxxxxxx"
+          required
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
 
-      {/* LOAN TYPE */}
-
       <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Loan Type
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Type / Plan</Label>
         <Input
           value={form.loan_type}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              loan_type: e.target.value,
-            })
-          }
-          placeholder="Personal Loan"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
+          onChange={(e) => setForm({ ...form, loan_type: e.target.value })}
+          placeholder="Personal Loan / Term / SIP"
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
 
-      {/* AMOUNT */}
-
       <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-        Amount
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Amount (₹)</Label>
         <Input
           type="number"
           value={form.amount}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              amount: e.target.value,
-            })
-          }
-          placeholder="₹ 5,00,000"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
+          onChange={(e) => setForm({ ...form, amount: e.target.value })}
+          placeholder="5,00,000"
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
 
-      {/* MONTHLY INCOME */}
-
       <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Monthly Income
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Monthly Income</Label>
         <Input
           type="number"
           value={form.monthly_income}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              monthly_income: e.target.value,
-            })
-          }
-          placeholder="₹ 50,000"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
+          onChange={(e) => setForm({ ...form, monthly_income: e.target.value })}
+          placeholder="50,000"
+          className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white placeholder:text-slate-500 focus-visible:ring-sky-500"
         />
-
       </div>
-
-      {/* EMPLOYMENT TYPE */}
-
-      <div>
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Employment Type
-        </Label>
-
-        <Input
-          value={form.employment_type}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              employment_type: e.target.value,
-            })
-          }
-          placeholder="Salaried / Self Employed"
-          className="h-12 rounded-2xl border-gray-200 bg-gray-50 px-4"
-        />
-
-      </div>
-
-      {/* MESSAGE */}
 
       <div className="sm:col-span-2">
-
-        <Label className="mb-2 block text-sm font-medium text-gray-600">
-          Message
-        </Label>
-
+        <Label className="mb-1.5 block text-xs font-medium text-slate-300">Message</Label>
         <Textarea
-          rows={5}
+          rows={3}
           value={form.message}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              message: e.target.value,
-            })
-          }
+          onChange={(e) => setForm({ ...form, message: e.target.value })}
           placeholder="Write your message..."
-          className="rounded-2xl border-gray-200 bg-gray-50 px-4 py-3 resize-none"
+          className="rounded-xl border-slate-700 bg-slate-800/60 px-4 py-3 text-white placeholder:text-slate-500 focus-visible:ring-sky-500 resize-none"
         />
-
       </div>
-
-      {/* BUTTON */}
 
       <Button
         type="submit"
         disabled={loading}
-        className="sm:col-span-2 h-14 rounded-2xl bg-gradient-to-r from-[#17357e] to-blue-600 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01]"
+        className="sm:col-span-2 h-12 rounded-xl bg-gradient-to-r from-sky-500 via-blue-500 to-cyan-500 text-base font-semibold text-white shadow-lg shadow-sky-500/30 transition-all hover:scale-[1.01] hover:opacity-95"
       >
-
-        {loading && (
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-        )}
-
+        {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
         {buttonLabel}
-
       </Button>
 
     </form>

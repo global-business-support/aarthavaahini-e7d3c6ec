@@ -20,6 +20,7 @@ import {
   MapPin,
   LogIn,
 } from "lucide-react";
+import { WhatsAppFab } from "./WhatsAppFab";
 
 
 export function Footer() {
