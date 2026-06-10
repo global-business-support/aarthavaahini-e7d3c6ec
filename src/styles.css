@@ -189,13 +189,13 @@ html {
 .animate-loan-products-bg { animation: loan-products-bg 18s ease-in-out infinite; }
 
 .loan-products-bg {
-  background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(219,234,254,0.16) 46%, rgba(255,255,255,0.28));
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(219,234,254,0.06) 46%, rgba(255,255,255,0.12));
 }
 
 .loan-product-card {
-  background-color: rgba(255, 255, 255, 0.72) !important;
+  background-color: rgba(255, 255, 255, 0.6) !important;
   background-blend-mode: screen;
-  backdrop-filter: blur(6px) saturate(1.12);
+  backdrop-filter: blur(3px) saturate(1.18);
 }
 
 /* 3D card effect for product boxes */
