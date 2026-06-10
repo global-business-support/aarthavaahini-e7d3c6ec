@@ -432,7 +432,7 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
       <Field label="Product Interest">
         <Select value={f.product_type} onValueChange={(v) => setF({ ...f, product_type: v })}>
           <SelectTrigger className="border-violet-200 focus:ring-violet-400"><SelectValue /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {PRODUCT_TYPES.map((p) => <SelectItem key={p} value={p} className="capitalize">{p.replace(/_/g, " ")}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -440,9 +440,10 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
       <Field label="Lead Source">
         <Select value={f.lead_source} onValueChange={(v) => setF({ ...f, lead_source: v })}>
           <SelectTrigger className="border-pink-200 focus:ring-pink-400"><SelectValue /></SelectTrigger>
-          <SelectContent>{LEAD_SOURCES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+          <SelectContent className="bg-white">{LEAD_SOURCES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
         </Select>
       </Field>
+
       <div className="col-span-2 mt-2 flex justify-end">
         <Button type="submit" disabled={saving} className="bg-gradient-to-r from-sky-600 via-blue-600 to-cyan-600 text-white shadow-md hover:opacity-90">
           {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Create Lead
