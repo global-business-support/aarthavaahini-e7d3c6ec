@@ -116,7 +116,7 @@ export function CrmLayout() {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-40 shrink-0 flex-col bg-gradient-to-b from-sky-600 via-blue-600 to-cyan-600 text-white shadow-2xl shadow-sky-500/20 transition-all md:relative md:flex md:translate-x-0",
+            "fixed inset-y-0 left-0 z-40 shrink-0 flex-col bg-gradient-to-b from-sky-300 via-sky-400 to-cyan-300 text-white shadow-xl shadow-sky-300/30 transition-all md:relative md:flex md:translate-x-0",
             collapsed ? "w-16" : "w-64",
             mobileOpen ? "flex translate-x-0 w-64" : "hidden -translate-x-full md:flex",
           )}
