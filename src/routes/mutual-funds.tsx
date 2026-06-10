@@ -4,6 +4,7 @@ import { Footer } from "@/components/site/Footer";
 import { ProductPage } from "@/components/site/ProductPage";
 import { ProductHeroSlider } from "@/components/site/ProductHeroSlider";
 import { MfCalculator } from "@/components/site/MfCalculator";
+import { AnimatedBackground } from "@/components/site/AnimatedBackground";
 import { mutualFunds } from "@/data/products";
 
 export const Route = createFileRoute("/mutual-funds")({
@@ -14,7 +15,8 @@ export const Route = createFileRoute("/mutual-funds")({
     ],
   }),
   component: () => (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground variant="mutual-funds" />
       <Header />
       <main className="relative isolate overflow-hidden">
         <ProductHeroSlider
