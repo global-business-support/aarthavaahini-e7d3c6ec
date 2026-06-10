@@ -39,11 +39,11 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
         <>
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 scale-110 bg-cover bg-center opacity-85 animate-loan-products-bg"
+            className="absolute inset-0 -z-10 scale-110 bg-cover bg-center opacity-100 animate-loan-products-bg"
             style={{ backgroundImage: `url('${loanBg.url}')` }}
           />
-          <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-white/45 via-white/10 to-white/50" />
-          <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_22%,rgba(37,99,235,0.22),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(14,165,233,0.2),transparent_32%)]" />
+          <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-white/20 via-white/0 to-white/25" />
+          <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_22%,rgba(37,99,235,0.1),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(14,165,233,0.1),transparent_32%)]" />
         </>
       )}
       <div className="container mx-auto px-6 py-20">
