@@ -227,21 +227,26 @@ function DashboardPage() {
           {recentLeads.length === 0 && <div className="py-6 text-center text-xs text-slate-400">No leads yet.</div>}
           {recentLeads.map((l) => (
             <div key={l.id} className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
+              <Link
+                to="/crm/customers"
+                search={{ q: l.full_name ?? "" }}
+                className="flex items-center gap-3 group"
+              >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-blue-600 text-[11px] font-semibold text-white">
                   {(l.full_name ?? "?").slice(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-slate-900">{l.full_name}</div>
+                  <div className="text-sm font-medium text-sky-700 group-hover:underline">{l.full_name}</div>
                   <div className="text-xs capitalize text-slate-500">{l.product_type?.replace(/_/g, " ")}</div>
                 </div>
-              </div>
+              </Link>
               <div className="flex items-center gap-3">
                 <Badge variant="outline" className="capitalize">{l.status}</Badge>
                 <div className="hidden text-xs text-slate-400 sm:block">{new Date(l.created_at).toLocaleDateString("en-IN")}</div>
               </div>
             </div>
           ))}
+
         </div>
       </Card>
     </div>
