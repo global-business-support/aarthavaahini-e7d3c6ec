@@ -187,16 +187,20 @@ html {
   50% { transform: scale(1.18) translate3d(-2%, -1.5%, 0); filter: saturate(1.18) contrast(1.08); }
 }
 .animate-loan-products-bg { animation: loan-products-bg 18s ease-in-out infinite; }
+.animate-products-bg { animation: loan-products-bg 18s ease-in-out infinite; }
 
-.loan-products-bg {
+.loan-products-bg,
+.products-bg {
   background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(219,234,254,0.06) 46%, rgba(255,255,255,0.12));
 }
 
-.loan-product-card {
-  background-color: rgba(255, 255, 255, 0.6) !important;
+.loan-product-card,
+.product-card-glass {
+  background-color: rgba(255, 255, 255, 0.62) !important;
   background-blend-mode: screen;
   backdrop-filter: blur(3px) saturate(1.18);
 }
+
 
 /* 3D card effect for product boxes */
 .card-3d {

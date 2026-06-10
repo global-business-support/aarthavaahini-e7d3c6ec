@@ -9,6 +9,8 @@ import type { ProductItem } from "@/data/products";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import loanBg from "@/assets/loan-bg.jpg.asset.json";
+import insuranceBg from "@/assets/insurance-bg.jpeg.asset.json";
+import mutualFundBg from "@/assets/mutual-fund-bg.jpg.asset.json";
 
 type Props = {
   title: string;
@@ -28,20 +30,33 @@ const CARD_PALETTES = [
   { bg: "bg-gradient-to-br from-cyan-50 via-white to-sky-100",      ring: "ring-cyan-200",   chip: "bg-cyan-100 text-cyan-700",      btn: "from-cyan-500 to-sky-600" },
 ];
 
-// Backdrop is now provided globally by <AnimatedBackground /> on each product route.
+const BG_BY_TYPE: Record<Props["productType"], { url: string } | null> = {
+  loan: loanBg,
+  insurance: insuranceBg,
+  mutual_fund: mutualFundBg,
+  banking: null,
+};
+
+const RADIAL_BY_TYPE: Record<Props["productType"], string> = {
+  loan: "bg-[radial-gradient(circle_at_18%_22%,rgba(37,99,235,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(14,165,233,0.10),transparent_32%)]",
+  insurance: "bg-[radial-gradient(circle_at_18%_22%,rgba(244,63,94,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(217,70,239,0.10),transparent_32%)]",
+  mutual_fund: "bg-[radial-gradient(circle_at_18%_22%,rgba(16,185,129,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(245,158,11,0.10),transparent_32%)]",
+  banking: "",
+};
 
 export function ProductPage({ title, subtitle, items, productType, accentClass }: Props) {
-  const isLoanPage = productType === "loan";
+  const bg = BG_BY_TYPE[productType];
+  const hasBg = !!bg;
 
   return (
-    <div className={cn("relative isolate overflow-hidden", isLoanPage && "loan-products-bg") }>
-      {isLoanPage && (
+    <div className={cn("relative isolate overflow-hidden", hasBg && "products-bg") }>
+      {hasBg && bg && (
         <>
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 opacity-95 mix-blend-multiply animate-loan-products-bg"
+            className="absolute inset-0 -z-10 opacity-95 mix-blend-multiply animate-products-bg"
             style={{
-              backgroundImage: `url('${loanBg.url}')`,
+              backgroundImage: `url('${bg.url}')`,
               backgroundPosition: "center 45%",
               backgroundRepeat: "no-repeat",
               backgroundSize: "min(1160px, 110vw) auto",
@@ -50,16 +65,17 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
           <div
             aria-hidden
             className="absolute -right-10 top-24 -z-10 h-[32rem] w-[46rem] max-w-[76vw] rounded-[2rem] bg-cover bg-center opacity-70 mix-blend-multiply shadow-2xl animate-float"
-            style={{ backgroundImage: `url('${loanBg.url}')` }}
+            style={{ backgroundImage: `url('${bg.url}')` }}
           />
           <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-white/0 via-transparent to-white/10" />
-          <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_22%,rgba(37,99,235,0.1),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(14,165,233,0.1),transparent_32%)]" />
+          <div aria-hidden className={cn("absolute inset-0 -z-10", RADIAL_BY_TYPE[productType])} />
         </>
       )}
+
       <div className="container mx-auto px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className={`font-display text-4xl font-bold sm:text-5xl ${accentClass}`}>{title}</h1>
-          <p className={cn("mt-4", isLoanPage ? "font-medium text-slate-700" : "text-muted-foreground")}>{subtitle}</p>
+          <p className={cn("mt-4", hasBg ? "font-medium text-slate-700" : "text-muted-foreground")}>{subtitle}</p>
         </div>
         <div className="mt-14 grid gap-10 sm:grid-cols-1 md:grid-cols-2 [perspective:1400px]">
           {items.map((p, i) => {
@@ -69,7 +85,8 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
                 key={p.slug}
                 className={cn(
                   "card-3d group relative flex flex-col overflow-hidden rounded-2xl p-7 ring-1 border-0 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.25)] backdrop-blur-sm",
-                  isLoanPage && "loan-product-card",
+                  hasBg && "product-card-glass",
+
                   palette.bg,
                   palette.ring,
                 )}
