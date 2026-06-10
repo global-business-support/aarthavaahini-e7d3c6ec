@@ -17,6 +17,7 @@ const PRESETS: Record<Variant, {
     blob3: "bg-indigo-400/30",
     // Loan-related: home keys, house & money, car keys, bank/finance
     images: [
+      loanBg.url, // uploaded loan reference (house + LOAN blocks + calculator)
       "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80", // modern home / home loan
       "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80", // money / personal loan
       "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80", // bank / business loan
