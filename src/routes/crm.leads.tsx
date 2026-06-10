@@ -299,16 +299,15 @@ function LeadsPage() {
                     <TableCell>
                       <Badge variant="secondary" className="capitalize">{(l.product_type ?? "").replace(/_/g, " ")}</Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-slate-600">{l.lead_source ?? "—"}</TableCell>
                     <TableCell>
                       <Select value={stage} onValueChange={(v) => updateStage(l, v as Stage)}>
-                        <SelectTrigger className={cn("h-8 w-[150px] font-semibold", st.trigger)}>
+                        <SelectTrigger className={cn("h-8 w-[150px] font-semibold bg-white", st.trigger)}>
                           <span className="flex items-center gap-2">
                             <span className={cn("h-2 w-2 rounded-full", st.dot)} />
                             <SelectValue />
                           </span>
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                           {LEAD_STAGES.map((s) => {
                             const ss = STAGE_STYLES[s];
                             return (
@@ -320,6 +319,25 @@ function LeadsPage() {
                               </SelectItem>
                             );
                           })}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Select value={l.assigned_to ?? "unassigned"} onValueChange={(v) => updateAssignee(l, v)}>
+                        <SelectTrigger className="h-8 w-[170px] bg-white">
+                          <SelectValue placeholder="Unassigned" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="unassigned">Unassigned</SelectItem>
+                          {staff.map((s) => (
+                            <SelectItem key={s.id} value={s.id}>
+                              <span className="flex items-center gap-2">
+                                <span className={cn("h-2 w-2 rounded-full", s.role === "admin" ? "bg-rose-500" : "bg-emerald-500")} />
+                                {(s.full_name || s.email || "Staff")}
+                                <span className="text-[10px] uppercase text-slate-400">{s.role}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </TableCell>
