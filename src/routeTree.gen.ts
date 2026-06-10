@@ -25,6 +25,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CrmIndexRouteImport } from './routes/crm.index'
 import { Route as CrmWhatsappRouteImport } from './routes/crm.whatsapp'
 import { Route as CrmTasksRouteImport } from './routes/crm.tasks'
+import { Route as CrmSettingsRouteImport } from './routes/crm.settings'
 import { Route as CrmScheduleRouteImport } from './routes/crm.schedule'
 import { Route as CrmReportsRouteImport } from './routes/crm.reports'
 import { Route as CrmPartnersRouteImport } from './routes/crm.partners'
@@ -33,7 +34,9 @@ import { Route as CrmLoginRouteImport } from './routes/crm.login'
 import { Route as CrmLoansRouteImport } from './routes/crm.loans'
 import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
 import { Route as CrmInsuranceRouteImport } from './routes/crm.insurance'
+import { Route as CrmDocumentsRouteImport } from './routes/crm.documents'
 import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
+import { Route as CrmActivityRouteImport } from './routes/crm.activity'
 import { Route as BlogsSipGuideRouteImport } from './routes/blogs/sip-guide'
 import { Route as BlogsHomeLoanGuideRouteImport } from './routes/blogs/home-loan-guide'
 import { Route as BlogsCibilScoreRouteImport } from './routes/blogs/cibil-score'
@@ -120,6 +123,11 @@ const CrmTasksRoute = CrmTasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => CrmRoute,
 } as any)
+const CrmSettingsRoute = CrmSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => CrmRoute,
+} as any)
 const CrmScheduleRoute = CrmScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
@@ -160,9 +168,19 @@ const CrmInsuranceRoute = CrmInsuranceRouteImport.update({
   path: '/insurance',
   getParentRoute: () => CrmRoute,
 } as any)
+const CrmDocumentsRoute = CrmDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => CrmRoute,
+} as any)
 const CrmCustomersRoute = CrmCustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
+  getParentRoute: () => CrmRoute,
+} as any)
+const CrmActivityRoute = CrmActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => CrmRoute,
 } as any)
 const BlogsSipGuideRoute = BlogsSipGuideRouteImport.update({
@@ -210,7 +228,9 @@ export interface FileRoutesByFullPath {
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
+  '/crm/activity': typeof CrmActivityRoute
   '/crm/customers': typeof CrmCustomersRoute
+  '/crm/documents': typeof CrmDocumentsRoute
   '/crm/insurance': typeof CrmInsuranceRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/crm/loans': typeof CrmLoansRoute
@@ -219,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/crm/partners': typeof CrmPartnersRoute
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
+  '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm/': typeof CrmIndexRoute
@@ -241,7 +262,9 @@ export interface FileRoutesByTo {
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
+  '/crm/activity': typeof CrmActivityRoute
   '/crm/customers': typeof CrmCustomersRoute
+  '/crm/documents': typeof CrmDocumentsRoute
   '/crm/insurance': typeof CrmInsuranceRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/crm/loans': typeof CrmLoansRoute
@@ -250,6 +273,7 @@ export interface FileRoutesByTo {
   '/crm/partners': typeof CrmPartnersRoute
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
+  '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm': typeof CrmIndexRoute
@@ -274,7 +298,9 @@ export interface FileRoutesById {
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
   '/blogs/home-loan-guide': typeof BlogsHomeLoanGuideRoute
   '/blogs/sip-guide': typeof BlogsSipGuideRoute
+  '/crm/activity': typeof CrmActivityRoute
   '/crm/customers': typeof CrmCustomersRoute
+  '/crm/documents': typeof CrmDocumentsRoute
   '/crm/insurance': typeof CrmInsuranceRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/crm/loans': typeof CrmLoansRoute
@@ -283,6 +309,7 @@ export interface FileRoutesById {
   '/crm/partners': typeof CrmPartnersRoute
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
+  '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm/': typeof CrmIndexRoute
@@ -308,7 +335,9 @@ export interface FileRouteTypes {
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
+    | '/crm/activity'
     | '/crm/customers'
+    | '/crm/documents'
     | '/crm/insurance'
     | '/crm/leads'
     | '/crm/loans'
@@ -317,6 +346,7 @@ export interface FileRouteTypes {
     | '/crm/partners'
     | '/crm/reports'
     | '/crm/schedule'
+    | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
     | '/crm/'
@@ -339,7 +369,9 @@ export interface FileRouteTypes {
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
+    | '/crm/activity'
     | '/crm/customers'
+    | '/crm/documents'
     | '/crm/insurance'
     | '/crm/leads'
     | '/crm/loans'
@@ -348,6 +380,7 @@ export interface FileRouteTypes {
     | '/crm/partners'
     | '/crm/reports'
     | '/crm/schedule'
+    | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
     | '/crm'
@@ -371,7 +404,9 @@ export interface FileRouteTypes {
     | '/blogs/cibil-score'
     | '/blogs/home-loan-guide'
     | '/blogs/sip-guide'
+    | '/crm/activity'
     | '/crm/customers'
+    | '/crm/documents'
     | '/crm/insurance'
     | '/crm/leads'
     | '/crm/loans'
@@ -380,6 +415,7 @@ export interface FileRouteTypes {
     | '/crm/partners'
     | '/crm/reports'
     | '/crm/schedule'
+    | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
     | '/crm/'
@@ -515,6 +551,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CrmTasksRouteImport
       parentRoute: typeof CrmRoute
     }
+    '/crm/settings': {
+      id: '/crm/settings'
+      path: '/settings'
+      fullPath: '/crm/settings'
+      preLoaderRoute: typeof CrmSettingsRouteImport
+      parentRoute: typeof CrmRoute
+    }
     '/crm/schedule': {
       id: '/crm/schedule'
       path: '/schedule'
@@ -571,11 +614,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CrmInsuranceRouteImport
       parentRoute: typeof CrmRoute
     }
+    '/crm/documents': {
+      id: '/crm/documents'
+      path: '/documents'
+      fullPath: '/crm/documents'
+      preLoaderRoute: typeof CrmDocumentsRouteImport
+      parentRoute: typeof CrmRoute
+    }
     '/crm/customers': {
       id: '/crm/customers'
       path: '/customers'
       fullPath: '/crm/customers'
       preLoaderRoute: typeof CrmCustomersRouteImport
+      parentRoute: typeof CrmRoute
+    }
+    '/crm/activity': {
+      id: '/crm/activity'
+      path: '/activity'
+      fullPath: '/crm/activity'
+      preLoaderRoute: typeof CrmActivityRouteImport
       parentRoute: typeof CrmRoute
     }
     '/blogs/sip-guide': {
@@ -643,7 +700,9 @@ const BlogsRouteChildren: BlogsRouteChildren = {
 const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
 
 interface CrmRouteChildren {
+  CrmActivityRoute: typeof CrmActivityRoute
   CrmCustomersRoute: typeof CrmCustomersRoute
+  CrmDocumentsRoute: typeof CrmDocumentsRoute
   CrmInsuranceRoute: typeof CrmInsuranceRoute
   CrmLeadsRoute: typeof CrmLeadsRoute
   CrmLoansRoute: typeof CrmLoansRoute
@@ -652,13 +711,16 @@ interface CrmRouteChildren {
   CrmPartnersRoute: typeof CrmPartnersRoute
   CrmReportsRoute: typeof CrmReportsRoute
   CrmScheduleRoute: typeof CrmScheduleRoute
+  CrmSettingsRoute: typeof CrmSettingsRoute
   CrmTasksRoute: typeof CrmTasksRoute
   CrmWhatsappRoute: typeof CrmWhatsappRoute
   CrmIndexRoute: typeof CrmIndexRoute
 }
 
 const CrmRouteChildren: CrmRouteChildren = {
+  CrmActivityRoute: CrmActivityRoute,
   CrmCustomersRoute: CrmCustomersRoute,
+  CrmDocumentsRoute: CrmDocumentsRoute,
   CrmInsuranceRoute: CrmInsuranceRoute,
   CrmLeadsRoute: CrmLeadsRoute,
   CrmLoansRoute: CrmLoansRoute,
@@ -667,6 +729,7 @@ const CrmRouteChildren: CrmRouteChildren = {
   CrmPartnersRoute: CrmPartnersRoute,
   CrmReportsRoute: CrmReportsRoute,
   CrmScheduleRoute: CrmScheduleRoute,
+  CrmSettingsRoute: CrmSettingsRoute,
   CrmTasksRoute: CrmTasksRoute,
   CrmWhatsappRoute: CrmWhatsappRoute,
   CrmIndexRoute: CrmIndexRoute,
