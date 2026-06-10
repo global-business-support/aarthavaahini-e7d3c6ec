@@ -404,3 +404,25 @@ function toneBlur(t: string) {
     violet: "bg-violet-300/40", cyan: "bg-cyan-300/40", slate: "bg-slate-300/40", rose: "bg-rose-300/40",
   } as Record<string, string>)[t];
 }
+
+function downloadLeadsXlsx(leads: Lead[]) {
+  if (!leads || leads.length === 0) return;
+  const rows = leads.map((l) => ({
+    "Created At": new Date(l.created_at).toLocaleString("en-IN"),
+    "Name": l.full_name,
+    "Phone": l.phone,
+    "Email": l.email ?? "",
+    "Product Type": l.product_type,
+    "Product Name": l.product_name ?? "",
+    "Amount": l.amount ?? "",
+    "City": l.city ?? "",
+    "Source": l.lead_source ?? "",
+    "Status": l.status,
+    "Message": l.message ?? "",
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws["!cols"] = [{ wch: 20 }, { wch: 22 }, { wch: 16 }, { wch: 26 }, { wch: 14 }, { wch: 18 }, { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 40 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Leads");
+  XLSX.writeFile(wb, `aarthvaahini-leads-${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
