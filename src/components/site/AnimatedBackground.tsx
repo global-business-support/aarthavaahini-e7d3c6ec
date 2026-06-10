@@ -1,4 +1,5 @@
 import { type CSSProperties } from "react";
+import loanBg from "@/assets/loan-bg.jpg.asset.json";
 
 type Variant = "loans" | "insurance" | "mutual-funds";
 
