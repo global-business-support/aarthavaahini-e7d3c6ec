@@ -5,7 +5,7 @@ const items = [
   {
     name: "Rahul Sharma",
     role: "Business Owner, Mumbai",
-    text: "Aarthvaahini ne mera business loan sirf 3 din me approve karwa diya. Process bahut smooth tha aur team ne har step pe guide kiya.",
+    text: "Aarthvaahini got my business loan approved in just 3 days. The process was smooth and the team guided me at every step.",
     rating: 5,
     initials: "RS",
     color: "from-blue-500 to-blue-700",
@@ -13,7 +13,7 @@ const items = [
   {
     name: "Priya Verma",
     role: "Software Engineer, Pune",
-    text: "SIP planning aur mutual fund advice excellent thi. Mere portfolio me ek saal me 18% return mila. Highly recommended!",
+    text: "Their SIP planning and mutual fund advice was excellent. My portfolio gained 18% returns in a year. Highly recommended!",
     rating: 5,
     initials: "PV",
     color: "from-pink-500 to-rose-600",
@@ -21,7 +21,7 @@ const items = [
   {
     name: "Amit Patel",
     role: "Doctor, Ahmedabad",
-    text: "Health insurance lene me bahut confusion thi, lekin team ne best plan suggest kiya. Claim bhi cashless ho gaya.",
+    text: "I was confused about choosing health insurance, but the team suggested the best plan. The claim was cashless and hassle-free.",
     rating: 5,
     initials: "AP",
     color: "from-emerald-500 to-teal-600",
@@ -29,7 +29,7 @@ const items = [
   {
     name: "Neha Singh",
     role: "Teacher, Lucknow",
-    text: "Home loan ke liye sabse low interest rate yahi mila. Documentation se lekar disbursal tak sab fast tha.",
+    text: "I got the lowest home loan interest rate here. From documentation to disbursal, everything was fast and transparent.",
     rating: 5,
     initials: "NS",
     color: "from-orange-500 to-amber-600",
@@ -37,7 +37,7 @@ const items = [
   {
     name: "Vikram Joshi",
     role: "Entrepreneur, Bengaluru",
-    text: "CIBIL score improve karne ke tips bahut helpful the. 4 mahine me score 680 se 770 ho gaya.",
+    text: "Their tips to improve my CIBIL score were super helpful. In 4 months, my score went from 680 to 770.",
     rating: 5,
     initials: "VJ",
     color: "from-indigo-500 to-purple-600",
@@ -45,7 +45,7 @@ const items = [
   {
     name: "Sneha Kapoor",
     role: "HR Manager, Delhi",
-    text: "Personal loan apply karte hi 24 ghante me amount account me aa gaya. Transparent charges aur no hidden fees.",
+    text: "I applied for a personal loan and the amount was credited within 24 hours. Transparent charges with no hidden fees.",
     rating: 5,
     initials: "SK",
     color: "from-cyan-500 to-blue-600",
