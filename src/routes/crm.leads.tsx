@@ -81,6 +81,7 @@ function normaliseStage(s: string): Stage {
 }
 
 function LeadsPage() {
+  const { user, isAdmin } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,6 +89,8 @@ function LeadsPage() {
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
   const [open, setOpen] = useState(false);
+  const [noteLead, setNoteLead] = useState<Lead | null>(null);
+
 
   const load = async () => {
     setLoading(true);
