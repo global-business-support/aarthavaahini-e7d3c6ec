@@ -12,7 +12,7 @@ export const Route = createFileRoute("/banking")({
   component: () => (
     <div className="min-h-screen bg-background">
       <Header />
-      <main><ProductPage title="Banking" subtitle="Savings, current, FD, demat — sab ek hi platform pe."
+      <main><ProductPage title="Banking" subtitle="Savings, current, FD, demat — all on a single platform."
         items={bankingProducts} productType="banking" accentClass="text-[#1565C0]" /></main>
       <Footer />
     </div>

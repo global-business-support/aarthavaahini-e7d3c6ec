@@ -27,7 +27,7 @@ export const Route = createFileRoute("/mutual-funds")({
         />
         <ProductPage
           title="Mutual Funds"
-          subtitle="₹500 se start investing through SIP — the smartest path to long-term wealth creation."
+          subtitle="Start investing with SIP from just ₹500 — the smartest path to long-term wealth creation."
           items={mutualFunds}
           productType="mutual_fund"
           accentClass="text-[#183c93]"

@@ -27,20 +27,42 @@ const CARD_PALETTES = [
   { bg: "bg-gradient-to-br from-cyan-50 via-white to-sky-100",      ring: "ring-cyan-200",   chip: "bg-cyan-100 text-cyan-700",      btn: "from-cyan-500 to-sky-600" },
 ];
 
-// Animated background per product type — soft & light
+// Animated background per product type — soft, light, with related imagery
 function AnimatedBackdrop({ productType }: { productType: Props["productType"] }) {
-  const config: Record<Props["productType"], string[]> = {
-    loan:        ["bg-blue-200/40", "bg-sky-200/40", "bg-indigo-200/40"],
-    insurance:   ["bg-rose-200/40", "bg-pink-200/40", "bg-amber-200/40"],
-    mutual_fund: ["bg-emerald-200/40", "bg-teal-200/40", "bg-lime-200/40"],
-    banking:     ["bg-cyan-200/40", "bg-sky-200/40", "bg-blue-200/40"],
+  const config: Record<Props["productType"], { blobs: string[]; image: string }> = {
+    loan: {
+      blobs: ["bg-blue-200/40", "bg-sky-200/40", "bg-indigo-200/40"],
+      // Modern home / keys — represents home & personal loans
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1800&q=80",
+    },
+    insurance: {
+      blobs: ["bg-rose-200/40", "bg-pink-200/40", "bg-amber-200/40"],
+      // Family protection / umbrella concept
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+    },
+    mutual_fund: {
+      blobs: ["bg-emerald-200/40", "bg-teal-200/40", "bg-lime-200/40"],
+      // Stock chart / investing growth
+      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1800&q=80",
+    },
+    banking: {
+      blobs: ["bg-cyan-200/40", "bg-sky-200/40", "bg-blue-200/40"],
+      image: "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1800&q=80",
+    },
   };
-  const colors = config[productType];
+  const { blobs, image } = config[productType];
   return (
     <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div className={cn("absolute -top-20 -left-20 h-[28rem] w-[28rem] rounded-full blur-3xl animate-pulse", colors[0])} style={{ animationDuration: "6s" }} />
-      <div className={cn("absolute top-1/3 -right-24 h-[26rem] w-[26rem] rounded-full blur-3xl animate-pulse", colors[1])} style={{ animationDuration: "8s", animationDelay: "1s" }} />
-      <div className={cn("absolute bottom-0 left-1/3 h-[24rem] w-[24rem] rounded-full blur-3xl animate-pulse", colors[2])} style={{ animationDuration: "10s", animationDelay: "2s" }} />
+      {/* Themed background image — very faded so cards stay readable */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-[0.12]"
+        style={{ backgroundImage: `url('${image}')` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-white/70 to-white/85" />
+      {/* Animated soft color blobs */}
+      <div className={cn("absolute -top-20 -left-20 h-[28rem] w-[28rem] rounded-full blur-3xl animate-pulse", blobs[0])} style={{ animationDuration: "6s" }} />
+      <div className={cn("absolute top-1/3 -right-24 h-[26rem] w-[26rem] rounded-full blur-3xl animate-pulse", blobs[1])} style={{ animationDuration: "8s", animationDelay: "1s" }} />
+      <div className={cn("absolute bottom-0 left-1/3 h-[24rem] w-[24rem] rounded-full blur-3xl animate-pulse", blobs[2])} style={{ animationDuration: "10s", animationDelay: "2s" }} />
     </div>
   );
 }
