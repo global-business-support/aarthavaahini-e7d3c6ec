@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ProductPage } from "@/components/site/ProductPage";
 import { ProductHeroSlider } from "@/components/site/ProductHeroSlider";
+import { AnimatedBackground } from "@/components/site/AnimatedBackground";
 import { insurance } from "@/data/products";
 
 export const Route = createFileRoute("/insurance")({
@@ -13,7 +14,8 @@ export const Route = createFileRoute("/insurance")({
     ],
   }),
   component: () => (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground variant="insurance" />
       <Header />
       <main className="relative isolate overflow-hidden">
         <ProductHeroSlider
