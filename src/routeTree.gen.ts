@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CrmIndexRouteImport } from './routes/crm.index'
+import { Route as CrmWhatsappRouteImport } from './routes/crm.whatsapp'
 import { Route as CrmTasksRouteImport } from './routes/crm.tasks'
 import { Route as CrmScheduleRouteImport } from './routes/crm.schedule'
 import { Route as CrmReportsRouteImport } from './routes/crm.reports'
@@ -107,6 +108,11 @@ const IndexRoute = IndexRouteImport.update({
 const CrmIndexRoute = CrmIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => CrmRoute,
+} as any)
+const CrmWhatsappRoute = CrmWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
   getParentRoute: () => CrmRoute,
 } as any)
 const CrmTasksRoute = CrmTasksRouteImport.update({
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
   '/crm/tasks': typeof CrmTasksRoute
+  '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm/': typeof CrmIndexRoute
 }
 export interface FileRoutesByTo {
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
   '/crm/tasks': typeof CrmTasksRoute
+  '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm': typeof CrmIndexRoute
 }
 export interface FileRoutesById {
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/crm/reports': typeof CrmReportsRoute
   '/crm/schedule': typeof CrmScheduleRoute
   '/crm/tasks': typeof CrmTasksRoute
+  '/crm/whatsapp': typeof CrmWhatsappRoute
   '/crm/': typeof CrmIndexRoute
 }
 export interface FileRouteTypes {
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/crm/reports'
     | '/crm/schedule'
     | '/crm/tasks'
+    | '/crm/whatsapp'
     | '/crm/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/crm/reports'
     | '/crm/schedule'
     | '/crm/tasks'
+    | '/crm/whatsapp'
     | '/crm'
   id:
     | '__root__'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/crm/reports'
     | '/crm/schedule'
     | '/crm/tasks'
+    | '/crm/whatsapp'
     | '/crm/'
   fileRoutesById: FileRoutesById
 }
@@ -487,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/crm/'
       preLoaderRoute: typeof CrmIndexRouteImport
+      parentRoute: typeof CrmRoute
+    }
+    '/crm/whatsapp': {
+      id: '/crm/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/crm/whatsapp'
+      preLoaderRoute: typeof CrmWhatsappRouteImport
       parentRoute: typeof CrmRoute
     }
     '/crm/tasks': {
@@ -634,6 +653,7 @@ interface CrmRouteChildren {
   CrmReportsRoute: typeof CrmReportsRoute
   CrmScheduleRoute: typeof CrmScheduleRoute
   CrmTasksRoute: typeof CrmTasksRoute
+  CrmWhatsappRoute: typeof CrmWhatsappRoute
   CrmIndexRoute: typeof CrmIndexRoute
 }
 
@@ -648,6 +668,7 @@ const CrmRouteChildren: CrmRouteChildren = {
   CrmReportsRoute: CrmReportsRoute,
   CrmScheduleRoute: CrmScheduleRoute,
   CrmTasksRoute: CrmTasksRoute,
+  CrmWhatsappRoute: CrmWhatsappRoute,
   CrmIndexRoute: CrmIndexRoute,
 }
 
