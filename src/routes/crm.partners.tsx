@@ -166,26 +166,30 @@ function PartnerForm({ onSaved }: { onSaved: (p: Partner) => void }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        if (!f.name.trim() || !f.phone.trim()) {
+          toast.error("Name and phone are required");
+          return;
+        }
         onSaved({
           id: crypto.randomUUID(),
           ...f,
           created_at: new Date().toISOString(),
         });
       }}
-      className="grid grid-cols-2 gap-3"
+      className="grid grid-cols-1 gap-3 sm:grid-cols-2"
     >
       <Field label="Partner Name *"><Input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
       <Field label="Organisation"><Input value={f.organisation} onChange={(e) => setF({ ...f, organisation: e.target.value })} /></Field>
       <Field label="Category">
         <Select value={f.category} onValueChange={(v) => setF({ ...f, category: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>{CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          <SelectContent className="bg-white">{CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
         </Select>
       </Field>
       <Field label="Status">
         <Select value={f.status} onValueChange={(v) => setF({ ...f, status: v as Partner["status"] })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectItem value="Active">Active</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Inactive">Inactive</SelectItem>
@@ -195,14 +199,14 @@ function PartnerForm({ onSaved }: { onSaved: (p: Partner) => void }) {
       <Field label="Phone *"><Input required value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></Field>
       <Field label="Email"><Input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
       <Field label="City"><Input value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></Field>
-      <div className="col-span-2"><Field label="Notes"><Input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></Field></div>
-      <div className="col-span-2 flex justify-end">
-        <Button type="submit" className="bg-gradient-to-r from-sky-600 to-blue-600 text-white">Save Partner</Button>
+      <div className="sm:col-span-2"><Field label="Notes"><Input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} placeholder="Commission %, contact person, agreement date…" /></Field></div>
+      <div className="sm:col-span-2 flex justify-end">
+        <Button type="submit" className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">Save Partner</Button>
       </div>
     </form>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div><Label className="text-xs">{label}</Label><div className="mt-1">{children}</div></div>;
+  return <div className="min-w-0"><Label className="text-xs">{label}</Label><div className="mt-1">{children}</div></div>;
 }
