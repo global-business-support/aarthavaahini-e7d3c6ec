@@ -23,6 +23,8 @@ import {
   ChevronsRight,
   Menu,
   X,
+  FolderOpen,
+  Activity,
 } from "lucide-react";
 import { useCrmAuth } from "@/hooks/useCrmAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,10 +62,13 @@ const NAV: NavItem[] = [
   { to: "/crm/loans", label: "Loans", icon: Banknote },
   { to: "/crm/insurance", label: "Insurance", icon: ShieldCheck },
   { to: "/crm/mutual-funds", label: "Mutual Funds", icon: TrendingUp },
+  { to: "/crm/documents", label: "Documents", icon: FolderOpen },
   { to: "/crm/tasks", label: "Tasks", icon: CheckSquare },
   { to: "/crm/schedule", label: "Schedule", icon: CalendarClock },
+  { to: "/crm/activity", label: "Activity", icon: Activity },
   { to: "/crm/whatsapp", label: "WhatsApp", icon: MessageCircle },
-  { to: "/crm/reports", label: "Reports", icon: FileText },
+  { to: "/crm/reports", label: "Reports & MIS", icon: FileText },
+  { to: "/crm/settings", label: "Settings", icon: Settings },
 ];
 
 export function CrmLayout() {

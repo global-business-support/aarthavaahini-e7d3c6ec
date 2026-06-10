@@ -1,15 +1,40 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Gauge } from "lucide-react";
+import { CheckCircle2, Gauge, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export function CibilChecker() {
+  const [form, setForm] = useState({ name: "", pan: "", mobile: "" });
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.name.trim().length < 2) return toast.error("Please enter your name");
+    if (form.mobile.trim().length < 7) return toast.error("Please enter a valid mobile number");
+    setLoading(true);
+    const { error } = await supabase.from("leads").insert({
+      full_name: form.name.trim(),
+      lead_name: form.name.trim(),
+      phone: form.mobile.trim(),
+      pan: form.pan.trim() || null,
+      product_type: "cibil",
+      product_name: "CIBIL Score Check",
+      lead_source: "Website",
+      status: "New",
+      message: "Free CIBIL score request from website",
+    });
+    setLoading(false);
+    if (error) return toast.error(error.message);
+    toast.success("Thank you! We will share your CIBIL report shortly.");
+    setForm({ name: "", pan: "", mobile: "" });
+  };
+
   return (
-    <section
-  id="cibil"
-  className="container mx-auto scroll-mt-24 px-6 py-24"
->
+    <section id="cibil" className="container mx-auto scroll-mt-24 px-6 py-24">
       <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
         <Card className="relative overflow-hidden border/60 bg-gradient-card p-10 shadow-elegant">
           <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-primary/15 blur-3xl" />
@@ -24,20 +49,25 @@ export function CibilChecker() {
               Know exactly where you stand before applying for any loan. Improve your eligibility with personalised tips.
             </p>
 
-            <form className="mt-8 grid gap-4 sm:grid-cols-2">
+            <form onSubmit={submit} className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="As per PAN" className="mt-1.5 h-11" />
+                <Input id="name" placeholder="As per PAN" className="mt-1.5 h-11"
+                  value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div>
                 <Label htmlFor="pan">PAN Number</Label>
-                <Input id="pan" placeholder="ABCDE1234F" className="mt-1.5 h-11" />
+                <Input id="pan" placeholder="ABCDE1234F" className="mt-1.5 h-11"
+                  value={form.pan} onChange={(e) => setForm({ ...form, pan: e.target.value.toUpperCase() })} />
               </div>
               <div>
                 <Label htmlFor="mobile">Mobile</Label>
-                <Input id="mobile" placeholder="+91 98xxxxxxxx" className="mt-1.5 h-11" />
+                <Input id="mobile" placeholder="+91 98xxxxxxxx" className="mt-1.5 h-11"
+                  value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} required />
               </div>
-              <Button type="button" size="lg" className="sm:col-span-2 bg-linear-to-r from-[#17357e] to-blue-600 shadow-glow">
+              <Button type="submit" size="lg" disabled={loading}
+                className="sm:col-span-2 bg-linear-to-r from-[#17357e] to-blue-600 shadow-glow">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Get my Score — Free
               </Button>
             </form>
