@@ -34,14 +34,39 @@ function CustomersPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<Row | null>(null);
+  const [q, setQ] = useState("");
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(500);
-      setRows((data ?? []) as Row[]);
+      const list = (data ?? []) as Row[];
+      setRows(list);
+      // Read ?q= from URL: auto-fill search and open match if exactly one
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        const initial = url.searchParams.get("q") ?? "";
+        if (initial) {
+          setQ(initial);
+          const match = list.find((r) => (r.customer_name ?? "").toLowerCase() === initial.toLowerCase());
+          if (match) setActive(match);
+        }
+      }
       setLoading(false);
     })();
   }, []);
+
+  const filtered = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return rows;
+    return rows.filter((r) =>
+      (r.customer_name ?? "").toLowerCase().includes(term) ||
+      (r.mobile ?? "").toLowerCase().includes(term) ||
+      (r.email ?? "").toLowerCase().includes(term) ||
+      (r.pan ?? "").toLowerCase().includes(term),
+    );
+  }, [q, rows]);
+
+
 
   return (
     <div className="space-y-4">
