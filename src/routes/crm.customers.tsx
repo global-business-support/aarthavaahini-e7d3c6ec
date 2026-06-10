@@ -81,11 +81,23 @@ function CustomersPage() {
         </div>
       </div>
 
+      <Card className="p-3">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search by name, mobile, email, PAN…"
+            className="pl-9"
+          />
+        </div>
+      </Card>
+
       <Card className="overflow-hidden">
         {loading ? (
           <div className="flex h-40 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
-        ) : rows.length === 0 ? (
-          <div className="p-10 text-center text-sm text-slate-500">No customers yet.</div>
+        ) : filtered.length === 0 ? (
+          <div className="p-10 text-center text-sm text-slate-500">{rows.length === 0 ? "No customers yet." : "No customers match your search."}</div>
         ) : (
           <Table>
             <TableHeader>
@@ -99,7 +111,7 @@ function CustomersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((r) => (
+              {filtered.map((r) => (
                 <TableRow key={r.id} className="cursor-pointer hover:bg-sky-50/60" onClick={() => setActive(r)}>
                   <TableCell className="font-medium">
                     <button className="text-sky-700 hover:underline">{r.customer_name}</button>
@@ -113,6 +125,7 @@ function CustomersPage() {
               ))}
             </TableBody>
           </Table>
+
         )}
       </Card>
 
