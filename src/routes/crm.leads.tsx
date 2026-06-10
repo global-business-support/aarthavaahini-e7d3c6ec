@@ -130,7 +130,10 @@ function LeadsPage() {
       (l.email ?? "").toLowerCase().includes(term) ||
       (l.pan ?? "").toLowerCase().includes(term);
     const matchesStage = stageFilter === "all" || stage === stageFilter;
-    return matchesText && matchesStage;
+    const matchesAssignee =
+      assigneeFilter === "all" ||
+      (assigneeFilter === "unassigned" ? !l.assigned_to : l.assigned_to === assigneeFilter);
+    return matchesText && matchesStage && matchesAssignee;
   });
 
   const stageCounts = LEAD_STAGES.reduce<Record<Stage, number>>((acc, s) => {
@@ -138,13 +141,26 @@ function LeadsPage() {
     return acc;
   }, { New: 0, Qualified: 0, Approved: 0, Disbursed: 0, Closed: 0 });
 
+  const staffLabel = (id: string | null) => {
+    if (!id) return "Unassigned";
+    const s = staff.find((x) => x.id === id);
+    return s?.full_name || s?.email || "Staff";
+  };
+
+  const updateAssignee = async (lead: Lead, value: string) => {
+    const newId = value === "unassigned" ? null : value;
+    const { error } = await supabase.from("leads").update({ assigned_to: newId }).eq("id", lead.id);
+    if (error) return toast.error(error.message);
+    setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, assigned_to: newId } : l)));
+    toast.success(`Assigned → ${staffLabel(newId)}`);
+  };
+
   const updateStage = async (lead: Lead, status: Stage) => {
     const { error } = await supabase.from("leads").update({ status }).eq("id", lead.id);
     if (error) return toast.error(error.message);
     setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status } : l)));
     toast.success(`Stage → ${status}`);
 
-    // Auto-create a customer when stage reaches Disbursed
     if (status === "Disbursed") {
       const { data: existing } = await supabase
         .from("customers")
