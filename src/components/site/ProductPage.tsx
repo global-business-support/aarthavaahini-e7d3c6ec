@@ -20,14 +20,9 @@ type Props = {
   accentClass: string;
 };
 
-// Light color palettes that rotate per card — no overlap, all readable
+// Single professional light-blue palette for all product cards
 const CARD_PALETTES = [
-  { bg: "bg-gradient-to-br from-sky-50 via-white to-blue-100",      ring: "ring-sky-200",    chip: "bg-sky-100 text-sky-700",        btn: "from-sky-500 to-blue-600" },
-  { bg: "bg-gradient-to-br from-rose-50 via-white to-pink-100",     ring: "ring-rose-200",   chip: "bg-rose-100 text-rose-700",      btn: "from-rose-500 to-pink-600" },
-  { bg: "bg-gradient-to-br from-emerald-50 via-white to-teal-100",  ring: "ring-emerald-200",chip: "bg-emerald-100 text-emerald-700",btn: "from-emerald-500 to-teal-600" },
-  { bg: "bg-gradient-to-br from-amber-50 via-white to-orange-100",  ring: "ring-amber-200",  chip: "bg-amber-100 text-amber-700",    btn: "from-amber-500 to-orange-600" },
-  { bg: "bg-gradient-to-br from-violet-50 via-white to-purple-100", ring: "ring-violet-200", chip: "bg-violet-100 text-violet-700",  btn: "from-violet-500 to-purple-600" },
-  { bg: "bg-gradient-to-br from-cyan-50 via-white to-sky-100",      ring: "ring-cyan-200",   chip: "bg-cyan-100 text-cyan-700",      btn: "from-cyan-500 to-sky-600" },
+  { bg: "bg-gradient-to-br from-blue-50 via-white to-slate-100", ring: "ring-blue-200", chip: "bg-blue-100 text-blue-700", btn: "from-blue-600 to-blue-700" },
 ];
 
 const BG_BY_TYPE: Record<Props["productType"], { url: string } | null> = {
