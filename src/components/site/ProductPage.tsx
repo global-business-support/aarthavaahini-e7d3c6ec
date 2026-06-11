@@ -49,17 +49,17 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
         <>
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 opacity-95 mix-blend-multiply animate-products-bg"
+            className="absolute inset-0 -z-10 opacity-90 mix-blend-multiply animate-products-bg"
             style={{
               backgroundImage: `url('${bg.url}')`,
-              backgroundPosition: "center 45%",
+              backgroundPosition: "center top",
               backgroundRepeat: "no-repeat",
-              backgroundSize: "min(1160px, 110vw) auto",
+              backgroundSize: "cover",
             }}
           />
           <div
             aria-hidden
-            className="absolute -right-10 top-24 -z-10 h-[32rem] w-[46rem] max-w-[76vw] rounded-[2rem] bg-cover bg-center opacity-70 mix-blend-multiply shadow-2xl animate-float"
+            className="hidden md:block absolute -right-10 top-24 -z-10 h-[32rem] w-[46rem] max-w-[76vw] rounded-[2rem] bg-cover bg-center opacity-60 mix-blend-multiply shadow-2xl animate-float"
             style={{ backgroundImage: `url('${bg.url}')` }}
           />
           <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-white/0 via-transparent to-white/10" />
