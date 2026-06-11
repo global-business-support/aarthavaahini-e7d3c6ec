@@ -67,6 +67,7 @@ const NAV: NavItem[] = [
   { to: "/crm/schedule", label: "Schedule", icon: CalendarClock },
   { to: "/crm/activity", label: "Activity", icon: Activity },
   { to: "/crm/reports", label: "Reports & MIS", icon: FileText },
+  { to: "/admin/whatsapp", label: "WhatsApp", icon: MessageCircle },
   { to: "/crm/settings", label: "Settings", icon: Settings },
 ];
 
