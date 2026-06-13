@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { sendWhatsApp } from "@/lib/twilio.functions";
+import { sendWhatsApp, twilioConfig } from "@/lib/twilio.functions";
 import * as XLSX from "xlsx";
 
 export const Route = createFileRoute("/crm/whatsapp")({
@@ -54,12 +54,22 @@ function CrmWhatsAppPage() {
   const [bulkRunning, setBulkRunning] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const sendFn = useServerFn(sendWhatsApp);
+  const cfgFn = useServerFn(twilioConfig);
+  const [cfg, setCfg] = useState<{
+    hasLovableKey: boolean;
+    hasTwilioKey: boolean;
+    hasFromNumber: boolean;
+    fromNumber: string | null;
+    gatewayVerified?: boolean;
+    gatewayMessage?: string;
+  } | null>(null);
 
   useEffect(() => {
     supabase.from("leads").select("id, full_name, lead_name, phone, email, product_type, status")
       .order("created_at", { ascending: false }).limit(500)
       .then(({ data }) => setLeads((data as Lead[]) ?? []));
-  }, []);
+    cfgFn().then(setCfg).catch(() => setCfg({ hasLovableKey: false, hasTwilioKey: false, hasFromNumber: false, fromNumber: null, gatewayVerified: false, gatewayMessage: "Twilio token check failed" }));
+  }, [cfgFn]);
 
   const finalMsg = message.replace(/\{\{name\}\}/gi, name || "Customer");
   const cleanPhone = phone.replace(/\D/g, "");
@@ -181,11 +191,23 @@ function CrmWhatsAppPage() {
         <p className="text-sm text-slate-500">Send single or bulk WhatsApp messages via Twilio.</p>
       </div>
 
+      {cfg && (
+        <div className={`mb-4 rounded-xl border p-3 text-xs ${cfg.gatewayVerified && cfg.hasFromNumber ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
+          <div className="flex items-start gap-2">
+            {cfg.gatewayVerified && cfg.hasFromNumber ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> : <XCircle className="mt-0.5 h-4 w-4 shrink-0" />}
+            <div>
+              <b>{cfg.gatewayVerified && cfg.hasFromNumber ? "Twilio connected:" : "Twilio setup check:"}</b> {cfg.gatewayMessage ?? "Checking token"}
+              {cfg.fromNumber && <span className="ml-1">Sender: <b>{cfg.fromNumber}</b>.</span>}
+              {!cfg.gatewayVerified && <span className="ml-1">If token error still appears, reconnect Twilio once in Connectors.</span>}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
-        <b>⚠️ Twilio WhatsApp Sandbox:</b> Before a number can receive messages, it must opt-in once by sending
+        <b>⚠️ Twilio WhatsApp Sandbox:</b> For sandbox sending, the customer must send
         <code className="mx-1 rounded bg-white px-1.5 py-0.5">join &lt;your-sandbox-code&gt;</code>
-        to your Twilio WhatsApp number from their phone. Approved Business Sender numbers don't need this step.
-        Indian 10-digit numbers will be auto-prefixed with <b>+91</b>.
+        to <b>+14155238886</b> once. Indian 10-digit numbers auto-convert to <b>+91</b>.
       </div>
 
 
