@@ -65,9 +65,16 @@ function CrmWhatsAppPage() {
   const cleanPhone = phone.replace(/\D/g, "");
   const waLink = cleanPhone && finalMsg ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(finalMsg)}` : null;
 
+  const normalisePhone = (to: string) => {
+    const trimmed = to.trim();
+    if (trimmed.startsWith("+")) return trimmed.replace(/\s/g, "");
+    const digits = trimmed.replace(/\D/g, "");
+    // Auto-prepend India country code for 10-digit numbers
+    if (digits.length === 10) return `+91${digits}`;
+    return `+${digits}`;
+  };
   const sendOne = async (to: string, body: string) => {
-    const normalised = to.startsWith("+") ? to.replace(/\s/g, "") : `+${to.replace(/\D/g, "")}`;
-    return sendFn({ data: { to: normalised, body } });
+    return sendFn({ data: { to: normalisePhone(to), body } });
   };
 
   const send = async () => {
