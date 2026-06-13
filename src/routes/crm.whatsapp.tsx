@@ -65,9 +65,16 @@ function CrmWhatsAppPage() {
   const cleanPhone = phone.replace(/\D/g, "");
   const waLink = cleanPhone && finalMsg ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(finalMsg)}` : null;
 
+  const normalisePhone = (to: string) => {
+    const trimmed = to.trim();
+    if (trimmed.startsWith("+")) return trimmed.replace(/\s/g, "");
+    const digits = trimmed.replace(/\D/g, "");
+    // Auto-prepend India country code for 10-digit numbers
+    if (digits.length === 10) return `+91${digits}`;
+    return `+${digits}`;
+  };
   const sendOne = async (to: string, body: string) => {
-    const normalised = to.startsWith("+") ? to.replace(/\s/g, "") : `+${to.replace(/\D/g, "")}`;
-    return sendFn({ data: { to: normalised, body } });
+    return sendFn({ data: { to: normalisePhone(to), body } });
   };
 
   const send = async () => {
@@ -169,10 +176,18 @@ function CrmWhatsAppPage() {
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="font-display text-2xl font-bold text-slate-900 md:text-3xl">WhatsApp Sender</h1>
         <p className="text-sm text-slate-500">Send single or bulk WhatsApp messages via Twilio.</p>
       </div>
+
+      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+        <b>⚠️ Twilio WhatsApp Sandbox:</b> Before a number can receive messages, it must opt-in once by sending
+        <code className="mx-1 rounded bg-white px-1.5 py-0.5">join &lt;your-sandbox-code&gt;</code>
+        to your Twilio WhatsApp number from their phone. Approved Business Sender numbers don't need this step.
+        Indian 10-digit numbers will be auto-prefixed with <b>+91</b>.
+      </div>
+
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 bg-white p-6">
