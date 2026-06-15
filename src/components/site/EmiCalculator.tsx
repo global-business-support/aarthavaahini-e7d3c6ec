@@ -300,6 +300,81 @@ export function EmiCalculator() {
   );
 }
 
+function YearlyChart({ data, loan }: { data: { year: number; interest: number; principal: number; balance: number }[]; loan: number }) {
+  if (!data.length) return null;
+  const W = 760;
+  const H = 260;
+  const padL = 50, padR = 50, padB = 30, padT = 10;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const maxStack = Math.max(...data.map((d) => d.interest + d.principal));
+  const maxBal = Math.max(loan, ...data.map((d) => d.balance));
+  const bw = innerW / data.length;
+  const barW = Math.max(6, bw * 0.6);
+
+  const balPoints = data
+    .map((d, i) => {
+      const x = padL + i * bw + bw / 2;
+      const y = padT + innerH - (d.balance / maxBal) * innerH;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[600px]" preserveAspectRatio="none">
+        {/* grid */}
+        {[0, 0.25, 0.5, 0.75, 1].map((t) => (
+          <line key={t} x1={padL} x2={W - padR} y1={padT + innerH * t} y2={padT + innerH * t} stroke="#e5e7eb" strokeWidth="1" />
+        ))}
+        {/* bars */}
+        {data.map((d, i) => {
+          const x = padL + i * bw + (bw - barW) / 2;
+          const pH = (d.principal / maxStack) * innerH;
+          const iH = (d.interest / maxStack) * innerH;
+          const yP = padT + innerH - pH;
+          const yI = yP - iH;
+          return (
+            <g key={d.year}>
+              <rect x={x} y={yI} width={barW} height={iH} fill="#fb923c" rx="2">
+                <title>Year {d.year} · Interest ₹ {formatINR(d.interest)}</title>
+              </rect>
+              <rect x={x} y={yP} width={barW} height={pH} fill="#2563eb" rx="2">
+                <title>Year {d.year} · Principal ₹ {formatINR(d.principal)}</title>
+              </rect>
+              {(data.length <= 20 || d.year % 2 === 1) && (
+                <text x={x + barW / 2} y={H - padB + 14} fontSize="10" fill="#6b7280" textAnchor="middle">
+                  {d.year}
+                </text>
+              )}
+            </g>
+          );
+        })}
+        {/* balance line */}
+        <polyline points={balPoints} fill="none" stroke="#10b981" strokeWidth="2.5" />
+        {data.map((d, i) => {
+          const x = padL + i * bw + bw / 2;
+          const y = padT + innerH - (d.balance / maxBal) * innerH;
+          return <circle key={d.year} cx={x} cy={y} r="2.5" fill="#10b981"><title>Year {d.year} · Balance ₹ {formatINR(d.balance)}</title></circle>;
+        })}
+        {/* y-axis labels (stack) */}
+        {[0, 0.5, 1].map((t) => (
+          <text key={`l${t}`} x={padL - 6} y={padT + innerH * (1 - t) + 3} fontSize="10" fill="#6b7280" textAnchor="end">
+            ₹{formatINR(maxStack * t)}
+          </text>
+        ))}
+        {/* y-axis right (balance) */}
+        {[0, 0.5, 1].map((t) => (
+          <text key={`r${t}`} x={W - padR + 6} y={padT + innerH * (1 - t) + 3} fontSize="10" fill="#10b981" textAnchor="start">
+            ₹{formatINR(maxBal * t)}
+          </text>
+        ))}
+        <text x={padL} y={H - 4} fontSize="10" fill="#6b7280">Year</text>
+      </svg>
+    </div>
+  );
+}
+
 function Slider({ label, value, v, min, max, step, onChange }: {
   label: string; value: string; v: number; min: number; max: number; step: number; onChange: (n: number) => void;
 }) {
