@@ -218,6 +218,7 @@ export type Database = {
           lead_source: string | null
           message: string | null
           pan: string | null
+          partner_id: string | null
           phone: string
           product_name: string | null
           product_type: string
@@ -237,6 +238,7 @@ export type Database = {
           lead_source?: string | null
           message?: string | null
           pan?: string | null
+          partner_id?: string | null
           phone: string
           product_name?: string | null
           product_type: string
@@ -256,13 +258,22 @@ export type Database = {
           lead_source?: string | null
           message?: string | null
           pan?: string | null
+          partner_id?: string | null
           phone?: string
           product_name?: string | null
           product_type?: string
           state?: string | null
           status?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "leads_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       loan_cases: {
         Row: {
@@ -345,6 +356,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      partners: {
+        Row: {
+          category: string
+          city: string | null
+          commission_pct: number | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          organisation: string | null
+          phone: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category?: string
+          city?: string | null
+          commission_pct?: number | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          organisation?: string | null
+          phone: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          city?: string | null
+          commission_pct?: number | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          organisation?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -442,6 +501,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
