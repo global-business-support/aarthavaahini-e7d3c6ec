@@ -48,41 +48,56 @@ export type Database = {
         Row: {
           aadhaar: string | null
           address: string | null
+          cibil_score: number | null
           created_at: string
           customer_name: string
           email: string | null
           id: string
           income: number | null
           lead_id: string | null
+          loan_amount: number | null
+          loan_sub_type: string | null
+          loan_type: string | null
           mobile: string | null
           occupation: string | null
           pan: string | null
+          stage: string
         }
         Insert: {
           aadhaar?: string | null
           address?: string | null
+          cibil_score?: number | null
           created_at?: string
           customer_name: string
           email?: string | null
           id?: string
           income?: number | null
           lead_id?: string | null
+          loan_amount?: number | null
+          loan_sub_type?: string | null
+          loan_type?: string | null
           mobile?: string | null
           occupation?: string | null
           pan?: string | null
+          stage?: string
         }
         Update: {
           aadhaar?: string | null
           address?: string | null
+          cibil_score?: number | null
           created_at?: string
           customer_name?: string
           email?: string | null
           id?: string
           income?: number | null
           lead_id?: string | null
+          loan_amount?: number | null
+          loan_sub_type?: string | null
+          loan_type?: string | null
           mobile?: string | null
           occupation?: string | null
           pan?: string | null
+          stage?: string
         }
         Relationships: [
           {
@@ -209,6 +224,7 @@ export type Database = {
           aadhaar: string | null
           amount: number | null
           assigned_to: string | null
+          cibil_score: number | null
           city: string | null
           created_at: string
           email: string | null
@@ -216,6 +232,9 @@ export type Database = {
           id: string
           lead_name: string | null
           lead_source: string | null
+          loan_amount: number | null
+          loan_sub_type: string | null
+          loan_type: string | null
           message: string | null
           pan: string | null
           partner_id: string | null
@@ -229,6 +248,7 @@ export type Database = {
           aadhaar?: string | null
           amount?: number | null
           assigned_to?: string | null
+          cibil_score?: number | null
           city?: string | null
           created_at?: string
           email?: string | null
@@ -236,6 +256,9 @@ export type Database = {
           id?: string
           lead_name?: string | null
           lead_source?: string | null
+          loan_amount?: number | null
+          loan_sub_type?: string | null
+          loan_type?: string | null
           message?: string | null
           pan?: string | null
           partner_id?: string | null
@@ -249,6 +272,7 @@ export type Database = {
           aadhaar?: string | null
           amount?: number | null
           assigned_to?: string | null
+          cibil_score?: number | null
           city?: string | null
           created_at?: string
           email?: string | null
@@ -256,6 +280,9 @@ export type Database = {
           id?: string
           lead_name?: string | null
           lead_source?: string | null
+          loan_amount?: number | null
+          loan_sub_type?: string | null
+          loan_type?: string | null
           message?: string | null
           pan?: string | null
           partner_id?: string | null
