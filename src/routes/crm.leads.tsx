@@ -136,7 +136,7 @@ function LeadsPage() {
     const [{ data, error }, roles] = await Promise.all([
       supabase
         .from("leads")
-        .select("id, lead_name, full_name, phone, email, pan, city, state, product_type, lead_source, status, assigned_to, created_at, cibil_score, loan_type, loan_sub_type, loan_amount")
+        .select("id, lead_name, full_name, phone, email, pan, city, state, product_type, lead_source, status, assigned_to, created_at, cibil_score, loan_type, loan_sub_type, loan_amount, bank_name")
         .order("created_at", { ascending: false })
         .limit(500),
       supabase.from("user_roles").select("user_id, role"),
