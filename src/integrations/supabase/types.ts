@@ -48,6 +48,7 @@ export type Database = {
         Row: {
           aadhaar: string | null
           address: string | null
+          bank_name: string | null
           cibil_score: number | null
           created_at: string
           customer_name: string
@@ -59,6 +60,7 @@ export type Database = {
           loan_sub_type: string | null
           loan_type: string | null
           mobile: string | null
+          note: string | null
           occupation: string | null
           pan: string | null
           stage: string
@@ -66,6 +68,7 @@ export type Database = {
         Insert: {
           aadhaar?: string | null
           address?: string | null
+          bank_name?: string | null
           cibil_score?: number | null
           created_at?: string
           customer_name: string
@@ -77,6 +80,7 @@ export type Database = {
           loan_sub_type?: string | null
           loan_type?: string | null
           mobile?: string | null
+          note?: string | null
           occupation?: string | null
           pan?: string | null
           stage?: string
@@ -84,6 +88,7 @@ export type Database = {
         Update: {
           aadhaar?: string | null
           address?: string | null
+          bank_name?: string | null
           cibil_score?: number | null
           created_at?: string
           customer_name?: string
@@ -95,6 +100,7 @@ export type Database = {
           loan_sub_type?: string | null
           loan_type?: string | null
           mobile?: string | null
+          note?: string | null
           occupation?: string | null
           pan?: string | null
           stage?: string
@@ -224,6 +230,7 @@ export type Database = {
           aadhaar: string | null
           amount: number | null
           assigned_to: string | null
+          bank_name: string | null
           cibil_score: number | null
           city: string | null
           created_at: string
@@ -248,6 +255,7 @@ export type Database = {
           aadhaar?: string | null
           amount?: number | null
           assigned_to?: string | null
+          bank_name?: string | null
           cibil_score?: number | null
           city?: string | null
           created_at?: string
@@ -272,6 +280,7 @@ export type Database = {
           aadhaar?: string | null
           amount?: number | null
           assigned_to?: string | null
+          bank_name?: string | null
           cibil_score?: number | null
           city?: string | null
           created_at?: string

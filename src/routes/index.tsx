@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/site/Testimonials";
 import { AdminPanel } from "@/components/site/AdminPanel";
 import { Footer } from "@/components/site/Footer";
 import { SipPlanner } from "@/components/site/SipPlanner";
+import { PartnerBanks } from "@/components/site/PartnerBanks";
 export const Route = createFileRoute("/")({ component: Index });
 
 function Index() {
@@ -20,6 +21,7 @@ function Index() {
         <EmiCalculator />
         <SipPlanner />
         <CibilChecker />
+        <PartnerBanks />
         <Testimonials />
         <AdminPanel />
       </main>

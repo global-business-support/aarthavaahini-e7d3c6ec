@@ -58,6 +58,26 @@ const LOAN_TYPES = [
   "Education Loan", "Loan Against Property", "Gold Loan", "Project Loan", "Credit Card",
 ] as const;
 
+const SUB_LOAN_TYPES: Record<string, string[]> = {
+  "Home Loan": ["Home Purchase", "Home Construction", "Plot Purchase", "Home Improvement", "Balance Transfer", "Top-up Loan"],
+  "Personal Loan": ["Salaried", "Self-Employed", "Wedding", "Travel", "Medical Emergency", "Debt Consolidation"],
+  "Business Loan": ["Working Capital", "Term Loan", "Machinery Loan", "MSME", "Overdraft", "Invoice Discounting"],
+  "Car / Vehicle Loan": ["New Car", "Used Car", "Two Wheeler", "Commercial Vehicle"],
+  "Education Loan": ["Study in India", "Study Abroad", "Skill Development"],
+  "Loan Against Property": ["Residential Property", "Commercial Property", "Industrial Property"],
+  "Gold Loan": ["Personal Gold Loan", "Agriculture Gold Loan"],
+  "Project Loan": ["Infrastructure", "Real Estate", "Renewable Energy"],
+  "Credit Card": ["Regular", "Premium", "Business", "Travel Card"],
+};
+
+const BANK_OPTIONS = [
+  "HDFC Bank", "ICICI Bank", "State Bank of India", "Axis Bank", "Kotak Mahindra Bank",
+  "IDFC First Bank", "Yes Bank", "IndusInd Bank", "Punjab National Bank", "Bank of Baroda",
+  "Canara Bank", "Union Bank of India", "Federal Bank", "RBL Bank", "Bajaj Finserv",
+  "Tata Capital", "Aditya Birla Finance", "L&T Finance", "Mahindra Finance", "IDBI Bank",
+  "Piramal Finance", "DCB Bank", "Karnataka Bank", "South Indian Bank",
+];
+
 type Lead = {
   id: string;
   lead_name: string | null;
@@ -76,6 +96,7 @@ type Lead = {
   loan_type: string | null;
   loan_sub_type: string | null;
   loan_amount: number | null;
+  bank_name: string | null;
 };
 
 type Staff = { id: string; full_name: string | null; email: string | null; role: string };
@@ -115,7 +136,7 @@ function LeadsPage() {
     const [{ data, error }, roles] = await Promise.all([
       supabase
         .from("leads")
-        .select("id, lead_name, full_name, phone, email, pan, city, state, product_type, lead_source, status, assigned_to, created_at, cibil_score, loan_type, loan_sub_type, loan_amount")
+        .select("id, lead_name, full_name, phone, email, pan, city, state, product_type, lead_source, status, assigned_to, created_at, cibil_score, loan_type, loan_sub_type, loan_amount, bank_name")
         .order("created_at", { ascending: false })
         .limit(500),
       supabase.from("user_roles").select("user_id, role"),
@@ -207,6 +228,7 @@ function LeadsPage() {
           loan_sub_type: lead.loan_sub_type,
           loan_amount: lead.loan_amount,
           cibil_score: lead.cibil_score,
+          bank_name: lead.bank_name,
           stage: "Docs Pending",
         });
         toast.success("Approved → Customer created");
@@ -315,6 +337,7 @@ function LeadsPage() {
                 <TableHead>Loan Amount</TableHead>
                 <TableHead>CIBIL</TableHead>
                 <TableHead>Stage</TableHead>
+                <TableHead>Bank</TableHead>
                 <TableHead>Assigned</TableHead>
                 <TableHead className="text-right">Action</TableHead>
               </TableRow>
@@ -347,6 +370,26 @@ function LeadsPage() {
                       <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold", st.trigger)}>
                         <span className={cn("h-1.5 w-1.5 rounded-full", st.dot)} /> {stage}
                       </span>
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        value={l.bank_name ?? "none"}
+                        onValueChange={async (v) => {
+                          const bn = v === "none" ? null : v;
+                          const { error } = await supabase.from("leads").update({ bank_name: bn }).eq("id", l.id);
+                          if (error) return toast.error(error.message);
+                          setLeads((p) => p.map((x) => (x.id === l.id ? { ...x, bank_name: bn } : x)));
+                          toast.success(bn ? `Bank → ${bn}` : "Bank cleared");
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[150px] bg-white">
+                          <SelectValue placeholder="—" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white max-h-72">
+                          <SelectItem value="none">— None —</SelectItem>
+                          {BANK_OPTIONS.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                     <TableCell>
                       <Select value={l.assigned_to ?? "unassigned"} onValueChange={(v) => updateAssignee(l, v)}>
@@ -434,8 +477,11 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
     lead_name: "", phone: "", email: "", pan: "", aadhaar: "", city: "", state: "",
     product_type: "loan", lead_source: "Website",
     loan_type: "", loan_sub_type: "", loan_amount: "", cibil_score: "",
+    bank_name: "",
   });
   const [saving, setSaving] = useState(false);
+
+  const subOptions = SUB_LOAN_TYPES[f.loan_type] ?? [];
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -451,6 +497,7 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
       amount: f.loan_amount ? Number(f.loan_amount) : null,
       cibil_score: f.cibil_score ? Number(f.cibil_score) : null,
       product_name: f.loan_sub_type || f.loan_type || null,
+      bank_name: f.bank_name || null,
     });
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -483,16 +530,33 @@ function NewLeadForm({ onSaved }: { onSaved: () => void }) {
       </Field>
 
       <Field label="Loan Type">
-        <Select value={f.loan_type} onValueChange={(v) => setF({ ...f, loan_type: v })}>
+        <Select value={f.loan_type} onValueChange={(v) => setF({ ...f, loan_type: v, loan_sub_type: "" })}>
           <SelectTrigger className="border-blue-200 focus:ring-blue-400"><SelectValue placeholder="Choose loan type" /></SelectTrigger>
           <SelectContent className="bg-white">
             {LOAN_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
           </SelectContent>
         </Select>
       </Field>
-      <Field label="Sub Loan Type"><Input className="border-blue-200 focus-visible:ring-blue-400" placeholder="e.g. Home Purchase" value={f.loan_sub_type} onChange={(e) => setF({ ...f, loan_sub_type: e.target.value })} /></Field>
+      <Field label="Sub Loan Type">
+        <Select value={f.loan_sub_type} onValueChange={(v) => setF({ ...f, loan_sub_type: v })} disabled={!subOptions.length}>
+          <SelectTrigger className="border-blue-200 focus:ring-blue-400">
+            <SelectValue placeholder={subOptions.length ? "Choose sub type" : "Pick loan type first"} />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {subOptions.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </Field>
       <Field label="Loan Amount (₹)"><Input type="number" className="border-emerald-200 focus-visible:ring-emerald-400" placeholder="500000" value={f.loan_amount} onChange={(e) => setF({ ...f, loan_amount: e.target.value })} /></Field>
       <Field label="CIBIL Score"><Input type="number" min={300} max={900} className="border-amber-200 focus-visible:ring-amber-400" placeholder="750" value={f.cibil_score} onChange={(e) => setF({ ...f, cibil_score: e.target.value })} /></Field>
+      <Field label="Bank (if approved)">
+        <Select value={f.bank_name} onValueChange={(v) => setF({ ...f, bank_name: v })}>
+          <SelectTrigger className="border-rose-200 focus:ring-rose-400"><SelectValue placeholder="Choose bank (optional)" /></SelectTrigger>
+          <SelectContent className="bg-white max-h-72">
+            {BANK_OPTIONS.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </Field>
 
       <div className="col-span-2 mt-2 flex justify-end">
         <Button type="submit" disabled={saving} className="bg-gradient-to-r from-sky-600 via-blue-600 to-cyan-600 text-white shadow-md hover:opacity-90">

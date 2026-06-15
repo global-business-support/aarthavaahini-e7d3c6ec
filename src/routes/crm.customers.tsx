@@ -47,7 +47,17 @@ type Row = {
   loan_amount: number | null;
   cibil_score: number | null;
   stage: string;
+  bank_name: string | null;
+  note: string | null;
 };
+
+const BANK_OPTIONS = [
+  "HDFC Bank", "ICICI Bank", "State Bank of India", "Axis Bank", "Kotak Mahindra Bank",
+  "IDFC First Bank", "Yes Bank", "IndusInd Bank", "Punjab National Bank", "Bank of Baroda",
+  "Canara Bank", "Union Bank of India", "Federal Bank", "RBL Bank", "Bajaj Finserv",
+  "Tata Capital", "Aditya Birla Finance", "L&T Finance", "Mahindra Finance", "IDBI Bank",
+  "Piramal Finance", "DCB Bank", "Karnataka Bank", "South Indian Bank",
+];
 
 type Note = { id: string; notes: string | null; created_at: string };
 
@@ -164,14 +174,16 @@ function CustomersPage() {
                 <TableHead>Loan Type</TableHead>
                 <TableHead>Loan Amount</TableHead>
                 <TableHead>CIBIL</TableHead>
+                <TableHead>Bank</TableHead>
                 <TableHead>Stage</TableHead>
+                <TableHead className="min-w-[220px]">Note</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((r) => {
                 const stage = normaliseStage(r.stage);
                 return (
-                  <TableRow key={r.id} className="hover:bg-sky-50/60">
+                  <TableRow key={r.id} className="hover:bg-sky-50/60 align-top">
                     <TableCell className="font-medium">
                       <button className="text-sky-700 hover:underline" onClick={() => setActive(r)}>{r.customer_name}</button>
                       {r.email && <div className="text-xs text-slate-500">{r.email}</div>}
@@ -188,6 +200,26 @@ function CustomersPage() {
                       </span>
                     </TableCell>
                     <TableCell>
+                      <Select
+                        value={r.bank_name ?? "none"}
+                        onValueChange={async (v) => {
+                          const bn = v === "none" ? null : v;
+                          const { error } = await supabase.from("customers").update({ bank_name: bn }).eq("id", r.id);
+                          if (error) return toast.error(error.message);
+                          setRows((p) => p.map((x) => (x.id === r.id ? { ...x, bank_name: bn } : x)));
+                          toast.success(bn ? `Bank → ${bn}` : "Bank cleared");
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[150px] bg-white">
+                          <SelectValue placeholder="—" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white max-h-72">
+                          <SelectItem value="none">— None —</SelectItem>
+                          {BANK_OPTIONS.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
                       <Select value={stage} onValueChange={(v) => updateStage(r, v as Stage)}>
                         <SelectTrigger className={cn("h-8 w-[160px] font-semibold bg-white", STAGE_COLOR[stage])}>
                           <SelectValue />
@@ -198,6 +230,14 @@ function CustomersPage() {
                           ))}
                         </SelectContent>
                       </Select>
+                    </TableCell>
+                    <TableCell>
+                      <NoteCell
+                        row={r}
+                        onSaved={(text) =>
+                          setRows((p) => p.map((x) => (x.id === r.id ? { ...x, note: text } : x)))
+                        }
+                      />
                     </TableCell>
                   </TableRow>
                 );
@@ -319,5 +359,64 @@ function Detail({ icon: Icon, label, value, full }: { icon?: React.ComponentType
       </div>
       <div className="mt-0.5 text-sm text-slate-800">{value || "—"}</div>
     </div>
+  );
+}
+
+function NoteCell({ row, onSaved }: { row: Row; onSaved: (text: string) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(row.note ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const trimmed = text.trim();
+    const { error } = await supabase.from("customers").update({ note: trimmed || null }).eq("id", row.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    onSaved(trimmed);
+    setEditing(false);
+    toast.success("Note saved");
+  };
+
+  if (editing) {
+    return (
+      <div className="space-y-1.5">
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={3}
+          placeholder="Quick note about this customer…"
+          className="border-amber-300 focus-visible:ring-amber-400 text-sm"
+          autoFocus
+        />
+        <div className="flex justify-end gap-1.5">
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" onClick={() => { setText(row.note ?? ""); setEditing(false); }}>
+            Cancel
+          </Button>
+          <Button size="sm" disabled={saving} onClick={save} className="h-7 bg-amber-500 px-2 text-xs text-white hover:bg-amber-600">
+            {saving && <Loader2 className="mr-1 h-3 w-3 animate-spin" />} Save
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className={cn(
+        "group block w-full rounded-md border px-2 py-1.5 text-left text-xs transition",
+        row.note
+          ? "border-amber-200 bg-amber-50/60 text-slate-800 hover:bg-amber-50"
+          : "border-dashed border-slate-300 bg-white text-slate-400 hover:border-amber-300 hover:text-amber-700",
+      )}
+      title="Click to edit note"
+    >
+      {row.note ? (
+        <span className="line-clamp-2 whitespace-pre-wrap">{row.note}</span>
+      ) : (
+        <span>+ Add note</span>
+      )}
+    </button>
   );
 }

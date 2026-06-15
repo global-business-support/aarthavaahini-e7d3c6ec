@@ -40,7 +40,7 @@ function RATE(nper: number, pmt: number, pv: number, guess = 0.01) {
 }
 
 type Mode = "EMI" | "ROI" | "Loan Amount";
-type Tab = "emi" | "eligibility" | "amortization";
+type Tab = "emi" | "eligibility" | "prepayment" | "balance-transfer" | "amortization";
 
 export function EmiCalculator() {
   const [tab, setTab] = useState<Tab>("emi");
@@ -89,6 +89,81 @@ export function EmiCalculator() {
     return { eligEmi, eligLoan, reqIncome };
   }, [income, existingEmi, foir, eligRate, eligYears]);
 
+  // Prepayment Engine state
+  const [ppAmount, setPpAmount] = useState(2700000);
+  const [ppRate, setPpRate] = useState(8.5);
+  const [ppYears, setPpYears] = useState(20);
+  const [ppLump, setPpLump] = useState(300000);
+  const [ppAfterMonths, setPpAfterMonths] = useState(24);
+
+  const prepayment = useMemo(() => {
+    const r = ppRate / 12 / 100;
+    const n = ppYears * 12;
+    const emi = PMT(r, n, ppAmount);
+
+    // Without prepayment
+    const totalWithout = emi * n;
+    const interestWithout = totalWithout - ppAmount;
+
+    // With prepayment — pay EMIs for ppAfterMonths, drop lumpsum, keep EMI fixed, find new tenure
+    let bal = ppAmount;
+    let paidInterest = 0;
+    for (let m = 1; m <= Math.min(ppAfterMonths, n) && bal > 0; m++) {
+      const i = bal * r;
+      const p = Math.min(emi - i, bal);
+      paidInterest += i;
+      bal -= p;
+    }
+    bal = Math.max(0, bal - ppLump);
+    // remaining tenure at same EMI
+    let remMonths = 0;
+    if (bal > 0) {
+      remMonths = Math.ceil(NPER(r, -emi, bal));
+      // simulate to accumulate interest
+      let b2 = bal;
+      for (let m = 1; m <= remMonths && b2 > 0; m++) {
+        const i = b2 * r;
+        const p = Math.min(emi - i, b2);
+        paidInterest += i;
+        b2 -= p;
+      }
+    }
+    const totalTenure = ppAfterMonths + remMonths;
+    const interestWith = paidInterest;
+    return {
+      emi,
+      interestWithout,
+      interestWith,
+      saved: Math.max(0, interestWithout - interestWith),
+      monthsSaved: Math.max(0, n - totalTenure),
+      newTenure: totalTenure,
+    };
+  }, [ppAmount, ppRate, ppYears, ppLump, ppAfterMonths]);
+
+  // Balance Transfer state
+  const [btOutstanding, setBtOutstanding] = useState(2000000);
+  const [btCurRate, setBtCurRate] = useState(10.5);
+  const [btNewRate, setBtNewRate] = useState(8.5);
+  const [btYears, setBtYears] = useState(15);
+  const [btFees, setBtFees] = useState(15000);
+
+  const balanceTransfer = useMemo(() => {
+    const n = btYears * 12;
+    const rA = btCurRate / 12 / 100;
+    const rB = btNewRate / 12 / 100;
+    const emiA = PMT(rA, n, btOutstanding);
+    const emiB = PMT(rB, n, btOutstanding);
+    const totA = emiA * n;
+    const totB = emiB * n + btFees;
+    return {
+      emiA, emiB,
+      totA, totB,
+      emiSaved: emiA - emiB,
+      totalSaved: totA - totB,
+    };
+  }, [btOutstanding, btCurRate, btNewRate, btYears, btFees]);
+
+
   // Amortization schedule
   const schedule = useMemo(() => {
     const rows: { m: number; emi: number; interest: number; principal: number; balance: number }[] = [];
@@ -132,10 +207,12 @@ export function EmiCalculator() {
         </p>
 
         {/* Tabs */}
-        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-2 rounded-full bg-blue-50 p-1.5">
+        <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2 rounded-2xl bg-blue-50 p-1.5">
           {([
             { k: "emi", label: "EMI Engine" },
             { k: "eligibility", label: "Eligibility" },
+            { k: "prepayment", label: "Prepayment" },
+            { k: "balance-transfer", label: "Balance Transfer" },
             { k: "amortization", label: "Amortization" },
           ] as { k: Tab; label: string }[]).map((t) => (
             <button
@@ -240,7 +317,56 @@ export function EmiCalculator() {
           </div>
         )}
 
-        {/* Amortization */}
+        {/* Prepayment */}
+        {tab === "prepayment" && (
+          <div className="mx-auto mt-10 grid max-w-6xl gap-8 rounded-3xl bg-[#f7f9ff] p-8 shadow-xl lg:grid-cols-5 lg:p-10">
+            <div className="space-y-6 lg:col-span-3">
+              <Slider label="Loan Amount" value={`₹ ${formatINR(ppAmount)}`} min={100000} max={50000000} step={50000} v={ppAmount} onChange={setPpAmount} />
+              <Slider label="Interest Rate" value={`${ppRate}%`} min={5} max={24} step={0.05} v={ppRate} onChange={setPpRate} />
+              <Slider label="Original Tenure" value={`${ppYears} Years`} min={1} max={30} step={1} v={ppYears} onChange={setPpYears} />
+              <Slider label="Lumpsum Prepayment" value={`₹ ${formatINR(ppLump)}`} min={10000} max={10000000} step={10000} v={ppLump} onChange={setPpLump} />
+              <Slider label="Prepay After (Months)" value={`${ppAfterMonths} months`} min={1} max={ppYears * 12 - 1} step={1} v={ppAfterMonths} onChange={setPpAfterMonths} />
+            </div>
+            <div className="space-y-4 lg:col-span-2">
+              <div className="rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-center text-white">
+                <p className="text-sm uppercase tracking-widest text-white/80">Interest Saved</p>
+                <h3 className="mt-2 text-4xl font-bold">₹ {formatINR(prepayment.saved)}</h3>
+                <p className="mt-1 text-xs text-white/80">{Math.floor(prepayment.monthsSaved / 12)}y {prepayment.monthsSaved % 12}m saved on tenure</p>
+              </div>
+              <Stat label="Original EMI" value={`₹ ${formatINR(prepayment.emi)}`} />
+              <Stat label="Interest (without prepayment)" value={`₹ ${formatINR(prepayment.interestWithout)}`} />
+              <Stat label="Interest (with prepayment)" value={`₹ ${formatINR(prepayment.interestWith)}`} />
+              <Stat label="New Total Tenure" value={`${Math.floor(prepayment.newTenure / 12)}y ${prepayment.newTenure % 12}m`} />
+            </div>
+          </div>
+        )}
+
+        {/* Balance Transfer */}
+        {tab === "balance-transfer" && (
+          <div className="mx-auto mt-10 grid max-w-6xl gap-8 rounded-3xl bg-[#f7f9ff] p-8 shadow-xl lg:grid-cols-5 lg:p-10">
+            <div className="space-y-6 lg:col-span-3">
+              <Slider label="Outstanding Loan" value={`₹ ${formatINR(btOutstanding)}`} min={100000} max={50000000} step={50000} v={btOutstanding} onChange={setBtOutstanding} />
+              <Slider label="Current Rate" value={`${btCurRate}%`} min={5} max={24} step={0.05} v={btCurRate} onChange={setBtCurRate} />
+              <Slider label="New Bank Rate" value={`${btNewRate}%`} min={5} max={24} step={0.05} v={btNewRate} onChange={setBtNewRate} />
+              <Slider label="Remaining Tenure" value={`${btYears} Years`} min={1} max={30} step={1} v={btYears} onChange={setBtYears} />
+              <Slider label="Transfer Fees" value={`₹ ${formatINR(btFees)}`} min={0} max={200000} step={1000} v={btFees} onChange={setBtFees} />
+            </div>
+            <div className="space-y-4 lg:col-span-2">
+              <div className="rounded-2xl bg-gradient-to-r from-[#17357e] to-blue-600 p-6 text-center text-white">
+                <p className="text-sm uppercase tracking-widest text-white/80">Total You Save</p>
+                <h3 className="mt-2 text-4xl font-bold">₹ {formatINR(balanceTransfer.totalSaved)}</h3>
+                <p className="mt-1 text-xs text-white/80">(after transfer fees of ₹ {formatINR(btFees)})</p>
+              </div>
+              <Stat label="Current EMI" value={`₹ ${formatINR(balanceTransfer.emiA)}`} />
+              <Stat label="New EMI" value={`₹ ${formatINR(balanceTransfer.emiB)}`} />
+              <Stat label="EMI Reduction / mo" value={`₹ ${formatINR(balanceTransfer.emiSaved)}`} />
+              <Stat label="Total Payable (Current)" value={`₹ ${formatINR(balanceTransfer.totA)}`} />
+              <Stat label="Total Payable (New + Fees)" value={`₹ ${formatINR(balanceTransfer.totB)}`} />
+            </div>
+          </div>
+        )}
+
+
         {tab === "amortization" && (
           <div className="mx-auto mt-10 max-w-6xl rounded-3xl bg-[#f7f9ff] p-6 shadow-xl lg:p-8">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
