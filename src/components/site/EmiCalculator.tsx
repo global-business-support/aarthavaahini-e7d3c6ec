@@ -40,7 +40,7 @@ function RATE(nper: number, pmt: number, pv: number, guess = 0.01) {
 }
 
 type Mode = "EMI" | "ROI" | "Loan Amount";
-type Tab = "emi" | "eligibility" | "amortization";
+type Tab = "emi" | "eligibility" | "prepayment" | "balance-transfer" | "amortization";
 
 export function EmiCalculator() {
   const [tab, setTab] = useState<Tab>("emi");
