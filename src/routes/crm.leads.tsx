@@ -58,6 +58,26 @@ const LOAN_TYPES = [
   "Education Loan", "Loan Against Property", "Gold Loan", "Project Loan", "Credit Card",
 ] as const;
 
+const SUB_LOAN_TYPES: Record<string, string[]> = {
+  "Home Loan": ["Home Purchase", "Home Construction", "Plot Purchase", "Home Improvement", "Balance Transfer", "Top-up Loan"],
+  "Personal Loan": ["Salaried", "Self-Employed", "Wedding", "Travel", "Medical Emergency", "Debt Consolidation"],
+  "Business Loan": ["Working Capital", "Term Loan", "Machinery Loan", "MSME", "Overdraft", "Invoice Discounting"],
+  "Car / Vehicle Loan": ["New Car", "Used Car", "Two Wheeler", "Commercial Vehicle"],
+  "Education Loan": ["Study in India", "Study Abroad", "Skill Development"],
+  "Loan Against Property": ["Residential Property", "Commercial Property", "Industrial Property"],
+  "Gold Loan": ["Personal Gold Loan", "Agriculture Gold Loan"],
+  "Project Loan": ["Infrastructure", "Real Estate", "Renewable Energy"],
+  "Credit Card": ["Regular", "Premium", "Business", "Travel Card"],
+};
+
+const BANK_OPTIONS = [
+  "HDFC Bank", "ICICI Bank", "State Bank of India", "Axis Bank", "Kotak Mahindra Bank",
+  "IDFC First Bank", "Yes Bank", "IndusInd Bank", "Punjab National Bank", "Bank of Baroda",
+  "Canara Bank", "Union Bank of India", "Federal Bank", "RBL Bank", "Bajaj Finserv",
+  "Tata Capital", "Aditya Birla Finance", "L&T Finance", "Mahindra Finance", "IDBI Bank",
+  "Piramal Finance", "DCB Bank", "Karnataka Bank", "South Indian Bank",
+];
+
 type Lead = {
   id: string;
   lead_name: string | null;
