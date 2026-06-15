@@ -174,14 +174,16 @@ function CustomersPage() {
                 <TableHead>Loan Type</TableHead>
                 <TableHead>Loan Amount</TableHead>
                 <TableHead>CIBIL</TableHead>
+                <TableHead>Bank</TableHead>
                 <TableHead>Stage</TableHead>
+                <TableHead className="min-w-[220px]">Note</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((r) => {
                 const stage = normaliseStage(r.stage);
                 return (
-                  <TableRow key={r.id} className="hover:bg-sky-50/60">
+                  <TableRow key={r.id} className="hover:bg-sky-50/60 align-top">
                     <TableCell className="font-medium">
                       <button className="text-sky-700 hover:underline" onClick={() => setActive(r)}>{r.customer_name}</button>
                       {r.email && <div className="text-xs text-slate-500">{r.email}</div>}
@@ -198,6 +200,26 @@ function CustomersPage() {
                       </span>
                     </TableCell>
                     <TableCell>
+                      <Select
+                        value={r.bank_name ?? "none"}
+                        onValueChange={async (v) => {
+                          const bn = v === "none" ? null : v;
+                          const { error } = await supabase.from("customers").update({ bank_name: bn }).eq("id", r.id);
+                          if (error) return toast.error(error.message);
+                          setRows((p) => p.map((x) => (x.id === r.id ? { ...x, bank_name: bn } : x)));
+                          toast.success(bn ? `Bank → ${bn}` : "Bank cleared");
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[150px] bg-white">
+                          <SelectValue placeholder="—" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white max-h-72">
+                          <SelectItem value="none">— None —</SelectItem>
+                          {BANK_OPTIONS.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
                       <Select value={stage} onValueChange={(v) => updateStage(r, v as Stage)}>
                         <SelectTrigger className={cn("h-8 w-[160px] font-semibold bg-white", STAGE_COLOR[stage])}>
                           <SelectValue />
@@ -208,6 +230,14 @@ function CustomersPage() {
                           ))}
                         </SelectContent>
                       </Select>
+                    </TableCell>
+                    <TableCell>
+                      <NoteCell
+                        row={r}
+                        onSaved={(text) =>
+                          setRows((p) => p.map((x) => (x.id === r.id ? { ...x, note: text } : x)))
+                        }
+                      />
                     </TableCell>
                   </TableRow>
                 );
