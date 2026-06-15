@@ -96,6 +96,7 @@ type Lead = {
   loan_type: string | null;
   loan_sub_type: string | null;
   loan_amount: number | null;
+  bank_name: string | null;
 };
 
 type Staff = { id: string; full_name: string | null; email: string | null; role: string };
