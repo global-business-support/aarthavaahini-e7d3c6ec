@@ -104,6 +104,23 @@ export function EmiCalculator() {
     return rows;
   }, [finalAmount, finalRate, finalEmi, finalMonths]);
 
+  // Year-wise aggregation for chart
+  const yearly = useMemo(() => {
+    const byYear: { year: number; interest: number; principal: number; balance: number }[] = [];
+    schedule.forEach((r) => {
+      const y = Math.ceil(r.m / 12);
+      let bucket = byYear[y - 1];
+      if (!bucket) {
+        bucket = { year: y, interest: 0, principal: 0, balance: r.balance };
+        byYear[y - 1] = bucket;
+      }
+      bucket.interest += r.interest;
+      bucket.principal += r.principal;
+      bucket.balance = r.balance;
+    });
+    return byYear;
+  }, [schedule]);
+
   return (
     <section id="calculator" className="bg-white py-24">
       <div className="container mx-auto px-6">
@@ -238,6 +255,20 @@ export function EmiCalculator() {
                 <span className="rounded-full bg-orange-100 px-3 py-1 text-orange-700">Interest ₹ {formatINR(totalInterest)}</span>
               </div>
             </div>
+
+            {/* Year-wise chart */}
+            <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="text-sm font-bold text-[#07142f]">Year-wise Breakup</h4>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="flex items-center gap-1"><span className="inline-block h-3 w-3 rounded-sm bg-blue-600" /> Principal</span>
+                  <span className="flex items-center gap-1"><span className="inline-block h-3 w-3 rounded-sm bg-orange-400" /> Interest</span>
+                  <span className="flex items-center gap-1"><span className="inline-block h-3 w-1 rounded-sm bg-emerald-500" /> Balance</span>
+                </div>
+              </div>
+              <YearlyChart data={yearly} loan={finalAmount} />
+            </div>
+
             <div className="max-h-[520px] overflow-auto rounded-xl border border-gray-200 bg-white">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-[#17357e] text-white">
@@ -266,6 +297,81 @@ export function EmiCalculator() {
         )}
       </div>
     </section>
+  );
+}
+
+function YearlyChart({ data, loan }: { data: { year: number; interest: number; principal: number; balance: number }[]; loan: number }) {
+  if (!data.length) return null;
+  const W = 760;
+  const H = 260;
+  const padL = 50, padR = 50, padB = 30, padT = 10;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const maxStack = Math.max(...data.map((d) => d.interest + d.principal));
+  const maxBal = Math.max(loan, ...data.map((d) => d.balance));
+  const bw = innerW / data.length;
+  const barW = Math.max(6, bw * 0.6);
+
+  const balPoints = data
+    .map((d, i) => {
+      const x = padL + i * bw + bw / 2;
+      const y = padT + innerH - (d.balance / maxBal) * innerH;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[600px]" preserveAspectRatio="none">
+        {/* grid */}
+        {[0, 0.25, 0.5, 0.75, 1].map((t) => (
+          <line key={t} x1={padL} x2={W - padR} y1={padT + innerH * t} y2={padT + innerH * t} stroke="#e5e7eb" strokeWidth="1" />
+        ))}
+        {/* bars */}
+        {data.map((d, i) => {
+          const x = padL + i * bw + (bw - barW) / 2;
+          const pH = (d.principal / maxStack) * innerH;
+          const iH = (d.interest / maxStack) * innerH;
+          const yP = padT + innerH - pH;
+          const yI = yP - iH;
+          return (
+            <g key={d.year}>
+              <rect x={x} y={yI} width={barW} height={iH} fill="#fb923c" rx="2">
+                <title>Year {d.year} · Interest ₹ {formatINR(d.interest)}</title>
+              </rect>
+              <rect x={x} y={yP} width={barW} height={pH} fill="#2563eb" rx="2">
+                <title>Year {d.year} · Principal ₹ {formatINR(d.principal)}</title>
+              </rect>
+              {(data.length <= 20 || d.year % 2 === 1) && (
+                <text x={x + barW / 2} y={H - padB + 14} fontSize="10" fill="#6b7280" textAnchor="middle">
+                  {d.year}
+                </text>
+              )}
+            </g>
+          );
+        })}
+        {/* balance line */}
+        <polyline points={balPoints} fill="none" stroke="#10b981" strokeWidth="2.5" />
+        {data.map((d, i) => {
+          const x = padL + i * bw + bw / 2;
+          const y = padT + innerH - (d.balance / maxBal) * innerH;
+          return <circle key={d.year} cx={x} cy={y} r="2.5" fill="#10b981"><title>Year {d.year} · Balance ₹ {formatINR(d.balance)}</title></circle>;
+        })}
+        {/* y-axis labels (stack) */}
+        {[0, 0.5, 1].map((t) => (
+          <text key={`l${t}`} x={padL - 6} y={padT + innerH * (1 - t) + 3} fontSize="10" fill="#6b7280" textAnchor="end">
+            ₹{formatINR(maxStack * t)}
+          </text>
+        ))}
+        {/* y-axis right (balance) */}
+        {[0, 0.5, 1].map((t) => (
+          <text key={`r${t}`} x={W - padR + 6} y={padT + innerH * (1 - t) + 3} fontSize="10" fill="#10b981" textAnchor="start">
+            ₹{formatINR(maxBal * t)}
+          </text>
+        ))}
+        <text x={padL} y={H - 4} fontSize="10" fill="#6b7280">Year</text>
+      </svg>
+    </div>
   );
 }
 
