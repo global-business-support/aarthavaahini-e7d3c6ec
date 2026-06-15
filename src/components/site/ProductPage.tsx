@@ -16,7 +16,7 @@ type Props = {
   title: string;
   subtitle: string;
   items: ProductItem[];
-  productType: "loan" | "insurance" | "mutual_fund" | "banking";
+  productType: "loan" | "insurance" | "mutual_fund";
   accentClass: string;
 };
 
@@ -29,14 +29,12 @@ const BG_BY_TYPE: Record<Props["productType"], { url: string } | null> = {
   loan: loanBg,
   insurance: insuranceBg,
   mutual_fund: mutualFundBg,
-  banking: null,
 };
 
 const RADIAL_BY_TYPE: Record<Props["productType"], string> = {
   loan: "bg-[radial-gradient(circle_at_18%_22%,rgba(37,99,235,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(14,165,233,0.10),transparent_32%)]",
   insurance: "bg-[radial-gradient(circle_at_18%_22%,rgba(244,63,94,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(217,70,239,0.10),transparent_32%)]",
   mutual_fund: "bg-[radial-gradient(circle_at_18%_22%,rgba(16,185,129,0.10),transparent_34%),radial-gradient(circle_at_82%_72%,rgba(245,158,11,0.10),transparent_32%)]",
-  banking: "",
 };
 
 export function ProductPage({ title, subtitle, items, productType, accentClass }: Props) {
