@@ -13,19 +13,31 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { loans, insurance, mutualFunds, bankingProducts } from "@/data/products";
+import { loans, insurance, mutualFunds } from "@/data/products";
 
 type Props = {
   productType:
     | "loan"
     | "insurance"
     | "mutual_fund"
-    | "banking"
     | "contact"
     | "cibil";
   productName?: string;
   buttonLabel?: string;
 };
+
+// Loan types and their sub-products (used for Apply Now → Loan)
+const LOAN_TYPES: { value: string; label: string; subs: string[] }[] = [
+  { value: "Home Loan", label: "Home Loan", subs: ["Home Purchase", "Home Construction", "Plot Loan", "Home Renovation", "Balance Transfer + Top-up"] },
+  { value: "Personal Loan", label: "Personal Loan", subs: ["Salaried", "Self-Employed", "Wedding", "Medical", "Travel", "Debt Consolidation"] },
+  { value: "Business Loan", label: "Business Loan", subs: ["MSME", "Working Capital", "Term Loan", "Startup", "CC / Overdraft"] },
+  { value: "Car / Vehicle Loan", label: "Car / Vehicle Loan", subs: ["New Car", "Used Car", "Commercial Vehicle", "Two Wheeler"] },
+  { value: "Education Loan", label: "Education Loan", subs: ["India", "Abroad", "Skill / Vocational"] },
+  { value: "Loan Against Property", label: "Loan Against Property", subs: ["Residential", "Commercial", "Industrial", "LAP Overdraft"] },
+  { value: "Gold Loan", label: "Gold Loan", subs: ["Bullet Repayment", "Monthly EMI"] },
+  { value: "Project Loan", label: "Project Loan", subs: ["Infrastructure", "Real Estate", "Greenfield", "Brownfield"] },
+  { value: "Credit Card", label: "Credit Card", subs: ["Cashback", "Travel", "Fuel", "Lifetime Free"] },
+];
 
 export function LeadForm({
   productType,
@@ -38,6 +50,8 @@ export function LeadForm({
     email: "",
     phone: "",
     product: productName ?? "",
+    loan_type: "",
+    loan_sub_type: "",
     amount: "",
     monthly_income: "",
     message: "",
@@ -47,7 +61,6 @@ export function LeadForm({
     if (productType === "loan") return loans;
     if (productType === "insurance") return insurance;
     if (productType === "mutual_fund") return mutualFunds;
-    if (productType === "banking") return bankingProducts;
     return [];
   }, [productType]);
 
@@ -58,20 +71,27 @@ export function LeadForm({
       ? "Select Insurance Plan"
       : productType === "mutual_fund"
       ? "Select Mutual Fund"
-      : productType === "banking"
-      ? "Select Banking Product"
       : "Product";
+
+  const isLoanFlow = productType === "loan";
+  const subOptions = useMemo(
+    () => LOAN_TYPES.find((l) => l.value === form.loan_type)?.subs ?? [],
+    [form.loan_type],
+  );
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const chosenProduct = productName || form.product || null;
+    const chosenProduct = form.loan_sub_type || form.loan_type || productName || form.product || null;
     const { error } = await supabase.from("leads").insert({
       full_name: form.name,
       lead_name: form.name,
       email: form.email || null,
       phone: form.phone,
       amount: form.amount ? Number(form.amount) : null,
+      loan_amount: form.amount ? Number(form.amount) : null,
+      loan_type: form.loan_type || null,
+      loan_sub_type: form.loan_sub_type || null,
       message: form.message || null,
       product_type: productType === "contact" ? "loan" : productType,
       product_name: chosenProduct,
@@ -89,6 +109,8 @@ export function LeadForm({
       email: "",
       phone: "",
       product: productName ?? "",
+      loan_type: "",
+      loan_sub_type: "",
       amount: "",
       monthly_income: "",
       message: "",
@@ -140,7 +162,46 @@ export function LeadForm({
           />
         </div>
 
-        {!productName && productOptions.length > 0 && (
+        {/* LOAN TYPE + SUB-TYPE for loan applications */}
+        {isLoanFlow && (
+          <>
+            <div>
+              <Label className="mb-1.5 block text-xs font-medium text-slate-300">Loan Type</Label>
+              <Select
+                value={form.loan_type}
+                onValueChange={(v) => setForm({ ...form, loan_type: v, loan_sub_type: "" })}
+              >
+                <SelectTrigger className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white">
+                  <SelectValue placeholder="Choose loan type" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {LOAN_TYPES.map((l) => (
+                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-1.5 block text-xs font-medium text-slate-300">Sub-Loan Type</Label>
+              <Select
+                value={form.loan_sub_type}
+                onValueChange={(v) => setForm({ ...form, loan_sub_type: v })}
+                disabled={!form.loan_type}
+              >
+                <SelectTrigger className="h-11 rounded-xl border-slate-700 bg-slate-800/60 px-4 text-white disabled:opacity-50">
+                  <SelectValue placeholder={form.loan_type ? "Choose sub-type" : "Select loan type first"} />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {subOptions.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+
+        {!productName && !isLoanFlow && productOptions.length > 0 && (
           <div className="sm:col-span-2">
             <Label className="mb-1.5 block text-xs font-medium text-slate-300">{productLabel}</Label>
             <Select
@@ -162,7 +223,7 @@ export function LeadForm({
         )}
 
         <div>
-          <Label className="mb-1.5 block text-xs font-medium text-slate-300">Amount (₹)</Label>
+          <Label className="mb-1.5 block text-xs font-medium text-slate-300">{isLoanFlow ? "Loan Amount (₹)" : "Amount (₹)"}</Label>
           <Input
             type="number"
             value={form.amount}

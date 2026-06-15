@@ -19,7 +19,6 @@ import { Route as CrmRouteImport } from './routes/crm'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CibilRouteImport } from './routes/cibil'
 import { Route as BlogsRouteImport } from './routes/blogs'
-import { Route as BankingRouteImport } from './routes/banking'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -95,11 +94,6 @@ const CibilRoute = CibilRouteImport.update({
 const BlogsRoute = BlogsRouteImport.update({
   id: '/blogs',
   path: '/blogs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BankingRoute = BankingRouteImport.update({
-  id: '/banking',
-  path: '/banking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -237,7 +231,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
@@ -276,7 +269,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
@@ -314,7 +306,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/banking': typeof BankingRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/cibil': typeof CibilRoute
   '/contact': typeof ContactRoute
@@ -355,7 +346,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
-    | '/banking'
     | '/blogs'
     | '/cibil'
     | '/contact'
@@ -394,7 +384,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
-    | '/banking'
     | '/blogs'
     | '/cibil'
     | '/contact'
@@ -431,7 +420,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
-    | '/banking'
     | '/blogs'
     | '/cibil'
     | '/contact'
@@ -471,7 +459,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
-  BankingRoute: typeof BankingRoute
   BlogsRoute: typeof BlogsRouteWithChildren
   CibilRoute: typeof CibilRoute
   ContactRoute: typeof ContactRoute
@@ -554,13 +541,6 @@ declare module '@tanstack/react-router' {
       path: '/blogs'
       fullPath: '/blogs'
       preLoaderRoute: typeof BlogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/banking': {
-      id: '/banking'
-      path: '/banking'
-      fullPath: '/banking'
-      preLoaderRoute: typeof BankingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -831,7 +811,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
-  BankingRoute: BankingRoute,
   BlogsRoute: BlogsRouteWithChildren,
   CibilRoute: CibilRoute,
   ContactRoute: ContactRoute,
@@ -846,13 +825,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -3,6 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -10,9 +13,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, StickyNote, Phone, Mail, MapPin, Briefcase, IndianRupee, User2, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 
 export const Route = createFileRoute("/crm/customers")({ component: CustomersPage });
+
+const CUSTOMER_STAGES = ["New", "Docs Pending", "Login", "Sanction", "Disbursement", "Closed"] as const;
+type Stage = (typeof CUSTOMER_STAGES)[number];
+
+const STAGE_COLOR: Record<Stage, string> = {
+  "New":          "border-sky-300 bg-sky-50 text-sky-700",
+  "Docs Pending": "border-violet-300 bg-violet-50 text-violet-700",
+  "Login":        "border-indigo-300 bg-indigo-50 text-indigo-700",
+  "Sanction":     "border-amber-300 bg-amber-50 text-amber-700",
+  "Disbursement": "border-emerald-300 bg-emerald-50 text-emerald-700",
+  "Closed":       "border-slate-300 bg-slate-100 text-slate-700",
+};
 
 type Row = {
   id: string;
@@ -26,9 +42,27 @@ type Row = {
   income: number | null;
   created_at: string;
   lead_id: string | null;
+  loan_type: string | null;
+  loan_sub_type: string | null;
+  loan_amount: number | null;
+  cibil_score: number | null;
+  stage: string;
 };
 
 type Note = { id: string; notes: string | null; created_at: string };
+
+function normaliseStage(s: string | null | undefined): Stage {
+  if (!s) return "New";
+  if ((CUSTOMER_STAGES as readonly string[]).includes(s)) return s as Stage;
+  return "New";
+}
+
+function cibilBadge(score: number | null) {
+  if (score == null) return "bg-slate-100 text-slate-500 border-slate-200";
+  if (score >= 750) return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  if (score >= 650) return "bg-amber-50 text-amber-700 border-amber-200";
+  return "bg-rose-50 text-rose-700 border-rose-200";
+}
 
 function CustomersPage() {
   const [rows, setRows] = useState<Row[]>([]);
@@ -36,22 +70,20 @@ function CustomersPage() {
   const [active, setActive] = useState<Row | null>(null);
   const [q, setQ] = useState("");
 
+  const load = async () => {
+    const { data } = await supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(500);
+    setRows((data ?? []) as Row[]);
+    setLoading(false);
+  };
+
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(500);
-      const list = (data ?? []) as Row[];
-      setRows(list);
-      // Read ?q= from URL: auto-fill search and open match if exactly one
+      await load();
       if (typeof window !== "undefined") {
         const url = new URL(window.location.href);
         const initial = url.searchParams.get("q") ?? "";
-        if (initial) {
-          setQ(initial);
-          const match = list.find((r) => (r.customer_name ?? "").toLowerCase() === initial.toLowerCase());
-          if (match) setActive(match);
-        }
+        if (initial) setQ(initial);
       }
-      setLoading(false);
     })();
   }, []);
 
@@ -62,11 +94,36 @@ function CustomersPage() {
       (r.customer_name ?? "").toLowerCase().includes(term) ||
       (r.mobile ?? "").toLowerCase().includes(term) ||
       (r.email ?? "").toLowerCase().includes(term) ||
-      (r.pan ?? "").toLowerCase().includes(term),
+      (r.pan ?? "").toLowerCase().includes(term) ||
+      (r.loan_type ?? "").toLowerCase().includes(term),
     );
   }, [q, rows]);
 
+  const updateStage = async (row: Row, stage: Stage) => {
+    const { error } = await supabase.from("customers").update({ stage }).eq("id", row.id);
+    if (error) return toast.error(error.message);
+    setRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, stage } : r)));
+    toast.success(`Stage → ${stage}`);
 
+    if (stage === "Closed") {
+      // Push to loan_cases (avoid duplicates by checking on customer_id)
+      const { data: existing } = await supabase
+        .from("loan_cases")
+        .select("id")
+        .eq("customer_id", row.id)
+        .maybeSingle();
+      if (!existing) {
+        const { error: e2 } = await supabase.from("loan_cases").insert({
+          customer_id: row.id,
+          loan_type: row.loan_type ?? row.loan_sub_type ?? "Loan",
+          loan_amount: row.loan_amount,
+          stage: "Completed",
+        });
+        if (e2) toast.error(e2.message);
+        else toast.success("Closed → Loan case created");
+      }
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -76,7 +133,7 @@ function CustomersPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20"><User2 className="h-4 w-4" /></div>
           <div>
             <div className="text-sm font-semibold">Customers</div>
-            <div className="text-[11px] text-white/80">{rows.length} customers · click a name to view 360° details and notes</div>
+            <div className="text-[11px] text-white/80">{rows.length} customers · Approved leads from Leads · close to push into Loans</div>
           </div>
         </div>
       </div>
@@ -87,7 +144,7 @@ function CustomersPage() {
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search by name, mobile, email, PAN…"
+            placeholder="Search by name, mobile, email, PAN, loan type…"
             className="pl-9"
           />
         </div>
@@ -97,35 +154,56 @@ function CustomersPage() {
         {loading ? (
           <div className="flex h-40 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
         ) : filtered.length === 0 ? (
-          <div className="p-10 text-center text-sm text-slate-500">{rows.length === 0 ? "No customers yet." : "No customers match your search."}</div>
+          <div className="p-10 text-center text-sm text-slate-500">{rows.length === 0 ? "No customers yet — approve a lead first." : "No customers match your search."}</div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Mobile</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>PAN</TableHead>
-                <TableHead>Occupation</TableHead>
-                <TableHead>Income</TableHead>
+                <TableHead>Loan Type</TableHead>
+                <TableHead>Loan Amount</TableHead>
+                <TableHead>CIBIL</TableHead>
+                <TableHead>Stage</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((r) => (
-                <TableRow key={r.id} className="cursor-pointer hover:bg-sky-50/60" onClick={() => setActive(r)}>
-                  <TableCell className="font-medium">
-                    <button className="text-sky-700 hover:underline">{r.customer_name}</button>
-                  </TableCell>
-                  <TableCell>{r.mobile ?? "—"}</TableCell>
-                  <TableCell>{r.email ?? "—"}</TableCell>
-                  <TableCell>{r.pan ?? "—"}</TableCell>
-                  <TableCell>{r.occupation ?? "—"}</TableCell>
-                  <TableCell>{r.income ? `₹${Number(r.income).toLocaleString("en-IN")}` : "—"}</TableCell>
-                </TableRow>
-              ))}
+              {filtered.map((r) => {
+                const stage = normaliseStage(r.stage);
+                return (
+                  <TableRow key={r.id} className="hover:bg-sky-50/60">
+                    <TableCell className="font-medium">
+                      <button className="text-sky-700 hover:underline" onClick={() => setActive(r)}>{r.customer_name}</button>
+                      {r.email && <div className="text-xs text-slate-500">{r.email}</div>}
+                    </TableCell>
+                    <TableCell>{r.mobile ?? "—"}</TableCell>
+                    <TableCell>
+                      <div className="text-sm font-medium text-slate-800">{r.loan_type ?? "—"}</div>
+                      {r.loan_sub_type && <div className="text-xs text-slate-500">{r.loan_sub_type}</div>}
+                    </TableCell>
+                    <TableCell>{r.loan_amount ? `₹${Number(r.loan_amount).toLocaleString("en-IN")}` : "—"}</TableCell>
+                    <TableCell>
+                      <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold", cibilBadge(r.cibil_score))}>
+                        {r.cibil_score ?? "N/A"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Select value={stage} onValueChange={(v) => updateStage(r, v as Stage)}>
+                        <SelectTrigger className={cn("h-8 w-[160px] font-semibold bg-white", STAGE_COLOR[stage])}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          {CUSTOMER_STAGES.map((s) => (
+                            <SelectItem key={s} value={s}>{s}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
-
         )}
       </Card>
 
@@ -182,6 +260,10 @@ function CustomerDetails({ customer }: { customer: Row }) {
       <div className="grid grid-cols-2 gap-3 rounded-lg border border-sky-100 bg-sky-50/40 p-4 text-sm">
         <Detail icon={Phone} label="Mobile" value={customer.mobile} />
         <Detail icon={Mail} label="Email" value={customer.email} />
+        <Detail label="Loan Type" value={customer.loan_type} />
+        <Detail label="Sub Loan" value={customer.loan_sub_type} />
+        <Detail icon={IndianRupee} label="Loan Amount" value={customer.loan_amount ? `₹${Number(customer.loan_amount).toLocaleString("en-IN")}` : null} />
+        <Detail label="CIBIL Score" value={customer.cibil_score ? String(customer.cibil_score) : null} />
         <Detail icon={Briefcase} label="Occupation" value={customer.occupation} />
         <Detail icon={IndianRupee} label="Income" value={customer.income ? `₹${Number(customer.income).toLocaleString("en-IN")}` : null} />
         <Detail icon={MapPin} label="Address" value={customer.address} full />
@@ -239,4 +321,3 @@ function Detail({ icon: Icon, label, value, full }: { icon?: React.ComponentType
     </div>
   );
 }
-

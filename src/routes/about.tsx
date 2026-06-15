@@ -50,9 +50,9 @@ function AboutPage() {
           <div className="mt-4 grid gap-4 text-sm md:grid-cols-2">
             <div><p className="font-semibold">Legal Name</p><p className="text-muted-foreground">Aarthvaahini Financial Services Pvt. Ltd.</p></div>
             <div><p className="font-semibold">Founded</p><p className="text-muted-foreground">2024 • India</p></div>
-            <div><p className="font-semibold">Registered Office</p><p className="text-muted-foreground">Mumbai, Maharashtra, India</p></div>
-            <div><p className="font-semibold">Email</p><p className="text-muted-foreground">support@aarthvaahini.com</p></div>
-            <div><p className="font-semibold">Phone</p><p className="text-muted-foreground">+91 90000 00000</p></div>
+            <div><p className="font-semibold">Registered Office</p><p className="text-muted-foreground">2nd Floor, Shrinath Tower, Opposite C3 Hospital, Behind C21 Mall, Vijay Nagar, Indore, MP 452010</p></div>
+            <div><p className="font-semibold">Email</p><p className="text-muted-foreground">care@aarthvaahini.com</p></div>
+            <div><p className="font-semibold">Phone</p><p className="text-muted-foreground">+91 98276 79993</p></div>
             {/* <div><p className="font-semibold">Compliance</p><p className="text-muted-foreground">RBI guidelines • IRDAI partner • SEBI registered MFD</p></div> */}
           </div>
         </Card>

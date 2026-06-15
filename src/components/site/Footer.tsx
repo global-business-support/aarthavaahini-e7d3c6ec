@@ -310,31 +310,18 @@ export function Footer() {
           </h3>
 
           <div className="mt-4 flex flex-col gap-4 text-sm text-muted-foreground">
-
             <div className="flex items-center gap-3">
-
               <Phone className="h-4 w-4 text-primary" />
-
-              <span>+91 90000 00000</span>
-
+              <a href="tel:+919827679993" className="hover:text-primary">+91 98276 79993</a>
             </div>
-
             <div className="flex items-center gap-3">
-
               <Mail className="h-4 w-4 text-primary" />
-
-              <span>support@aarthvaahini.com</span>
-
+              <a href="mailto:care@aarthvaahini.com" className="hover:text-primary">care@aarthvaahini.com</a>
             </div>
-
             <div className="flex items-start gap-3">
-
               <MapPin className="mt-1 h-4 w-4 text-primary" />
-
-              <span>Mumbai, Maharashtra, India</span>
-
+              <span>2nd Floor, Shrinath Tower, Opposite C3 Hospital, Behind C21 Mall, Vijay Nagar, Indore, MP 452010</span>
             </div>
-
           </div>
 
         </div>

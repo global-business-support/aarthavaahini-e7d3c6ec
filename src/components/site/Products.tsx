@@ -463,7 +463,7 @@ export function Products() {
 
         <h2 className="mt-3 text-4xl font-bold text-gray-900 sm:text-5xl">
 
-          Banking, loans and protection,
+          Loans, insurance and investments,
 
           <span className="text-blue-600">
             {" "}in one place
@@ -635,7 +635,7 @@ export function Products() {
                               Aarthvaahini provides fast approvals,
                               secure documentation, expert financial
                               guidance, and trusted partner support
-                              for all your banking, insurance, and
+                              for all your loans, insurance, and
                               investment needs.
 
                             </p>

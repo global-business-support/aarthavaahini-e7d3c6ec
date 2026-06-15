@@ -39,7 +39,7 @@ function RATE(nper: number, pmt: number, pv: number, guess = 0.01) {
   return r;
 }
 
-type Mode = "EMI" | "ROI" | "Tenure" | "Loan Amount";
+type Mode = "EMI" | "ROI" | "Loan Amount";
 type Tab = "emi" | "eligibility" | "amortization";
 
 export function EmiCalculator() {
@@ -49,7 +49,8 @@ export function EmiCalculator() {
   const [mode, setMode] = useState<Mode>("EMI");
   const [amount, setAmount] = useState(2700000);
   const [rate, setRate] = useState(8.5);
-  const [years, setYears] = useState(7);
+  // Tenure is fixed internally (20 years) — UI does not expose it per requirement
+  const years = 20;
   const [emiInput, setEmiInput] = useState(42324);
 
   const months = years * 12;
@@ -58,7 +59,6 @@ export function EmiCalculator() {
   const result = useMemo(() => {
     if (mode === "EMI") return PMT(monthlyRate, months, amount);
     if (mode === "ROI") return RATE(months, -emiInput, amount) * 12 * 100;
-    if (mode === "Tenure") return NPER(monthlyRate, -emiInput, amount);
     if (mode === "Loan Amount") return PV(monthlyRate, months, -emiInput);
     return 0;
   }, [mode, monthlyRate, months, amount, emiInput]);
@@ -66,12 +66,12 @@ export function EmiCalculator() {
   // Computed final values used by amortization
   const finalEmi = mode === "EMI" ? result : emiInput;
   const finalAmount = mode === "Loan Amount" ? result : amount;
-  const finalMonths = mode === "Tenure" ? Math.ceil(result) : months;
+  const finalMonths = months;
   const finalRate = mode === "ROI" ? result / 12 / 100 : monthlyRate;
 
   const totalPayable = finalEmi * finalMonths;
   const totalInterest = totalPayable - finalAmount;
-  const principalPct = (finalAmount / (finalAmount + totalInterest)) * 100;
+  const principalPct = totalPayable > 0 ? (finalAmount / totalPayable) * 100 : 0;
 
   // Eligibility Engine state
   const [income, setIncome] = useState(100000);
@@ -111,7 +111,7 @@ export function EmiCalculator() {
           Professional Loan Calculator
         </h2>
         <p className="mt-3 text-center text-gray-500">
-          Banking-grade EMI engine, eligibility calculator and full amortization schedule.
+          EMI engine, eligibility calculator and full amortization schedule.
         </p>
 
         {/* Tabs */}
@@ -141,8 +141,8 @@ export function EmiCalculator() {
             <div className="space-y-6 lg:col-span-3">
               <div>
                 <label className="mb-2 block font-medium">Calculation Mode</label>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {(["EMI", "ROI", "Tenure", "Loan Amount"] as Mode[]).map((m) => (
+                <div className="grid grid-cols-3 gap-2">
+                  {(["EMI", "ROI", "Loan Amount"] as Mode[]).map((m) => (
                     <button
                       key={m}
                       onClick={() => setMode(m)}
@@ -167,9 +167,6 @@ export function EmiCalculator() {
               {mode !== "ROI" && (
                 <Slider label="Interest Rate" value={`${rate}%`} min={5} max={24} step={0.05} v={rate} onChange={setRate} />
               )}
-              {mode !== "Tenure" && (
-                <Slider label="Tenure" value={`${years} Years`} min={1} max={30} step={1} v={years} onChange={setYears} />
-              )}
               {mode !== "EMI" && (
                 <Slider label="Monthly EMI" value={`₹ ${formatINR(emiInput)}`} min={1000} max={500000} step={500} v={emiInput} onChange={setEmiInput} />
               )}
@@ -180,13 +177,11 @@ export function EmiCalculator() {
                 <p className="text-sm uppercase tracking-widest text-white/80">{mode} (Calculated)</p>
                 <h3 className="mt-2 text-4xl font-bold">
                   {mode === "ROI" && `${result.toFixed(2)}%`}
-                  {mode === "Tenure" && `${Math.ceil(result)} months`}
                   {(mode === "EMI" || mode === "Loan Amount") && `₹ ${formatINR(result)}`}
                 </h3>
               </div>
               <Stat label="Monthly EMI" value={`₹ ${formatINR(finalEmi)}`} />
               <Stat label="Loan Amount" value={`₹ ${formatINR(finalAmount)}`} />
-              <Stat label="Tenure" value={`${Math.floor(finalMonths / 12)}y ${finalMonths % 12}m`} />
               <Stat label="Total Interest" value={`₹ ${formatINR(totalInterest)}`} />
               <Stat label="Total Payable" value={`₹ ${formatINR(totalPayable)}`} />
 

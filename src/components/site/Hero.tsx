@@ -452,7 +452,7 @@ const slides: Slide[] = [
     ),
 
     subtitle:
-      "Get customized financial solutions with trusted banking partners, low interest rates, insurance protection, and wealth-building opportunities designed for modern families and businesses.",
+      "Get customized financial solutions with trusted lending partners, low interest rates, insurance protection, and wealth-building opportunities designed for modern families and businesses.",
 
     image: advisor18,
   },
