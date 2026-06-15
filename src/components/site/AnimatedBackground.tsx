@@ -1,5 +1,7 @@
 import { type CSSProperties } from "react";
 import loanBg from "@/assets/loan-bg.jpg.asset.json";
+import insuranceBg from "@/assets/insurance-bg.jpeg.asset.json";
+import mutualFundBg from "@/assets/mutual-fund-bg.jpg.asset.json";
 
 type Variant = "loans" | "insurance" | "mutual-funds";
 
@@ -11,36 +13,25 @@ const PRESETS: Record<Variant, {
   images: string[];
 }> = {
   loans: {
-    tint: "from-blue-100/70 via-sky-50/60 to-indigo-100/60",
+    tint: "from-blue-100/60 via-sky-50/50 to-indigo-100/50",
     blob1: "bg-blue-400/35",
     blob2: "bg-sky-400/35",
     blob3: "bg-indigo-400/30",
-    // Loan-related: home keys, house & money, car keys, bank/finance
-    images: [
-      loanBg.url, // uploaded loan reference (house + LOAN blocks + calculator)
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80", // modern home / home loan
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80", // money / personal loan
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80", // bank / business loan
-      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1920&q=80", // car / auto loan
-    ],
+    images: [loanBg.url],
   },
   insurance: {
-    tint: "from-emerald-100/70 via-teal-50/60 to-cyan-100/60",
+    tint: "from-emerald-100/60 via-teal-50/50 to-cyan-100/50",
     blob1: "bg-emerald-400/35",
     blob2: "bg-teal-400/35",
     blob3: "bg-cyan-400/30",
-    images: [
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80",
-    ],
+    images: [insuranceBg.url],
   },
   "mutual-funds": {
-    tint: "from-amber-100/70 via-orange-50/60 to-rose-100/60",
+    tint: "from-amber-100/60 via-orange-50/50 to-rose-100/50",
     blob1: "bg-amber-400/40",
     blob2: "bg-orange-400/35",
     blob3: "bg-rose-400/30",
-    images: [
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1920&q=80",
-    ],
+    images: [mutualFundBg.url],
   },
 };
 
@@ -67,7 +58,8 @@ export function AnimatedBackground({ variant }: { variant: Variant }) {
 
       {/* Color tint + white wash for readability */}
       <div className={`absolute inset-0 bg-gradient-to-br ${preset.tint}`} />
-      <div className="absolute inset-0 bg-white/55" />
+      <div className="absolute inset-0 bg-white/30" />
+
 
       {/* Animated soft color blobs */}
       <div className={`absolute -top-40 -left-32 h-[32rem] w-[32rem] rounded-full ${preset.blob1} blur-3xl animate-blob`} />
