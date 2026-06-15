@@ -89,6 +89,81 @@ export function EmiCalculator() {
     return { eligEmi, eligLoan, reqIncome };
   }, [income, existingEmi, foir, eligRate, eligYears]);
 
+  // Prepayment Engine state
+  const [ppAmount, setPpAmount] = useState(2700000);
+  const [ppRate, setPpRate] = useState(8.5);
+  const [ppYears, setPpYears] = useState(20);
+  const [ppLump, setPpLump] = useState(300000);
+  const [ppAfterMonths, setPpAfterMonths] = useState(24);
+
+  const prepayment = useMemo(() => {
+    const r = ppRate / 12 / 100;
+    const n = ppYears * 12;
+    const emi = PMT(r, n, ppAmount);
+
+    // Without prepayment
+    const totalWithout = emi * n;
+    const interestWithout = totalWithout - ppAmount;
+
+    // With prepayment — pay EMIs for ppAfterMonths, drop lumpsum, keep EMI fixed, find new tenure
+    let bal = ppAmount;
+    let paidInterest = 0;
+    for (let m = 1; m <= Math.min(ppAfterMonths, n) && bal > 0; m++) {
+      const i = bal * r;
+      const p = Math.min(emi - i, bal);
+      paidInterest += i;
+      bal -= p;
+    }
+    bal = Math.max(0, bal - ppLump);
+    // remaining tenure at same EMI
+    let remMonths = 0;
+    if (bal > 0) {
+      remMonths = Math.ceil(NPER(r, -emi, bal));
+      // simulate to accumulate interest
+      let b2 = bal;
+      for (let m = 1; m <= remMonths && b2 > 0; m++) {
+        const i = b2 * r;
+        const p = Math.min(emi - i, b2);
+        paidInterest += i;
+        b2 -= p;
+      }
+    }
+    const totalTenure = ppAfterMonths + remMonths;
+    const interestWith = paidInterest;
+    return {
+      emi,
+      interestWithout,
+      interestWith,
+      saved: Math.max(0, interestWithout - interestWith),
+      monthsSaved: Math.max(0, n - totalTenure),
+      newTenure: totalTenure,
+    };
+  }, [ppAmount, ppRate, ppYears, ppLump, ppAfterMonths]);
+
+  // Balance Transfer state
+  const [btOutstanding, setBtOutstanding] = useState(2000000);
+  const [btCurRate, setBtCurRate] = useState(10.5);
+  const [btNewRate, setBtNewRate] = useState(8.5);
+  const [btYears, setBtYears] = useState(15);
+  const [btFees, setBtFees] = useState(15000);
+
+  const balanceTransfer = useMemo(() => {
+    const n = btYears * 12;
+    const rA = btCurRate / 12 / 100;
+    const rB = btNewRate / 12 / 100;
+    const emiA = PMT(rA, n, btOutstanding);
+    const emiB = PMT(rB, n, btOutstanding);
+    const totA = emiA * n;
+    const totB = emiB * n + btFees;
+    return {
+      emiA, emiB,
+      totA, totB,
+      emiSaved: emiA - emiB,
+      totalSaved: totA - totB,
+    };
+  }, [btOutstanding, btCurRate, btNewRate, btYears, btFees]);
+
+
   // Amortization schedule
   const schedule = useMemo(() => {
     const rows: { m: number; emi: number; interest: number; principal: number; balance: number }[] = [];
