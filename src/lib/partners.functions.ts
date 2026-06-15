@@ -228,8 +228,8 @@ export const createMyPartnerLead = createServerFn({ method: "POST" })
         full_name: data.full_name,
         phone: data.phone,
         email: data.email || "",
-        product_type: data.product_type || null,
-        product_name: data.product_name || null,
+        product_type: data.product_type || "Loan",
+        product_name: data.product_name || "General",
         amount: data.amount ?? null,
         city: data.city || null,
         state: data.state || null,
@@ -237,7 +237,7 @@ export const createMyPartnerLead = createServerFn({ method: "POST" })
         lead_source: "Partner",
         status: "new",
         partner_id: p.id,
-      }).select().single();
+      } as never).select().single();
     if (error) throw new Error(error.message);
     return { lead: row };
   });
