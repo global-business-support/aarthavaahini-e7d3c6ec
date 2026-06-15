@@ -104,6 +104,23 @@ export function EmiCalculator() {
     return rows;
   }, [finalAmount, finalRate, finalEmi, finalMonths]);
 
+  // Year-wise aggregation for chart
+  const yearly = useMemo(() => {
+    const byYear: { year: number; interest: number; principal: number; balance: number }[] = [];
+    schedule.forEach((r) => {
+      const y = Math.ceil(r.m / 12);
+      let bucket = byYear[y - 1];
+      if (!bucket) {
+        bucket = { year: y, interest: 0, principal: 0, balance: r.balance };
+        byYear[y - 1] = bucket;
+      }
+      bucket.interest += r.interest;
+      bucket.principal += r.principal;
+      bucket.balance = r.balance;
+    });
+    return byYear;
+  }, [schedule]);
+
   return (
     <section id="calculator" className="bg-white py-24">
       <div className="container mx-auto px-6">
