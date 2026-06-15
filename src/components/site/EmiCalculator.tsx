@@ -207,10 +207,12 @@ export function EmiCalculator() {
         </p>
 
         {/* Tabs */}
-        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-2 rounded-full bg-blue-50 p-1.5">
+        <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2 rounded-2xl bg-blue-50 p-1.5">
           {([
             { k: "emi", label: "EMI Engine" },
             { k: "eligibility", label: "Eligibility" },
+            { k: "prepayment", label: "Prepayment" },
+            { k: "balance-transfer", label: "Balance Transfer" },
             { k: "amortization", label: "Amortization" },
           ] as { k: Tab; label: string }[]).map((t) => (
             <button
