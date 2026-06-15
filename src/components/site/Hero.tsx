@@ -584,24 +584,6 @@ export function Hero() {
 
       <div className="absolute bottom-24 right-10 z-20 hidden flex-wrap items-center gap-5 lg:flex">
 
-        <Link to="/mutual-funds">
-          <div className="flex min-w-60 items-center gap-4 rounded-2xl border border-green-200/40 bg-white/10 px-6 py-4 text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white/20">
-
-            <TrendingUp className="h-7 w-7 text-green-400" />
-
-            <div>
-              <h3 className="text-lg font-semibold">
-                Mutual Funds 
-              </h3>
-
-              <p className="text-sm text-gray-300">
-                Wealth Growth
-              </p>
-            </div>
-
-          </div>
-        </Link>
-
         <Link to="/loans">
           <div className="flex min-w-60 items-center gap-4 rounded-2xl border border-green-200/40 bg-white/10 px-6 py-4 text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white/20">
 
@@ -632,6 +614,24 @@ export function Hero() {
 
               <p className="text-sm text-gray-300">
                 Secure Insurance
+              </p>
+            </div>
+
+          </div>
+        </Link>
+
+        <Link to="/mutual-funds">
+          <div className="flex min-w-60 items-center gap-4 rounded-2xl border border-green-200/40 bg-white/10 px-6 py-4 text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white/20">
+
+            <TrendingUp className="h-7 w-7 text-green-400" />
+
+            <div>
+              <h3 className="text-lg font-semibold">
+                Mutual Funds 
+              </h3>
+
+              <p className="text-sm text-gray-300">
+                Wealth Growth
               </p>
             </div>
 
