@@ -29,12 +29,12 @@ function CrmLoginPage() {
         .select("role")
         .eq("user_id", session.user.id);
       if (error) return;
-      const staff = (roles ?? []).some((r) =>
-        ["admin", "manager", "sales_executive", "operations", "insurance_executive", "mf_executive"].includes(
-          r.role as string,
-        ),
+      const list = (roles ?? []).map((r) => r.role as string);
+      const staff = list.some((r) =>
+        ["admin", "manager", "sales_executive", "operations", "insurance_executive", "mf_executive"].includes(r),
       );
       if (staff) nav({ to: "/crm" });
+      else if (list.includes("partner")) nav({ to: "/partner" });
     };
     check();
   }, [nav]);
@@ -47,7 +47,6 @@ function CrmLoginPage() {
       setLoading(false);
       return toast.error(error.message);
     }
-    // Verify staff role before redirect
     const userId = data.user?.id;
     if (userId) {
       const { data: roles, error: roleError } = await supabase
@@ -56,23 +55,21 @@ function CrmLoginPage() {
         .eq("user_id", userId);
       if (roleError) {
         setLoading(false);
-        return toast.error("CRM access check failed. Please try again.");
+        return toast.error("Access check failed. Please try again.");
       }
-      const staff = (roles ?? []).some((r) =>
-        ["admin", "manager", "sales_executive", "operations", "insurance_executive", "mf_executive"].includes(
-          r.role as string,
-        ),
+      const list = (roles ?? []).map((r) => r.role as string);
+      const staff = list.some((r) =>
+        ["admin", "manager", "sales_executive", "operations", "insurance_executive", "mf_executive"].includes(r),
       );
+      const partner = list.includes("partner");
       setLoading(false);
-      if (!staff) {
-        await supabase.auth.signOut();
-        return toast.error("CRM access is not enabled for this account.");
-      }
+      if (staff) { toast.success("Welcome back!"); return nav({ to: "/crm" }); }
+      if (partner) { toast.success("Welcome, Partner!"); return nav({ to: "/partner" }); }
+      await supabase.auth.signOut();
+      return toast.error("This account does not have CRM or Partner access.");
     } else {
       setLoading(false);
     }
-    toast.success("Welcome back!");
-    nav({ to: "/crm" });
   };
 
   return (

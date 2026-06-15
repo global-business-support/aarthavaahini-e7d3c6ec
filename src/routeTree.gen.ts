@@ -23,7 +23,10 @@ import { Route as BankingRouteImport } from './routes/banking'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PartnerIndexRouteImport } from './routes/partner.index'
 import { Route as CrmIndexRouteImport } from './routes/crm.index'
+import { Route as PartnerProfileRouteImport } from './routes/partner.profile'
+import { Route as PartnerLeadsRouteImport } from './routes/partner.leads'
 import { Route as CrmWhatsappRouteImport } from './routes/crm.whatsapp'
 import { Route as CrmTasksRouteImport } from './routes/crm.tasks'
 import { Route as CrmSettingsRouteImport } from './routes/crm.settings'
@@ -114,10 +117,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PartnerIndexRoute = PartnerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PartnerRoute,
+} as any)
 const CrmIndexRoute = CrmIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CrmRoute,
+} as any)
+const PartnerProfileRoute = PartnerProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PartnerRoute,
+} as any)
+const PartnerLeadsRoute = PartnerLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => PartnerRoute,
 } as any)
 const CrmWhatsappRoute = CrmWhatsappRouteImport.update({
   id: '/whatsapp',
@@ -229,7 +247,7 @@ export interface FileRoutesByFullPath {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
-  '/partner': typeof PartnerRoute
+  '/partner': typeof PartnerRouteWithChildren
   '/admin/employees': typeof AdminEmployeesRoute
   '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
@@ -249,7 +267,10 @@ export interface FileRoutesByFullPath {
   '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
+  '/partner/leads': typeof PartnerLeadsRoute
+  '/partner/profile': typeof PartnerProfileRoute
   '/crm/': typeof CrmIndexRoute
+  '/partner/': typeof PartnerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -264,7 +285,6 @@ export interface FileRoutesByTo {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
-  '/partner': typeof PartnerRoute
   '/admin/employees': typeof AdminEmployeesRoute
   '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
@@ -284,7 +304,10 @@ export interface FileRoutesByTo {
   '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
+  '/partner/leads': typeof PartnerLeadsRoute
+  '/partner/profile': typeof PartnerProfileRoute
   '/crm': typeof CrmIndexRoute
+  '/partner': typeof PartnerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -301,7 +324,7 @@ export interface FileRoutesById {
   '/loans': typeof LoansRoute
   '/login': typeof LoginRoute
   '/mutual-funds': typeof MutualFundsRoute
-  '/partner': typeof PartnerRoute
+  '/partner': typeof PartnerRouteWithChildren
   '/admin/employees': typeof AdminEmployeesRoute
   '/admin/whatsapp': typeof AdminWhatsappRoute
   '/blogs/cibil-score': typeof BlogsCibilScoreRoute
@@ -321,7 +344,10 @@ export interface FileRoutesById {
   '/crm/settings': typeof CrmSettingsRoute
   '/crm/tasks': typeof CrmTasksRoute
   '/crm/whatsapp': typeof CrmWhatsappRoute
+  '/partner/leads': typeof PartnerLeadsRoute
+  '/partner/profile': typeof PartnerProfileRoute
   '/crm/': typeof CrmIndexRoute
+  '/partner/': typeof PartnerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -359,7 +385,10 @@ export interface FileRouteTypes {
     | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
+    | '/partner/leads'
+    | '/partner/profile'
     | '/crm/'
+    | '/partner/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -374,7 +403,6 @@ export interface FileRouteTypes {
     | '/loans'
     | '/login'
     | '/mutual-funds'
-    | '/partner'
     | '/admin/employees'
     | '/admin/whatsapp'
     | '/blogs/cibil-score'
@@ -394,7 +422,10 @@ export interface FileRouteTypes {
     | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
+    | '/partner/leads'
+    | '/partner/profile'
     | '/crm'
+    | '/partner'
   id:
     | '__root__'
     | '/'
@@ -430,7 +461,10 @@ export interface FileRouteTypes {
     | '/crm/settings'
     | '/crm/tasks'
     | '/crm/whatsapp'
+    | '/partner/leads'
+    | '/partner/profile'
     | '/crm/'
+    | '/partner/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -447,7 +481,7 @@ export interface RootRouteChildren {
   LoansRoute: typeof LoansRoute
   LoginRoute: typeof LoginRoute
   MutualFundsRoute: typeof MutualFundsRoute
-  PartnerRoute: typeof PartnerRoute
+  PartnerRoute: typeof PartnerRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -550,12 +584,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/partner/': {
+      id: '/partner/'
+      path: '/'
+      fullPath: '/partner/'
+      preLoaderRoute: typeof PartnerIndexRouteImport
+      parentRoute: typeof PartnerRoute
+    }
     '/crm/': {
       id: '/crm/'
       path: '/'
       fullPath: '/crm/'
       preLoaderRoute: typeof CrmIndexRouteImport
       parentRoute: typeof CrmRoute
+    }
+    '/partner/profile': {
+      id: '/partner/profile'
+      path: '/profile'
+      fullPath: '/partner/profile'
+      preLoaderRoute: typeof PartnerProfileRouteImport
+      parentRoute: typeof PartnerRoute
+    }
+    '/partner/leads': {
+      id: '/partner/leads'
+      path: '/leads'
+      fullPath: '/partner/leads'
+      preLoaderRoute: typeof PartnerLeadsRouteImport
+      parentRoute: typeof PartnerRoute
     }
     '/crm/whatsapp': {
       id: '/crm/whatsapp'
@@ -757,6 +812,21 @@ const CrmRouteChildren: CrmRouteChildren = {
 
 const CrmRouteWithChildren = CrmRoute._addFileChildren(CrmRouteChildren)
 
+interface PartnerRouteChildren {
+  PartnerLeadsRoute: typeof PartnerLeadsRoute
+  PartnerProfileRoute: typeof PartnerProfileRoute
+  PartnerIndexRoute: typeof PartnerIndexRoute
+}
+
+const PartnerRouteChildren: PartnerRouteChildren = {
+  PartnerLeadsRoute: PartnerLeadsRoute,
+  PartnerProfileRoute: PartnerProfileRoute,
+  PartnerIndexRoute: PartnerIndexRoute,
+}
+
+const PartnerRouteWithChildren =
+  PartnerRoute._addFileChildren(PartnerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -771,7 +841,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoansRoute: LoansRoute,
   LoginRoute: LoginRoute,
   MutualFundsRoute: MutualFundsRoute,
-  PartnerRoute: PartnerRoute,
+  PartnerRoute: PartnerRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

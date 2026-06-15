@@ -16,6 +16,7 @@ export type StaffRole = (typeof STAFF_ROLES)[number];
 export function useCrmAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<StaffRole[]>([]);
+  const [isPartner, setIsPartner] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,11 +41,9 @@ export function useCrmAuth() {
         setLoading(false);
         return;
       }
-      setRoles(
-        (data ?? [])
-          .map((r) => r.role as StaffRole)
-          .filter((r) => (STAFF_ROLES as readonly string[]).includes(r)),
-      );
+      const allRoles = (data ?? []).map((r) => r.role as string);
+      setRoles(allRoles.filter((r) => (STAFF_ROLES as readonly string[]).includes(r)) as StaffRole[]);
+      setIsPartner(allRoles.includes("partner"));
       setLoading(false);
     };
 
@@ -71,5 +70,5 @@ export function useCrmAuth() {
   const isAdmin = roles.includes("admin");
   const primaryRole = roles[0] ?? null;
 
-  return { user, roles, isStaff, isAdmin, primaryRole, loading };
+  return { user, roles, isStaff, isAdmin, isPartner, primaryRole, loading };
 }
