@@ -72,7 +72,7 @@ const NAV: NavItem[] = [
 ];
 
 export function CrmLayout() {
-  const { user, isStaff, primaryRole, loading } = useCrmAuth();
+  const { user, isStaff, isPartner, primaryRole, loading } = useCrmAuth();
   const nav = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -92,8 +92,9 @@ export function CrmLayout() {
   useEffect(() => {
     if (loading || isLoginRoute) return;
     if (!user) nav({ to: "/crm/login" });
+    else if (!isStaff && isPartner) nav({ to: "/partner" });
     else if (!isStaff) nav({ to: "/crm/login", search: { unauthorized: "1" } as never });
-  }, [loading, user, isStaff, nav, isLoginRoute]);
+  }, [loading, user, isStaff, isPartner, nav, isLoginRoute]);
 
   useEffect(() => setMobileOpen(false), [pathname]);
 
