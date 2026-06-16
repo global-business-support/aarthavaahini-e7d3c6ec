@@ -9,6 +9,7 @@ import { AdminPanel } from "@/components/site/AdminPanel";
 import { Footer } from "@/components/site/Footer";
 import { SipPlanner } from "@/components/site/SipPlanner";
 import { PartnerBanks } from "@/components/site/PartnerBanks";
+import { EligibilityChecker } from "@/components/site/EligibilityChecker";
 export const Route = createFileRoute("/")({ component: Index });
 
 function Index() {
@@ -18,6 +19,7 @@ function Index() {
       <main>
         <Hero />
         <Products />
+        <EligibilityChecker />
         <EmiCalculator />
         <SipPlanner />
         <CibilChecker />
