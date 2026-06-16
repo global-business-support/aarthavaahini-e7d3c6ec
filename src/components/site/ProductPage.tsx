@@ -70,68 +70,72 @@ export function ProductPage({ title, subtitle, items, productType, accentClass }
           <h1 className={`font-display text-4xl font-bold sm:text-5xl ${accentClass}`}>{title}</h1>
           <p className={cn("mt-4", hasBg ? "font-medium text-slate-700" : "text-muted-foreground")}>{subtitle}</p>
         </div>
-        <div className="mt-14 grid gap-10 sm:grid-cols-1 md:grid-cols-2 [perspective:1400px]">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 [perspective:1400px]">
           {items.map((p, i) => {
             const palette = CARD_PALETTES[i % CARD_PALETTES.length];
             return (
-              <Card
-                key={p.slug}
-                className={cn(
-                  "card-3d group relative flex flex-col overflow-hidden rounded-2xl ring-1 border-0 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.25)] backdrop-blur-sm",
-                  hasBg && "product-card-glass",
-
-                  palette.bg,
-                  palette.ring,
-                )}
-              >
-                {p.image && (
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
-                      <h3 className="font-display text-2xl font-bold leading-tight text-white drop-shadow">{p.name}</h3>
-                      {p.tag && <Badge className={cn("border-0 shadow", palette.chip)}>{p.tag}</Badge>}
+              <Dialog key={p.slug}>
+                <DialogTrigger asChild>
+                  <Card
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "card-3d group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl ring-1 border-0 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.25)] backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-[0_30px_60px_-20px_rgba(15,23,42,0.35)]",
+                      hasBg && "product-card-glass",
+                      palette.bg,
+                      palette.ring,
+                    )}
+                  >
+                    <div className="relative h-56 w-full overflow-hidden bg-slate-200">
+                      {p.image && (
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      {p.tag && (
+                        <Badge className={cn("absolute right-3 top-3 border-0 shadow", palette.chip)}>{p.tag}</Badge>
+                      )}
+                      <div className="absolute inset-x-0 bottom-0 p-5">
+                        <h3 className="font-display text-2xl font-bold leading-tight text-white drop-shadow">{p.name}</h3>
+                        <p className="mt-1 text-xs font-medium uppercase tracking-wide text-white/80">Tap to view details</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col p-7">
-                  <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/60 blur-2xl transition-transform duration-700 group-hover:scale-150" />
-                  {!p.image && (
-                    <div className="relative flex items-start justify-between gap-3">
-                      <h3 className="font-display text-2xl font-bold text-slate-900">{p.name}</h3>
-                      {p.tag && <Badge className={cn("border-0", palette.chip)}>{p.tag}</Badge>}
+                  </Card>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl p-0 overflow-hidden">
+                  {p.image && (
+                    <div className="relative h-44 w-full overflow-hidden">
+                      <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 p-5">
+                        <h3 className="font-display text-2xl font-bold text-white">{p.name}</h3>
+                        {p.rate && <p className="text-sm font-semibold text-white/90">{p.rate}</p>}
+                      </div>
                     </div>
                   )}
-                  {p.rate && <p className="relative mt-1 text-sm font-semibold text-slate-700">{p.rate}</p>}
-                  <p className="relative mt-3 text-sm text-slate-600">{p.desc}</p>
-                  <ul className="relative mt-4 flex-1 space-y-2 text-sm text-slate-700">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className={cn("relative mt-6 w-full bg-gradient-to-r text-white shadow-md transition hover:opacity-95", palette.btn)}>
-                        Apply / Enquire
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg p-0">
-                      <DialogHeader className="px-6 pt-6">
-                        <DialogTitle className="text-white">{p.name} — Enquiry</DialogTitle>
-                      </DialogHeader>
-                      <LeadForm productType={productType} productName={p.name} />
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              </Card>
+                  <div className="px-6 pt-5">
+                    <DialogHeader>
+                      <DialogTitle className="sr-only">{p.name}</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-slate-600">{p.desc}</p>
+                    <ul className="mt-4 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+                      {p.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="mt-4 border-t">
+                    <LeadForm productType={productType} productName={p.name} />
+                  </div>
+                </DialogContent>
+              </Dialog>
             );
           })}
         </div>
