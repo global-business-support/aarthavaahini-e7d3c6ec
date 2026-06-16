@@ -455,7 +455,7 @@ const slides: Slide[] = [
     subtitle:
       "Get customized financial solutions with trusted lending partners, low interest rates, insurance protection, and wealth-building opportunities designed for modern families and businesses.",
 
-    image: advisor18,
+    image: heroBanner.url,
   },
 
   {
