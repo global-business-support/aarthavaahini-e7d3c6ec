@@ -527,37 +527,25 @@ export function Hero() {
             {/* CONTENT */}
 
             <div className="relative z-10 flex h-full items-center">
-              <div className="container mx-auto px-6">
+              <div className={`container mx-auto px-6 ${index === 1 ? "flex justify-center text-center" : ""}`}>
 
-                {/* LEFT CONTENT */}
-
-                <div className="max-w-3xl">
+                <div className={`max-w-3xl ${index === 1 ? "mx-auto text-center" : ""}`}>
 
                   <h1 className="text-5xl font-bold leading-tight text-black md:text-7xl">
                     {slide.title}
-                    
                   </h1>
-                      
-       
-        
 
-                  <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-200 md:text-xl">
+                  <p className={`mt-6 text-lg leading-8 text-gray-200 md:text-xl ${index === 1 ? "mx-auto max-w-2xl" : "max-w-2xl"}`}>
                     {slide.subtitle}
-
                   </p>
-
-                  {/* FIRST SLIDE BUTTONS ONLY */}
 
                   {current === 0 && (
                     <div className="mt-10 flex flex-wrap gap-5">
 
                       <Link to="/contact">
                         <Button className="h-14 rounded-xl bg-linear-to-r from-[#17357e] to-blue-600 px-8 text-lg font-semibold text-white transition-all hover:scale-105">
-
                           Free Consultation
-
                           <ArrowRight className="ml-2 h-5 w-5" />
-
                         </Button>
                       </Link>
 
