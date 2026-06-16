@@ -49,8 +49,7 @@ export function EmiCalculator() {
   const [mode, setMode] = useState<Mode>("EMI");
   const [amount, setAmount] = useState(2700000);
   const [rate, setRate] = useState(8.5);
-  // Tenure is fixed internally (20 years) — UI does not expose it per requirement
-  const years = 20;
+  const [years, setYears] = useState(20);
   const [emiInput, setEmiInput] = useState(42324);
 
   const months = years * 12;
