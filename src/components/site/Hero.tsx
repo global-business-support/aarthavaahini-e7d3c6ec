@@ -421,6 +421,7 @@ import { Button } from "@/components/ui/button";
 import advisor17 from "@/assets/hero-advisor17.jpeg";
 import advisor18 from "@/assets/hero-advisor18.png";
 import advisor21 from "@/assets/hero-advisor21.jpeg";
+import heroBanner from "@/assets/hero-banner.png.asset.json";
 
 type Slide = {
   title: React.ReactNode;
