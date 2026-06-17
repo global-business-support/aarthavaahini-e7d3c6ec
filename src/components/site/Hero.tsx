@@ -419,9 +419,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 import advisor17 from "@/assets/hero-advisor17.jpeg";
-import advisor18 from "@/assets/hero-advisor18.png";
-import advisor21 from "@/assets/hero-advisor21.jpeg";
-import heroBanner from "@/assets/hero-banner.png.asset.json";
+import insuranceBanner from "@/assets/insurance-banner.png.asset.json";
+import mutualFundsBanner from "@/assets/mutual-funds-banner.png.asset.json";
 
 type Slide = {
   title: React.ReactNode;
@@ -447,29 +446,29 @@ const slides: Slide[] = [
   {
     title: (
       <>
-        Smart Loans & Investments
-        <span className="text-gradient"> For Every Dream</span>
+        Protecting What
+        <span className="text-gradient"> Matters Most</span>
       </>
     ),
 
     subtitle:
-      "Get customized financial solutions with trusted lending partners, low interest rates, insurance protection, and wealth-building opportunities designed for modern families and businesses.",
+      "Comprehensive Life, Health, Motor and Home insurance plans from India's most trusted insurers — safeguarding your family, home and assets against life's uncertainties.",
 
-    image: advisor18,
+    image: insuranceBanner.url,
   },
 
   {
     title: (
       <>
-        Trusted Financial Solutions
-        <span className="text-gradient"> For Your Future</span>
+        Grow Your Wealth
+        <span className="text-gradient"> With Smart Investments</span>
       </>
     ),
 
     subtitle:
-      "From home loans and business funding to insurance and mutual funds, Aarthvaahini Financial Services Pvt. Ltd. delivers secure, transparent, and growth-focused financial services across India.",
+      "Build long-term wealth with curated Mutual Funds, SIPs and tax-saving investment plans — expert-led advisory designed to help your money grow steadily.",
 
-    image: advisor21,
+    image: mutualFundsBanner.url,
   },
 ];
 
