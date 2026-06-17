@@ -8,9 +8,9 @@ import { LeadForm } from "./LeadForm";
 import type { ProductItem } from "@/data/products";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import loanBg from "@/assets/loan-bg.jpg.asset.json";
-import insuranceBg from "@/assets/insurance-bg.jpeg.asset.json";
-import mutualFundBg from "@/assets/mutual-fund-bg.jpg.asset.json";
+import loanBg from "@/assets/loan-banner.png.asset.json";
+import insuranceBg from "@/assets/insurance-banner.png.asset.json";
+import mutualFundBg from "@/assets/mutual-funds-banner.png.asset.json";
 
 type Props = {
   title: string;
